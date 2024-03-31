@@ -1,50 +1,105 @@
-import React, { useEffect } from 'react';
-import styles from './Game.module.css';
-
+import React, { useEffect, useRef } from 'react';
 
 const Game = () => {
-    useEffect(() => {
-        const gameContainer = document.getElementById('gameContainer');
-        const gameBox = document.getElementById('gameBox');
-        const scoreDisplay = document.getElementById('score');
-        const timeLeftDisplay = document.getElementById('timeLeft');
-        let score = 0;
-        let timeLeft = 10;
+    const canvasRef = useRef(null);
+    let animationFrameId;
 
-        gameBox.addEventListener('click', () => {
-            score++;
-            scoreDisplay.textContent = score;
-            moveBox();
-        });
+    // Game state
+    const game = {
+        box: { x: 50, y: 50, size: 50, speed: 5 },
+        score: 0,
+        isRunning: true,
+    };
 
-        const moveBox = () => {
-            const x = Math.floor(Math.random() * (gameContainer.offsetWidth - 50));
-            const y = Math.floor(Math.random() * (gameContainer.offsetHeight - 50));
-            gameBox.style.left = x + 'px';
-            gameBox.style.top = y + 'px';
-        };
-
-        const countdown = () => {
-            timeLeft--;
-            timeLeftDisplay.textContent = timeLeft;
-            if (timeLeft === 0) {
-                alert('Game over! Your score is: ' + score);
-                clearInterval(timerId);
+    const toggleFullScreen = () => {
+        const canvas = canvasRef.current;
+        if (!document.fullscreenElement) {
+            if (canvas.requestFullscreen) {
+                canvas.requestFullscreen();
+            } else if (canvas.mozRequestFullScreen) { /* Firefox */
+                canvas.mozRequestFullScreen();
+            } else if (canvas.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+                canvas.webkitRequestFullscreen();
+            } else if (canvas.msRequestFullscreen) { /* IE/Edge */
+                canvas.msRequestFullscreen();
             }
-        };
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) { /* Firefox */
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { /* IE/Edge */
+                document.msExitFullscreen();
+            }
+        }
+    };
 
-        let timerId = setInterval(countdown, 1000);
+    // Move the box to a new random location
+    const moveBox = () => {
+        const canvas = canvasRef.current;
+        game.box.x = Math.random() * (canvas.width - game.box.size);
+        game.box.y = Math.random() * (canvas.height - game.box.size);
+    };
+
+    // Check if the click is inside the box
+    const checkClickInsideBox = (event) => {
+        const rect = canvasRef.current.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        if (
+            x > game.box.x &&
+            x < game.box.x + game.box.size &&
+            y > game.box.y &&
+            y < game.box.y + game.box.size
+        ) {
+            game.score += 1;
+            moveBox();
+        }
+    };
+
+    // Game loop
+    const updateGame = () => {
+        if (!game.isRunning) return;
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+
+        // Clear the canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw the box
+        ctx.fillStyle = 'red';
+        ctx.fillRect(game.box.x, game.box.y, game.box.size, game.box.size);
+
+        // Draw the score
+        ctx.font = '20px Arial';
+        ctx.fillStyle = 'black';
+        ctx.fillText(`Score: ${game.score}`, 10, 30);
+
+        animationFrameId = requestAnimationFrame(updateGame);
+    };
+
+    useEffect(() => {
         moveBox();
+        updateGame();
 
-        return () => clearInterval(timerId); // Cleanup on component unmount
+        const canvas = canvasRef.current;
+        canvas.style.backgroundColor = 'beige'; // Or any color you prefer
+        canvas.addEventListener('click', checkClickInsideBox);
+
+        return () => {
+            cancelAnimationFrame(animationFrameId);
+            canvas.removeEventListener('click', checkClickInsideBox);
+        };
     }, []);
 
     return (
-        <div className={styles.gameContainer} id="gameContainer">
-            <div id="gameBox" className={styles.gameBox}></div>
-            <div id="scoreBoard">Score: <span id="score">0</span></div>
-            <div id="timer">Time left: <span id="timeLeft">10</span> seconds</div>
-        </div>
+        <>
+            <canvas ref={canvasRef} width="800" height="500" style={{ border: '1px solid #000' }}></canvas>
+            <button onClick={toggleFullScreen}>Toggle Fullscreen</button>
+        </>
     );
 };
 
