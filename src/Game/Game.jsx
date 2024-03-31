@@ -45,9 +45,12 @@ const Game = () => {
 
     // Check if the click is inside the box
     const checkClickInsideBox = (event) => {
-        const rect = canvasRef.current.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
+        const canvas = canvasRef.current;
+        const rect = canvas.getBoundingClientRect(); // Gets the size of the element and its position relative to the viewport
+
+        // Adjust mouse click position based on the canvas scale
+        const x = (event.clientX - rect.left); // Adjusting for scale
+        const y = (event.clientY - rect.top); // Adjusting for scale
 
         if (
             x > game.box.x &&
@@ -82,6 +85,20 @@ const Game = () => {
     };
 
     useEffect(() => {
+        const resizeCanvas = () => {
+            if (document.fullscreenElement === canvasRef.current) {
+                // When in fullscreen, resize canvas to fill screen
+                canvasRef.current.width = window.innerWidth;
+                canvasRef.current.height = window.innerHeight;
+            } else {
+                // When exiting fullscreen, revert to original size
+                canvasRef.current.width = 800; // Your default canvas width
+                canvasRef.current.height = 500; // Your default canvas height
+            }
+        };
+        document.addEventListener('fullscreenchange', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
+
         moveBox();
         updateGame();
 
@@ -90,6 +107,8 @@ const Game = () => {
         canvas.addEventListener('click', checkClickInsideBox);
 
         return () => {
+            document.removeEventListener('fullscreenchange', resizeCanvas);
+            window.removeEventListener('resize', resizeCanvas);
             cancelAnimationFrame(animationFrameId);
             canvas.removeEventListener('click', checkClickInsideBox);
         };
