@@ -1,30 +1,24 @@
-import { useRef } from "react";
+import React, {useState} from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
-import './Navbar.modules.css';
+import './Navbar.css';
 import {NavLink} from "react-router-dom";
 function Navbar() {
-    const navRef = useRef();
-
-    const showNavbar = () => {
-        navRef.current.classList.toggle(
-            "responsive_nav"
-        );
-    };
+    const [menuOpen, setMenuOpen] = useState(false);
 
     return (
         <header>
             <h1>Digits</h1>
-            <nav ref={navRef}>
-                <NavLink to="/">Home</NavLink>
-                <NavLink to="/digits">Play</NavLink>
-                <NavLink to="/other">Other</NavLink>
+            <nav className={menuOpen ? "open" : ""}>
+                <NavLink to="/" onClick={() => setMenuOpen(false)}>Home</NavLink>
+                <NavLink to="/digits" onClick={() => setMenuOpen(false)}>Play</NavLink>
+                <NavLink to="/other" onClick={() => setMenuOpen(false)}>Other</NavLink>
                 <button className="nav-btn nav-close-btn"
-                    onClick={showNavbar}>
+                        onClick={() => setMenuOpen(!menuOpen)}>
                     <FaTimes />
                 </button>
             </nav>
             <button className="nav-btn"
-                onClick={showNavbar}>
+                    onClick={() => setMenuOpen(!menuOpen)}>
                 <FaBars />
             </button>
         </header>
