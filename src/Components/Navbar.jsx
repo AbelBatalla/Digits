@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import './Navbar.modules.css';
+import {NavLink} from "react-router-dom";
 function Navbar() {
     const navRef = useRef();
 
@@ -14,15 +15,15 @@ function Navbar() {
         <header>
             <h1>Digits</h1>
             <nav ref={navRef}>
-                <a href="">Home</a>
-                <a href="">Play</a>
-                <a href="">Other</a>
-                <button className="navBtn nav-close-btn"
+                <NavLink to="/">Home</NavLink>
+                <NavLink to="/digits">Play</NavLink>
+                <NavLink to="/other">Other</NavLink>
+                <button className="nav-btn nav-close-btn"
                     onClick={showNavbar}>
                     <FaTimes />
                 </button>
             </nav>
-            <button className="navBtn"
+            <button className="nav-btn"
                 onClick={showNavbar}>
                 <FaBars />
             </button>

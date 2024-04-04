@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-
+import './Game.module.css'
 const Game = () => {
     const canvasRef = useRef(null);
     let animationFrameId;
@@ -112,7 +112,7 @@ const Game = () => {
             cancelAnimationFrame(animationFrameId);
             canvas.removeEventListener('click', checkClickInsideBox);
         };
-    }, []);
+    });
 
     return (
         <>

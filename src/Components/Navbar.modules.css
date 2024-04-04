@@ -14,6 +14,8 @@ header h1 {
 header nav {
     display: flex;
     gap: 2rem;
+    position: sticky;
+    top: 0;
 }
 header nav a {
     text-decoration: none;
@@ -37,22 +39,20 @@ header nav:hover > a:not(:hover) {
     color: black;
 }
 
-.button {
+header .nav-btn {
     padding: 5px;
     cursor: pointer;
     background: transparent;
     border: none;
     outline: none;
-    color: white;
+    color: black;
     display: none;
-    opacity: 0;
-    font-size: 20rem;
+    font-size: 1.8rem;
 }
 
 @media only screen and (max-width: 1024px) {
     header .nav-btn {
-        visibility: visible;
-        opacity: 1;
+        display: flex;
     }
 
     header nav {
@@ -67,7 +67,7 @@ header nav:hover > a:not(:hover) {
         justify-content: center;
         gap: 1.5rem;
         background-color: #2fa6a6;
-        transition: 1s;
+        transition: 0.3s;
     }
 
     header .responsive_nav {
