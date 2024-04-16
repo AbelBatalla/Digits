@@ -1,1 +1,15 @@
 
+.canvasContainer {
+    position: relative;
+    display: inline-block;
+}
+
+.canvasContainer canvas {
+    border: 1px solid #000;
+}
+
+.fullscreenButton {
+    position: absolute;
+    right: 0px;
+    bottom: 6px;
+}

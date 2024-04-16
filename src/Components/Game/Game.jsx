@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import './Game.module.css'
+import styles from './Game.module.css'
 const Game = () => {
     const canvasRef = useRef(null);
     let animationFrameId;
@@ -115,11 +115,12 @@ const Game = () => {
     });
 
     return (
-        <>
-            <canvas ref={canvasRef} width="800" height="500" style={{ border: '1px solid #000' }}></canvas>
-            <button onClick={toggleFullScreen}>Toggle Fullscreen</button>
-        </>
+        <div className={styles.canvasContainer}>
+            <canvas ref={canvasRef} width="800" height="500"></canvas>
+            <button className={styles.fullscreenButton} onClick={toggleFullScreen}>Fullscreen</button>
+        </div>
     );
+
 };
 
 export default Game;
