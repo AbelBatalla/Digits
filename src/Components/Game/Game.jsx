@@ -40,53 +40,74 @@ const Game = () => {
         return posVector
     };
 
+    //Initalitzation
     useEffect(() => {
         const canvas = canvasRef.current;
-        const context = canvas.getContext('2d');
+        canvas.style.backgroundColor = 'beige';
+    }, []);
 
-        const updateCanvas = () => {
-            let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height)
-            // Clear the canvas
-            context.clearRect(0, 0, canvas.width, canvas.height);
+    /*
+        useEffect(() => {
+            const canvas = canvasRef.current;
+            const context = canvas.getContext('2d');
 
-            for (let pos of positions) {
-                context.fillStyle = "blue";
-                context.fillRect(pos.x, pos.y, 50, 50);
-            }
-        };
+            const image = new Image();
+            image.src = '/images/teddy.jpg';
+            console.log("Preparing to load");
+            image.onload = () => {
+                context.drawImage(image, 300, 300);
+                console.log("Image painted");
+            };
 
-        const intervalId = setInterval(updateCanvas, 1000); // Call updateCanvas every second
+        }, []);
+    */
+        //Draw
+        useEffect(() => {
+            const canvas = canvasRef.current;
+            const context = canvas.getContext('2d');
 
-        // Cleanup on unmount
-        return () => {
-            clearInterval(intervalId);
-        };
-    }, []); // Empty dependency array ensures this effect only runs once
+            const image = new Image();  // Create a new Image object
+            image.src = '/images/teddy.jpg';
+
+            const updateCanvas = () => {
+                let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height)
+                // Clear the canvas
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (let pos of positions) {
+                    context.drawImage(image, pos.x, pos.y);
+                }
+
+            };
+
+            let intervalId
+            image.onload = () => {
+                intervalId = setInterval(updateCanvas, 1000);  // Set interval only after the image is loaded
+                console.log("Drawing " + intervalId)
+            };
+            return () => {
+                clearInterval(intervalId);
+            };
+        }, []);
 
     useEffect(() => {
         const resizeCanvas = () => {
             if (document.fullscreenElement === canvasRef.current) {
-                // When in fullscreen, resize canvas to fill screen
                 canvasRef.current.width = window.innerWidth;
                 canvasRef.current.height = window.innerHeight;
             } else {
-                // When exiting fullscreen, revert to original size
-                canvasRef.current.width = window.innerWidth; // Your default canvas width
-                canvasRef.current.height = 550; // Your default canvas height
+                canvasRef.current.width = window.innerWidth;
+                canvasRef.current.height = 550;
             }
         };
         document.addEventListener('fullscreenchange', resizeCanvas);
         window.addEventListener('resize', resizeCanvas);
 
-
-        const canvas = canvasRef.current;
-        canvas.style.backgroundColor = 'beige'; // Or any color you prefer
-
         return () => {
             document.removeEventListener('fullscreenchange', resizeCanvas);
             window.removeEventListener('resize', resizeCanvas);
-            cancelAnimationFrame(animationFrameId);};
-    });
+        };
+    }, []);
 
     return (
         <div className={styles.canvasContainer}>
