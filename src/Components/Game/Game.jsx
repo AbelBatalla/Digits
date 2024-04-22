@@ -4,13 +4,6 @@ const Game = () => {
     const canvasRef = useRef(null);
     let animationFrameId;
 
-    // Game state
-    const game = {
-        box: { x: 50, y: 50, size: 50, speed: 5 },
-        score: 0,
-        isRunning: true,
-    };
-
     const toggleFullScreen = () => {
         const canvas = canvasRef.current;
         if (!document.fullscreenElement) {
@@ -36,53 +29,39 @@ const Game = () => {
         }
     };
 
-    // Move the box to a new random location
-    const moveBox = () => {
-        const canvas = canvasRef.current;
-        game.box.x = Math.random() * (canvas.width - game.box.size);
-        game.box.y = Math.random() * (canvas.height - game.box.size);
-    };
-
-    // Check if the click is inside the box
-    const checkClickInsideBox = (event) => {
-        const canvas = canvasRef.current;
-        const rect = canvas.getBoundingClientRect(); // Gets the size of the element and its position relative to the viewport
-
-        // Adjust mouse click position based on the canvas scale
-        const x = (event.clientX - rect.left); // Adjusting for scale
-        const y = (event.clientY - rect.top); // Adjusting for scale
-
-        if (
-            x > game.box.x &&
-            x < game.box.x + game.box.size &&
-            y > game.box.y &&
-            y < game.box.y + game.box.size
-        ) {
-            game.score += 1;
-            moveBox();
+    const randomNumbers = (width, height) => {
+        let n = Math.floor(Math.random() * (30 + 1))
+        let posVector = []
+        for (let i = 0; i <= n; i++) {
+            let x = Math.floor(Math.random() * (width + 1));
+            let y = Math.floor(Math.random() * (height + 1));
+            posVector[i] = {x: x, y: y}
         }
+        return posVector
     };
 
-    // Game loop
-    const updateGame = () => {
-        if (!game.isRunning) return;
+    useEffect(() => {
         const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
+        const context = canvas.getContext('2d');
 
-        // Clear the canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const updateCanvas = () => {
+            let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height)
+            // Clear the canvas
+            context.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Draw the box
-        ctx.fillStyle = 'red';
-        ctx.fillRect(game.box.x, game.box.y, game.box.size, game.box.size);
+            for (let pos of positions) {
+                context.fillStyle = "blue";
+                context.fillRect(pos.x, pos.y, 50, 50);
+            }
+        };
 
-        // Draw the score
-        ctx.font = '20px Arial';
-        ctx.fillStyle = 'black';
-        ctx.fillText(`Score: ${game.score}`, 10, 30);
+        const intervalId = setInterval(updateCanvas, 1000); // Call updateCanvas every second
 
-        animationFrameId = requestAnimationFrame(updateGame);
-    };
+        // Cleanup on unmount
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, []); // Empty dependency array ensures this effect only runs once
 
     useEffect(() => {
         const resizeCanvas = () => {
@@ -92,32 +71,31 @@ const Game = () => {
                 canvasRef.current.height = window.innerHeight;
             } else {
                 // When exiting fullscreen, revert to original size
-                canvasRef.current.width = 800; // Your default canvas width
-                canvasRef.current.height = 500; // Your default canvas height
+                canvasRef.current.width = window.innerWidth; // Your default canvas width
+                canvasRef.current.height = 550; // Your default canvas height
             }
         };
         document.addEventListener('fullscreenchange', resizeCanvas);
         window.addEventListener('resize', resizeCanvas);
 
-        moveBox();
-        updateGame();
 
         const canvas = canvasRef.current;
         canvas.style.backgroundColor = 'beige'; // Or any color you prefer
-        canvas.addEventListener('click', checkClickInsideBox);
 
         return () => {
             document.removeEventListener('fullscreenchange', resizeCanvas);
             window.removeEventListener('resize', resizeCanvas);
-            cancelAnimationFrame(animationFrameId);
-            canvas.removeEventListener('click', checkClickInsideBox);
-        };
+            cancelAnimationFrame(animationFrameId);};
     });
 
     return (
         <div className={styles.canvasContainer}>
-            <canvas ref={canvasRef} width="800" height="500"></canvas>
-            <button className={styles.fullscreenButton} onClick={toggleFullScreen}>Fullscreen</button>
+            <canvas ref={canvasRef} width={window.innerWidth} height ={"550"}></canvas>
+            <div className={styles.overlay}>
+                <button className={styles.fullscreenButton} onClick={toggleFullScreen}>Fullscreen</button>
+                <button className={[styles.numberButton, false ? styles.active : styles.hidden].join(' ')}>NUMBER</button>
+
+            </div>
         </div>
     );
 

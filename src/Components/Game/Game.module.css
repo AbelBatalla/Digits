@@ -6,10 +6,30 @@
 
 .canvasContainer canvas {
     border: 1px solid #000;
+
+}
+
+.canvasContainer overlay {
+
 }
 
 .fullscreenButton {
     position: absolute;
     right: 0px;
     bottom: 6px;
+}
+
+.numberButton {
+    position: absolute;
+    right: 100px;
+    bottom: 6px;
+    cursor: pointer;
+}
+
+.active {
+
+}
+
+.hidden {
+    display: none;
 }
