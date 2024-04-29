@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import styles from './Game.module.css'
+import {isLabelWithInternallyDisabledControl} from "@testing-library/user-event/dist/utils";
 const Game = () => {
     const canvasRef = useRef(null);
     let animationFrameId;
@@ -34,54 +35,80 @@ const Game = () => {
         let n = Math.floor(Math.random() * (maxN))+1 //Num of images 0-25
         winHeight = winHeight - imageHeight
         winWidth = winWidth - imageWidth
-        let width = winWidth/4 + (n*(winWidth-winWidth/4))/(maxN*2)
-        let height = winHeight/3 + (n*(winHeight-winHeight/3))/(maxN*1.4)
-        let paddingX = (winWidth - width) / 2
-        let paddingY = (winHeight - height) / 2
-        let numCellsX = n
-        let numCellsY = 1
-        while (numCellsX-numCellsY > 1) {
-            ++numCellsY
-            --numCellsX
-        }
-        while (numCellsX*numCellsY > 2*n) {
-            --numCellsY
-            --numCellsX
-        }
-        console.log("images/cells: " + n + "/" + numCellsY*numCellsX + "x: " + numCellsX + " y: " + numCellsY)
-        console.log("winWidth" + winWidth + " winHeight" + winHeight + " width: " + width + " height: " + height + " paddingX: " + paddingX + " paddingY: " + paddingY)
-
-        const cellWidth = width / numCellsX
-        const cellHeight = height / numCellsY
-        /*
-        for (let i = 0; i <= n; i++) {
-            let x = Math.floor(Math.random() * (width + 1));
-            let y = Math.floor(Math.random() * (height + 1));
-            posVector[i] = {x: x, y: y}
-        }
-
-         */
-        let allPairs = [];
-        for (let i = 0; i < numCellsX; i++) {
-            for (let j = 0; j < numCellsY; j++) {
-                allPairs.push({i: i, j: j});
-            }
-        }
-
-        for (let i = allPairs.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [allPairs[i], allPairs[j]] = [allPairs[j], allPairs[i]];
-        }
-
-        let selectedPairs = allPairs.slice(0, n);
-
+        let width = winWidth/5 + (n*(winWidth-winWidth/5))/(maxN*2)
+        let height = winHeight/4 + (n*(winHeight-winHeight/4))/(maxN*1.4)
+        let paddingX = (winWidth-width)/2
+        let paddingY = (winHeight-height)/2
+        const radius = 120;
+        const k = 4; // maximum number of samples before rejection
+        const radius2 = radius * radius;
+        const cellSize = radius * Math.SQRT1_2;
+        const gridWidth = Math.ceil(width / cellSize);
+        const gridHeight = Math.ceil(height / cellSize);
+        const grid = new Array(gridWidth * gridHeight);
+        const queue = [];
         let posVector = [];
-        for (let pair of selectedPairs) {
-            let x = pair.i * cellWidth + paddingX + (cellWidth-imageWidth) * Math.random()
-            let y = pair.j * cellHeight + paddingY + (cellHeight-imageHeight) * Math.random();
-            posVector.push({x: x, y: y});
+        posVector.push({x: width / 2 + paddingX, y: height / 2 + paddingY});
+        queue.push(sample(width / 2, height / 2,));
+        let numBodies = 1;
+        // Pick a random existing sample from the queue.
+        pick: while (queue.length && numBodies < n) {
+            const i = Math.random() * queue.length | 0;
+            const parent = queue[i];
+            const seed = Math.random();
+            const epsilon = 0.0000001;
+
+            // Make a new candidate.
+            for (let j = 0; j < k; ++j) {
+                const a = 2 * Math.PI * (seed + 1.0*j/k);
+                const r = radius + epsilon;
+                const x = parent[0] + r * Math.cos(a);
+                const y = parent[1] + r * Math.sin(a);
+
+                // Accept candidates that are inside the allowed extent
+                // and farther than 2 * radius to all existing samples.
+                if (0 <= x && x < width && 0 <= y && y < height && far(x, y)) {
+                    posVector.push({x: x+paddingX, y: y+paddingY});
+                    console.log("x: " + x + " y: " + y);
+                    numBodies++;
+                    queue.push(sample(x, y, parent));
+                    continue pick;
+                }
+            }
+
+            // If none of k candidates were accepted, remove it from the queue.
+            const r = queue.pop();
+            if (i < queue.length) queue[i] = r;
         }
-                return posVector //[{x: 0, y: 0}, {x: width, y: height}, {x: width, y: 0}, {x: 0, y: height}]
+
+        function far(x, y) {
+            const i = x / cellSize | 0;
+            const j = y / cellSize | 0;
+            const i0 = Math.max(i - 2, 0);
+            const j0 = Math.max(j - 2, 0);
+            const i1 = Math.min(i + 3, gridWidth);
+            const j1 = Math.min(j + 3, gridHeight);
+            for (let j = j0; j < j1; ++j) {
+                const o = j * gridWidth;
+                for (let i = i0; i < i1; ++i) {
+                    const s = grid[o + i];
+                    if (s) {
+                        const dx = s[0] - x;
+                        const dy = s[1] - y;
+                        if (dx * dx + dy * dy < radius2) return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        function sample(x, y) {
+            const s = grid[gridWidth * (y / cellSize | 0) + (x / cellSize | 0)] = [x, y];
+            queue.push(s);
+            return s;
+        }
+        console.log("n: ", n," Number of bodies: " + numBodies);
+         return posVector
     };
 
     //Initalitzation
