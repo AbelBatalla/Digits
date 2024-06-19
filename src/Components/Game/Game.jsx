@@ -1,9 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import styles from './Game.module.css'
 import {isLabelWithInternallyDisabledControl} from "@testing-library/user-event/dist/utils";
 const Game = () => {
     const canvasRef = useRef(null);
     const [gameStarted, setGameStarted] = useState(false);
+    const [slideType, setSlideType] = useState('none');// 'number' or 'button'
+    let updateCanvas = useRef(() => {});
+
 
     const toggleFullScreen = () => {
         const canvas = canvasRef.current;
@@ -115,47 +118,39 @@ const Game = () => {
     useEffect(() => {
         const canvas = canvasRef.current;
         canvas.style.backgroundColor = '#CFCFCF';
+
     }, []);
 
-    //Draw
-    useEffect(() => {
-        const handleKeyDown = (event) => {
-            if (event.key === 'f') {
-                updateCanvas();
-            }
-        };
+    updateCanvas = () => {
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
-
         const image = new Image();  // Create a new Image object
         image.src = '/images/teddy.jpg';
         let imageSize = {x: 64, y: 64}
-
-        const updateCanvas = () => {
-            let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y)
-            // Clear the canvas
-            context.clearRect(0, 0, canvas.width, canvas.height);
+        let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y)
+        // Clear the canvas
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        image.onload = () => {
             for (let pos of positions) {
                 context.drawImage(image, pos.x, pos.y, imageSize.x, imageSize.y);
             }
+            setTimeout(() => {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                setSlideType('button')
+            }, 1000);
         };
+    };
 
-        if (gameStarted) {
-            let intervalId
-            image.onload = () => {
-                //intervalId = setInterval(updateCanvas, 10000);
-                document.addEventListener('keydown', handleKeyDown);
+    const handleButtonClick = () => {
+        setSlideType('number');
+        updateCanvas();
+    };
 
-                console.log("ready")
-            };
-        }
-
-        return () => {
-            //clearInterval(intervalId);
-            document.removeEventListener('keydown', handleKeyDown);
-
-        };
-    }, [gameStarted]);
+    const handleStart = () => {
+        setGameStarted(true);
+        setSlideType('number');
+        updateCanvas();
+    };
 
     //Resize
     useEffect(() => {
@@ -197,8 +192,8 @@ const Game = () => {
             <canvas ref={canvasRef} width={window.innerWidth} height ={"550"}></canvas>
             <div className={styles.overlay}>
                 {gameStarted && <button className={styles.fullscreenButton} onClick={toggleFullScreen}>Fullscreen</button>}
-                <button className={[styles.numberButton, false ? styles.active : styles.hidden].join(' ')}>NUMBER</button>
-                {!gameStarted && <button className={styles.startGameButton} onClick={() => setGameStarted(true)}>Start Game</button>}
+                {slideType === 'button' && <button className={styles.numberButton} onClick={handleButtonClick}>NUMBER</button>}
+                {!gameStarted && <button className={styles.startGameButton} onClick={handleStart}>Start Game</button>}
             </div>
         </div>
     );
