@@ -1,9 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './Game.module.css'
 import {isLabelWithInternallyDisabledControl} from "@testing-library/user-event/dist/utils";
 const Game = () => {
     const canvasRef = useRef(null);
-    let animationFrameId;
+    const [gameStarted, setGameStarted] = useState(false);
 
     const toggleFullScreen = () => {
         const canvas = canvasRef.current;
@@ -115,48 +115,32 @@ const Game = () => {
     useEffect(() => {
         const canvas = canvasRef.current;
         canvas.style.backgroundColor = '#CFCFCF';
-}, []);
+    }, []);
 
-/*
-        useEffect(() => {
-            const canvas = canvasRef.current;
-            const context = canvas.getContext('2d');
+    //Draw
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.key === 'f') {
+                updateCanvas();
+            }
+        };
+        const canvas = canvasRef.current;
+        const context = canvas.getContext('2d');
 
-            const image = new Image();
-            image.src = '/images/teddy.jpg';
-            console.log("Preparing to load");
-            image.onload = () => {
-                context.drawImage(image, 0, 0, 64, 64);
-                console.log("Image painted");
-            };
+        const image = new Image();  // Create a new Image object
+        image.src = '/images/teddy.jpg';
+        let imageSize = {x: 64, y: 64}
 
-        }, []);
-*/
-        //Draw
-        useEffect(() => {
-            const handleKeyDown = (event) => {
-                if (event.key === 'f') {
-                    updateCanvas();
-                }
-            };
-            const canvas = canvasRef.current;
-            const context = canvas.getContext('2d');
+        const updateCanvas = () => {
+            let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y)
+            // Clear the canvas
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            for (let pos of positions) {
+                context.drawImage(image, pos.x, pos.y, imageSize.x, imageSize.y);
+            }
+        };
 
-            const image = new Image();  // Create a new Image object
-            image.src = '/images/teddy.jpg';
-            let imageSize = {x: 64, y: 64}
-
-            const updateCanvas = () => {
-                let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y)
-                // Clear the canvas
-                context.clearRect(0, 0, canvas.width, canvas.height);
-
-                for (let pos of positions) {
-                    context.drawImage(image, pos.x, pos.y, imageSize.x, imageSize.y);
-                }
-
-            };
-
+        if (gameStarted) {
             let intervalId
             image.onload = () => {
                 //intervalId = setInterval(updateCanvas, 10000);
@@ -164,13 +148,16 @@ const Game = () => {
 
                 console.log("ready")
             };
-            return () => {
-                //clearInterval(intervalId);
-                document.removeEventListener('keydown', handleKeyDown);
+        }
 
-            };
-        }, []);
+        return () => {
+            //clearInterval(intervalId);
+            document.removeEventListener('keydown', handleKeyDown);
 
+        };
+    }, [gameStarted]);
+
+    //Resize
     useEffect(() => {
         const resizeCanvas = () => {
             if (canvasRef.current) {
@@ -209,9 +196,9 @@ const Game = () => {
         <div className={styles.canvasContainer}>
             <canvas ref={canvasRef} width={window.innerWidth} height ={"550"}></canvas>
             <div className={styles.overlay}>
-                <button className={styles.fullscreenButton} onClick={toggleFullScreen}>Fullscreen</button>
+                {gameStarted && <button className={styles.fullscreenButton} onClick={toggleFullScreen}>Fullscreen</button>}
                 <button className={[styles.numberButton, false ? styles.active : styles.hidden].join(' ')}>NUMBER</button>
-
+                {!gameStarted && <button className={styles.startGameButton} onClick={() => setGameStarted(true)}>Start Game</button>}
             </div>
         </div>
     );
