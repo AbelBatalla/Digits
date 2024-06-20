@@ -4,9 +4,9 @@ import {isLabelWithInternallyDisabledControl} from "@testing-library/user-event/
 const Game = () => {
     const canvasRef = useRef(null);
     const [gameStarted, setGameStarted] = useState(false);
-    const [slideType, setSlideType] = useState('none');// 'number' or 'button'
+    const [slideType, setSlideType] = useState('none'); // 'number' or 'button'
     let updateCanvas = useRef(() => {});
-
+    const [number, setNumber] = useState(-1);
 
     const toggleFullScreen = () => {
         const canvas = canvasRef.current;
@@ -72,7 +72,7 @@ const Game = () => {
                 // and farther than 2 * radius to all existing samples.
                 if (0 <= x && x < width && 0 <= y && y < height && far(x, y)) {
                     posVector.push({x: x+paddingX, y: y+paddingY});
-                    console.log("x: " + x + " y: " + y);
+                    //console.log("x: " + x + " y: " + y);
                     numBodies++;
                     queue.push(sample(x, y, parent));
                     continue pick;
@@ -110,8 +110,9 @@ const Game = () => {
             queue.push(s);
             return s;
         }
-        console.log("n: ", n," Number of bodies: " + numBodies);
-         return posVector
+        setNumber(numBodies);
+        console.log("n: ", n," Number of bodies: " + numBodies, " number: ", number);
+        return posVector
     };
 
     //Initalitzation
@@ -141,7 +142,9 @@ const Game = () => {
         };
     };
 
-    const handleButtonClick = () => {
+    const handleButtonClick = (n) => () => {
+        if(n === number) console.log("Correct");
+        else console.log("Incorrect");
         setSlideType('number');
         updateCanvas();
     };
@@ -192,7 +195,9 @@ const Game = () => {
             <canvas ref={canvasRef} width={window.innerWidth} height ={"550"}></canvas>
             <div className={styles.overlay}>
                 {gameStarted && <button className={styles.fullscreenButton} onClick={toggleFullScreen}>Fullscreen</button>}
-                {slideType === 'button' && <button className={styles.numberButton} onClick={handleButtonClick}>NUMBER</button>}
+                {slideType === 'button' && <button className={[styles.numberButton, styles.numberButtonLeft].join(' ')} onClick={handleButtonClick(number-2)}>{number-2}</button>}
+                {slideType === 'button' && <button className={[styles.numberButton, styles.numberButtonCenter].join(' ')} onClick={handleButtonClick(number)}>{number}</button>}
+                {slideType === 'button' && <button className={[styles.numberButton, styles.numberButtonRight].join(' ')} onClick={handleButtonClick(number+2)}>{number+2}</button>}
                 {!gameStarted && <button className={styles.startGameButton} onClick={handleStart}>Start Game</button>}
             </div>
         </div>
