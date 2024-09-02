@@ -1,0 +1,63 @@
+
+.canvasContainer {
+    position: relative;
+    display: inline-block;
+}
+
+.canvasContainer canvas {
+    border: 1px solid #000;
+}
+
+.overlay {
+    position: absolute;
+    z-index: 10; /* Ensure it's above the canvas */
+}
+
+.fullscreenButton {
+    position: absolute;
+    right: 0px;
+    bottom: 6.5px;
+}
+
+.numberButton {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%); /* Centers the button exactly */
+    z-index: 10;
+    cursor: pointer;
+    font-size: 2rem;
+    padding: 5rem 5rem; /* Responsive padding */
+    border: none; /* Optional: removes the border */
+    border-radius: 8px; /* Optional: adds rounded corners to the button */
+    background-color: #419aff; /* Background color */
+    color: white; /* Text color */
+}
+
+.numberButtonCenter {
+    left: 50%;
+}
+
+.numberButtonLeft{
+    left: 20%;
+}
+
+.numberButtonRight{
+    left: 80%;
+}
+
+.startGameButton {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centers the button exactly */
+    z-index: 10;
+    cursor: pointer;
+}
+
+.active {
+
+}
+
+.hidden {
+    display: none;
+}

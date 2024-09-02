@@ -1,23 +1,26 @@
 import React, {useState} from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
-import './Navbar.css';
+import styles from './Navbar.module.css';
 import {NavLink} from "react-router-dom";
 function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
 
     return (
-        <header>
-            <h1>Digits</h1>
-            <nav className={menuOpen ? "open" : ""}>
-                <NavLink to="/" onClick={() => setMenuOpen(false)}>Home</NavLink>
-                <NavLink to="/digits" onClick={() => setMenuOpen(false)}>Play</NavLink>
-                <NavLink to="/other" onClick={() => setMenuOpen(false)}>Other</NavLink>
-                <button className="nav-btn nav-close-btn"
+        <header className={styles.header}>
+            <h1 className={styles.h1}>Digits</h1>
+            <nav className= {[
+                styles.nav,
+                menuOpen ? styles.open : '',
+            ].join(' ')}>
+                <NavLink className={styles.a} to="/" onClick={() => setMenuOpen(false)}>Home</NavLink>
+                <NavLink className={styles.a} to="/digits" onClick={() => setMenuOpen(false)}>Play</NavLink>
+                <NavLink className={styles.a} to="/other" onClick={() => setMenuOpen(false)}>Other</NavLink>
+                <button className={[styles.navBtn, styles.navCloseBtn].join(' ')}
                         onClick={() => setMenuOpen(!menuOpen)}>
                     <FaTimes />
                 </button>
             </nav>
-            <button className="nav-btn"
+            <button className={styles.navBtn}
                     onClick={() => setMenuOpen(!menuOpen)}>
                 <FaBars />
             </button>

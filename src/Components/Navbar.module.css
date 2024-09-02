@@ -1,4 +1,4 @@
-header {
+.header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -6,18 +6,18 @@ header {
     padding: 0 5%;
 }
 
-header h1 {
+.h1 {
     font-size: 40px;
     color: Black;
 }
 
-header nav {
+.nav {
     display: flex;
     gap: 2rem;
     position: sticky;
     top: 0;
 }
-header nav a {
+.nav .a {
     text-decoration: none;
     font-size: 20px;
     font-weight: 600;
@@ -26,20 +26,20 @@ header nav a {
     transition: 0.4s;
     color: Black;
 }
-header nav a.active {
+.nav .a.active {
     background: #2fa6a6;
     color: white;
 }
-header nav a:hover {
+.nav .a:hover {
     background: #2fa6a6;
     color: white;
 }
-header nav:hover > a:not(:hover) {
+.nav:hover > .a:not(:hover) {
     background: none;
     color: black;
 }
 
-header .nav-btn {
+.navBtn {
     padding: 5px;
     cursor: pointer;
     background: transparent;
@@ -51,20 +51,20 @@ header .nav-btn {
 }
 
 @media (max-width: 720px) {
-    header .open {
+    .open {
         transform: translateY(100vh);
         transition: 0.3s;
     }
 
-    header .nav-btn {
+    .navBtn {
         display: flex;
     }
 
-    header nav {
+    .nav {
         top: -100vh;
         position: fixed;
         left: 0;
-        height: 30%;
+        height: 40%;
         width: 100%;
         display: flex;
         flex-direction: column;
@@ -72,16 +72,17 @@ header .nav-btn {
         justify-content: center;
         gap: 1.5rem;
         background-color: #2fa6a6;
+        z-index: 10;
     }
 
-    nav .nav-close-btn {
+    .nav .navCloseBtn {
         position: absolute;
         top: 2rem;
         right: 2rem;
 
     }
 
-    nav a {
+    .nav .a {
         font-size: 1.5rem;
     }
 }
