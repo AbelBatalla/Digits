@@ -3,13 +3,14 @@ import styles from './Game.module.css'
 import {isLabelWithInternallyDisabledControl} from "@testing-library/user-event/dist/utils";
 const Game = () => {
     const canvasRef = useRef(null);
+    const screenSet = useRef(null);
     const [gameStarted, setGameStarted] = useState(false);
     const [slideType, setSlideType] = useState('none'); // 'number' or 'button'
     let updateCanvas = useRef(() => {});
     const [number, setNumber] = useState(-1);
 
     const toggleFullScreen = () => {
-        const canvas = canvasRef.current;
+        const canvas = screenSet.current;
         if (!document.fullscreenElement) {
             if (canvas.requestFullscreen) {
                 canvas.requestFullscreen();
@@ -111,7 +112,7 @@ const Game = () => {
             return s;
         }
         setNumber(numBodies);
-        console.log("n: ", n," Number of bodies: " + numBodies, " number: ", number);
+        console.log("n: ", n," Number of bodies: ", numBodies, " number: ", number);
         return posVector
     };
 
@@ -191,9 +192,9 @@ const Game = () => {
     }, []);
 
     return (
-        <div className={styles.canvasContainer}>
+        <div ref={screenSet} className={styles.canvasContainer}>
             <canvas ref={canvasRef} width={window.innerWidth} height ={"550"}></canvas>
-            <div className={styles.overlay}>
+            <div className={document.fullscreenElement? styles.overlay : ''}>
                 {gameStarted && <button className={styles.fullscreenButton} onClick={toggleFullScreen}>Fullscreen</button>}
                 {slideType === 'button' && <button className={[styles.numberButton, styles.numberButtonLeft].join(' ')} onClick={handleButtonClick(number-2)}>{number-2}</button>}
                 {slideType === 'button' && <button className={[styles.numberButton, styles.numberButtonCenter].join(' ')} onClick={handleButtonClick(number)}>{number}</button>}

@@ -6,11 +6,11 @@
 
 .canvasContainer canvas {
     border: 1px solid #000;
-
 }
 
-.canvasContainer overlay {
-
+.overlay {
+    position: absolute;
+    z-index: 10; /* Ensure it's above the canvas */
 }
 
 .fullscreenButton {
@@ -31,7 +31,6 @@
     border-radius: 8px; /* Optional: adds rounded corners to the button */
     background-color: #419aff; /* Background color */
     color: white; /* Text color */
-    cursor: pointer; /* Changes cursor to pointer on hover */
 }
 
 .numberButtonCenter {
