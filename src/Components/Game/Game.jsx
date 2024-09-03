@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './Game.module.css'
-import {isLabelWithInternallyDisabledControl} from "@testing-library/user-event/dist/utils";
+import { useGame } from "../../contexts/gameContext/gameContext";
+import {useAuth} from "../../contexts/authContext";
 const Game = () => {
     const canvasRef = useRef(null);
     const screenSet = useRef(null);
@@ -8,6 +9,13 @@ const Game = () => {
     const [slideType, setSlideType] = useState('none'); // 'number' or 'button'
     let updateCanvas = useRef(() => {});
     const [number, setNumber] = useState(-1);
+    const { currentUser, userLoggedIn } = useAuth();
+    const { sessionDifficulty,
+        changeSessionDifficulty,
+        endSession,
+        runNumber,
+        incrementRunNumber,
+        getImageId } = useGame();
 
     const toggleFullScreen = () => {
         const canvas = screenSet.current;
@@ -120,7 +128,7 @@ const Game = () => {
     useEffect(() => {
         const canvas = canvasRef.current;
         canvas.style.backgroundColor = '#CFCFCF';
-
+        endSession();
     }, []);
 
     updateCanvas = () => {
