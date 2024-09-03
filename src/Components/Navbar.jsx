@@ -2,8 +2,10 @@ import React, {useState} from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import styles from './Navbar.module.css';
 import {NavLink} from "react-router-dom";
+import { useAuth } from "../contexts/authContext";
 function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
+    const { currentUser, userLoggedIn } = useAuth();
 
     return (
         <header className={styles.header}>
@@ -15,6 +17,13 @@ function Navbar() {
                 <NavLink className={styles.a} to="/" onClick={() => setMenuOpen(false)}>Home</NavLink>
                 <NavLink className={styles.a} to="/digits" onClick={() => setMenuOpen(false)}>Play</NavLink>
                 <NavLink className={styles.a} to="/other" onClick={() => setMenuOpen(false)}>Other</NavLink>
+                <div>
+                    {userLoggedIn ? (
+                        <p>{currentUser.email}</p>
+                    ) : (
+                        <p>Not logged in</p>
+                    )}
+                </div>
                 <button className={[styles.navBtn, styles.navCloseBtn].join(' ')}
                         onClick={() => setMenuOpen(!menuOpen)}>
                     <FaTimes />
