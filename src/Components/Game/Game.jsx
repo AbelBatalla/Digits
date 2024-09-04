@@ -129,8 +129,6 @@ const Game = () => {
 
     //Initalitzation
     useEffect(() => {
-        const canvas = canvasRef.current;
-        canvas.style.backgroundColor = '#CFCFCF';
         endSession();
     }, []);
 
@@ -165,6 +163,7 @@ const Game = () => {
         toggleFullScreen();
         canvasRef.current.width = window.innerWidth;
         canvasRef.current.height = window.innerHeight+100;
+        canvasRef.current.style.backgroundColor = '#CFCFCF';
         setGameState('number');
         changeSessionDifficulty(selectedDifficulty);
         updateCanvas();
@@ -206,8 +205,8 @@ const Game = () => {
     }, []);
 
     return (
-        <div ref={screenSet} className={document.fullscreenElement? styles.canvasContainerFull : styles.canvasContainer}>
-            <canvas ref={canvasRef} className={document.fullscreenElement? styles.canvas : styles.canvas}></canvas>
+        <div ref={screenSet} className={document.fullscreenElement === screenSet.current? styles.canvasContainerFull : styles.canvasContainer}>
+            <canvas ref={canvasRef} className={styles.canvas}></canvas>
             <div>
                 {gameState === 'button' && <button className={[styles.numberButton, styles.numberButtonLeft].join(' ')} onClick={handleButtonClick(number-2)}>{number-2}</button>}
                 {gameState === 'button' && <button className={[styles.numberButton, styles.numberButtonCenter].join(' ')} onClick={handleButtonClick(number)}>{number}</button>}
