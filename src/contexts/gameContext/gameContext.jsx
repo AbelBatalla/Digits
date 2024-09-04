@@ -14,6 +14,7 @@ export function GameProvider({ children }) {
 
     function changeSessionDifficulty(difficulty) {
         setSessionDifficulty(difficulty);
+        console.log("difficulty: ", difficulty);
     }
 
     function incrementRunNumber() {

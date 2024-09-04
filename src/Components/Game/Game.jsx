@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import styles from './Game.module.css'
 import { useGame } from "../../contexts/gameContext/gameContext";
 import {useAuth} from "../../contexts/authContext";
+import StartScreen from './StartScreen';
+
 const Game = () => {
     const canvasRef = useRef(null);
     const screenSet = useRef(null);
@@ -158,8 +160,9 @@ const Game = () => {
         updateCanvas();
     };
 
-    const handleStart = () => {
+    const handleStartGame = (selectedDifficulty) => {
         setGameState('number');
+        changeSessionDifficulty(selectedDifficulty);
         updateCanvas();
     };
 
@@ -206,7 +209,7 @@ const Game = () => {
                 {gameState === 'button' && <button className={[styles.numberButton, styles.numberButtonLeft].join(' ')} onClick={handleButtonClick(number-2)}>{number-2}</button>}
                 {gameState === 'button' && <button className={[styles.numberButton, styles.numberButtonCenter].join(' ')} onClick={handleButtonClick(number)}>{number}</button>}
                 {gameState === 'button' && <button className={[styles.numberButton, styles.numberButtonRight].join(' ')} onClick={handleButtonClick(number+2)}>{number+2}</button>}
-                {gameState === 'start' && <button className={styles.startGameButton} onClick={handleStart}>Start Game</button>}
+                {gameState === 'start' && <StartScreen onStartGame={handleStartGame} />}
             </div>
         </div>
     );
