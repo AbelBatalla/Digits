@@ -5,8 +5,8 @@ import {useAuth} from "../../contexts/authContext";
 const Game = () => {
     const canvasRef = useRef(null);
     const screenSet = useRef(null);
-    const [gameStarted, setGameStarted] = useState(false);
-    const [slideType, setSlideType] = useState('none'); // 'number' or 'button'
+    const [gameState, setGameState] = useState('start');
+    // 'start', 'intro', 'runInfo', 'number', 'button' or 'end'
     let updateCanvas = useRef(() => {});
     const [number, setNumber] = useState(-1);
     const { currentUser, userLoggedIn } = useAuth();
@@ -146,7 +146,7 @@ const Game = () => {
             }
             setTimeout(() => {
                 context.clearRect(0, 0, canvas.width, canvas.height);
-                setSlideType('button')
+                setGameState('button')
             }, 1000);
         };
     };
@@ -154,13 +154,12 @@ const Game = () => {
     const handleButtonClick = (n) => () => {
         if(n === number) console.log("Correct");
         else console.log("Incorrect");
-        setSlideType('number');
+        setGameState('number');
         updateCanvas();
     };
 
     const handleStart = () => {
-        setGameStarted(true);
-        setSlideType('number');
+        setGameState('number');
         updateCanvas();
     };
 
@@ -203,11 +202,11 @@ const Game = () => {
         <div ref={screenSet} className={styles.canvasContainer}>
             <canvas ref={canvasRef} width={window.innerWidth} height ={"550"}></canvas>
             <div className={document.fullscreenElement? styles.overlay : ''}>
-                {gameStarted && <button className={styles.fullscreenButton} onClick={toggleFullScreen}>Fullscreen</button>}
-                {slideType === 'button' && <button className={[styles.numberButton, styles.numberButtonLeft].join(' ')} onClick={handleButtonClick(number-2)}>{number-2}</button>}
-                {slideType === 'button' && <button className={[styles.numberButton, styles.numberButtonCenter].join(' ')} onClick={handleButtonClick(number)}>{number}</button>}
-                {slideType === 'button' && <button className={[styles.numberButton, styles.numberButtonRight].join(' ')} onClick={handleButtonClick(number+2)}>{number+2}</button>}
-                {!gameStarted && <button className={styles.startGameButton} onClick={handleStart}>Start Game</button>}
+                {gameState !== 'start' && <button className={styles.fullscreenButton} onClick={toggleFullScreen}>Fullscreen</button>}
+                {gameState === 'button' && <button className={[styles.numberButton, styles.numberButtonLeft].join(' ')} onClick={handleButtonClick(number-2)}>{number-2}</button>}
+                {gameState === 'button' && <button className={[styles.numberButton, styles.numberButtonCenter].join(' ')} onClick={handleButtonClick(number)}>{number}</button>}
+                {gameState === 'button' && <button className={[styles.numberButton, styles.numberButtonRight].join(' ')} onClick={handleButtonClick(number+2)}>{number+2}</button>}
+                {gameState === 'start' && <button className={styles.startGameButton} onClick={handleStart}>Start Game</button>}
             </div>
         </div>
     );
