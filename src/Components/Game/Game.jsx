@@ -3,6 +3,7 @@ import styles from './Game.module.css'
 import { useGame } from "../../contexts/gameContext/gameContext";
 import {useAuth} from "../../contexts/authContext";
 import StartScreen from './StartScreen';
+import startScreen from "./StartScreen";
 
 const Game = () => {
     const canvasRef = useRef(null);
@@ -161,6 +162,9 @@ const Game = () => {
     };
 
     const handleStartGame = (selectedDifficulty) => {
+        toggleFullScreen();
+        canvasRef.current.width = window.innerWidth;
+        canvasRef.current.height = window.innerHeight+100;
         setGameState('number');
         changeSessionDifficulty(selectedDifficulty);
         updateCanvas();
@@ -192,8 +196,8 @@ const Game = () => {
                 canvasRef.current.getContext('2d').drawImage(tempCanvas, 0, 0);
             }
         };
-        document.addEventListener('fullscreenchange', resizeCanvas);
-        window.addEventListener('resize', resizeCanvas);
+        //document.addEventListener('fullscreenchange', resizeCanvas);
+        //window.addEventListener('resize', resizeCanvas);
 
         return () => {
             document.removeEventListener('fullscreenchange', resizeCanvas);
@@ -202,10 +206,9 @@ const Game = () => {
     }, []);
 
     return (
-        <div ref={screenSet} className={styles.canvasContainer}>
-            <canvas ref={canvasRef} width={window.innerWidth} height ={"550"}></canvas>
-            <div className={document.fullscreenElement? styles.overlay : ''}>
-                {gameState !== 'start' && <button className={styles.fullscreenButton} onClick={toggleFullScreen}>Fullscreen</button>}
+        <div ref={screenSet} className={document.fullscreenElement? styles.canvasContainerFull : styles.canvasContainer}>
+            <canvas ref={canvasRef} className={document.fullscreenElement? styles.canvas : styles.canvas}></canvas>
+            <div>
                 {gameState === 'button' && <button className={[styles.numberButton, styles.numberButtonLeft].join(' ')} onClick={handleButtonClick(number-2)}>{number-2}</button>}
                 {gameState === 'button' && <button className={[styles.numberButton, styles.numberButtonCenter].join(' ')} onClick={handleButtonClick(number)}>{number}</button>}
                 {gameState === 'button' && <button className={[styles.numberButton, styles.numberButtonRight].join(' ')} onClick={handleButtonClick(number+2)}>{number+2}</button>}

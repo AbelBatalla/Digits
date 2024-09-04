@@ -1,12 +1,33 @@
+.canvas{
+    border: 1px solid #000;
+    width: 100%;
+    height: 100%;
+}
+.canvasFull{
+    border: 1px solid #000;
+    width: 100%;
+    height: 100%;
+}
 
 .canvasContainer {
-    position: relative;
-    display: inline-block;
+    display: flex; /* Enables flexbox layout */
+    justify-content: center; /* Centers items horizontally */
+    align-items: center; /* Centers items vertically */
+    height: 50%; /* Ensures the container takes the full viewport height */
+    width: 50%; /* Takes full width of the parent */
+    left: 25%;
+    position: relative; /* Allows absolutely positioned children */
 }
 
-.canvasContainer canvas {
-    border: 1px solid #000;
+.canvasContainerFull {
+    display: flex; /* Enables flexbox layout */
+    justify-content: center; /* Centers items horizontally */
+    align-items: center; /* Centers items vertically */
+    height: 100%; /* Ensures the container takes the full viewport height */
+    width: 100%; /* Takes full width of the parent */
+    position: relative; /* Allows absolutely positioned children */
 }
+
 
 .overlay {
     position: absolute;
