@@ -2,14 +2,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import styles from './Game.module.css'
 import { useGame } from "../../contexts/gameContext/gameContext";
 import {useAuth} from "../../contexts/authContext";
-import StartScreen from './StartScreen';
-import startScreen from "./StartScreen";
+import StartScreen from './Screens/StartScreen';
+import RunIntroFirstScreen from './Screens/RunIntroFirstScreen';
+import RunContinueScreen from './Screens/RunContinueScreen';
+
 
 const Game = () => {
     const canvasRef = useRef(null);
     const screenSet = useRef(null);
     const [gameState, setGameState] = useState('start');
-    // 'start', 'intro', 'runInfo', 'number', 'button' or 'end'
+    // 'start', 'runIntroFirst', 'passives', 'runContinue', 'number', 'button', 'trialContintue', 'runIntroSecond' or 'end'
     let updateCanvas = useRef(() => {});
     const [number, setNumber] = useState(-1);
     const { currentUser, userLoggedIn } = useAuth();
@@ -160,14 +162,47 @@ const Game = () => {
     };
 
     const handleStartGame = (selectedDifficulty) => {
+        setGameState('runIntroFirst');
         toggleFullScreen();
         canvasRef.current.width = window.innerWidth;
-        canvasRef.current.height = window.innerHeight+100;
+        canvasRef.current.height = window.innerHeight+125;
         canvasRef.current.style.backgroundColor = '#CFCFCF';
-        setGameState('number');
         changeSessionDifficulty(selectedDifficulty);
+    };
+
+    const runIntroEnd = () => {
+        console.log("passives");
+        setGameState('runContinue');
+        //updateCanvas();
+    };
+
+    const runContinueEnd = () => {
+        console.log("number");
+        setGameState('number');
         updateCanvas();
     };
+
+    const handleKeyPress = (event) => {
+        if (event.code === 'Space') {
+            console.log("Pressed space, status: ", gameState);
+            if (gameState === 'runIntroFirst') {
+                runIntroEnd();
+            }
+            if (gameState === 'runContinue') {
+                runContinueEnd();
+            }
+        }
+    };
+
+    useEffect(() => { //Keypress
+        // Add the event listener for keypress
+        window.addEventListener('keydown', handleKeyPress);
+
+        // Clean up the event listener on component unmount
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+        };
+    }, [gameState]);
 
     //Resize
     useEffect(() => {
@@ -204,6 +239,8 @@ const Game = () => {
         };
     }, []);
 
+    // X'start', X'runIntroFirst', 'passives', X'runContinue', 'number', 'button', 'trialContintue', 'runIntroSecond' or 'end'
+
     return (
         <div ref={screenSet} className={document.fullscreenElement === screenSet.current? styles.canvasContainerFull : styles.canvasContainer}>
             <canvas ref={canvasRef} className={styles.canvas}></canvas>
@@ -211,7 +248,10 @@ const Game = () => {
                 {gameState === 'button' && <button className={[styles.numberButton, styles.numberButtonLeft].join(' ')} onClick={handleButtonClick(number-2)}>{number-2}</button>}
                 {gameState === 'button' && <button className={[styles.numberButton, styles.numberButtonCenter].join(' ')} onClick={handleButtonClick(number)}>{number}</button>}
                 {gameState === 'button' && <button className={[styles.numberButton, styles.numberButtonRight].join(' ')} onClick={handleButtonClick(number+2)}>{number+2}</button>}
-                {gameState === 'start' && <StartScreen onStartGame={handleStartGame} />}
+                {gameState === 'start' && <StartScreen onStartGame={handleStartGame}/>}
+                {gameState === 'runIntroFirst' && <RunIntroFirstScreen/>}
+                {gameState === 'runContinue' && <RunContinueScreen/>}
+
             </div>
         </div>
     );
