@@ -5,13 +5,15 @@ import {useAuth} from "../../contexts/authContext";
 import StartScreen from './Screens/StartScreen';
 import RunIntroFirstScreen from './Screens/RunIntroFirstScreen';
 import RunContinueScreen from './Screens/RunContinueScreen';
+import ButtonScreen from './Screens/ButtonScreen';
+import TrialContinueScreen from "./Screens/TrialContinueScreen";
 
 
 const Game = () => {
     const canvasRef = useRef(null);
     const screenSet = useRef(null);
     const [gameState, setGameState] = useState('start');
-    // 'start', 'runIntroFirst', 'passives', 'runContinue', 'number', 'button', 'trialContintue', 'runIntroSecond' or 'end'
+    // 'start', 'runIntroFirst', 'passives', 'runContinue', 'number', 'button', 'trialContinue', 'runIntroSecond' or 'end'
     let updateCanvas = useRef(() => {});
     const [number, setNumber] = useState(-1);
     const { currentUser, userLoggedIn } = useAuth();
@@ -157,8 +159,7 @@ const Game = () => {
     const handleButtonClick = (n) => () => {
         if(n === number) console.log("Correct");
         else console.log("Incorrect");
-        setGameState('number');
-        updateCanvas();
+        setGameState('trialContinue')
     };
 
     const handleStartGame = (selectedDifficulty) => {
@@ -177,7 +178,6 @@ const Game = () => {
     };
 
     const runContinueEnd = () => {
-        console.log("number");
         setGameState('number');
         updateCanvas();
     };
@@ -188,7 +188,7 @@ const Game = () => {
             if (gameState === 'runIntroFirst') {
                 runIntroEnd();
             }
-            if (gameState === 'runContinue') {
+            if (gameState === 'runContinue' || gameState === 'trialContinue') {
                 runContinueEnd();
             }
         }
@@ -239,19 +239,17 @@ const Game = () => {
         };
     }, []);
 
-    // X'start', X'runIntroFirst', 'passives', X'runContinue', 'number', 'button', 'trialContintue', 'runIntroSecond' or 'end'
+    // X'start', X'runIntroFirst', 'passives', X'runContinue', 'number', X'button', 'trialContinue', 'runIntroSecond' or 'end'
 
     return (
         <div ref={screenSet} className={document.fullscreenElement === screenSet.current? styles.canvasContainerFull : styles.canvasContainer}>
             <canvas ref={canvasRef} className={styles.canvas}></canvas>
             <div>
-                {gameState === 'button' && <button className={[styles.numberButton, styles.numberButtonLeft].join(' ')} onClick={handleButtonClick(number-2)}>{number-2}</button>}
-                {gameState === 'button' && <button className={[styles.numberButton, styles.numberButtonCenter].join(' ')} onClick={handleButtonClick(number)}>{number}</button>}
-                {gameState === 'button' && <button className={[styles.numberButton, styles.numberButtonRight].join(' ')} onClick={handleButtonClick(number+2)}>{number+2}</button>}
                 {gameState === 'start' && <StartScreen onStartGame={handleStartGame}/>}
                 {gameState === 'runIntroFirst' && <RunIntroFirstScreen/>}
                 {gameState === 'runContinue' && <RunContinueScreen/>}
-
+                {gameState === 'button' && <ButtonScreen onButtonClick={handleButtonClick} number={number}/>}
+                {gameState === 'trialContinue' && <TrialContinueScreen/>}
             </div>
         </div>
     );

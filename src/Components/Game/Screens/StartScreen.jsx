@@ -26,7 +26,7 @@ const StartScreen = ({ onStartGame }) => { // Accept the function as a prop
                     <option value={-2}>Kids 1</option>
                     <option value={-3}>Kids 0</option>
                 </select>
-                <button type="submit">Start Game</button>
+                <button type="submit" className={styles.startGameButton} >Start Game</button>
             </form>
         </div>
     );
