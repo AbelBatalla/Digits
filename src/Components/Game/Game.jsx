@@ -7,6 +7,8 @@ import RunIntroFirstScreen from './Screens/RunIntroFirstScreen';
 import RunContinueScreen from './Screens/RunContinueScreen';
 import ButtonScreen from './Screens/ButtonScreen';
 import TrialContinueScreen from "./Screens/TrialContinueScreen";
+import RunIntroSecondScreen from "./Screens/RunIntroSecondScreen";
+import EndScreen from "./Screens/EndScreen";
 
 
 const Game = () => {
@@ -250,6 +252,9 @@ const Game = () => {
                 {gameState === 'runContinue' && <RunContinueScreen/>}
                 {gameState === 'button' && <ButtonScreen onButtonClick={handleButtonClick} number={number}/>}
                 {gameState === 'trialContinue' && <TrialContinueScreen/>}
+                {gameState === 'runIntroSecond' && <RunIntroSecondScreen/>}
+                {gameState === 'end' && <EndScreen/>}
+
             </div>
         </div>
     );

@@ -1,4 +1,4 @@
-import styles from './RunIntroFirstScreen.module.css';
+import styles from './TextScreen.module.css';
 
 const RunIntroFirstScreen = () => { // Accept the function as a prop
     return (

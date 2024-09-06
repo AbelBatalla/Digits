@@ -1,11 +1,11 @@
 import styles from './TextScreen.module.css';
 
-const RunContinueScreen = () => { // Accept the function as a prop
+const RunIntroSecondScreen = () => { // Accept the function as a prop
     return (
         <div className={styles.RunIntroFirstScreen}>
-            <p className={styles.p}>Let's play!,
+            <p className={styles.p}>Well done!
                 <br></br>
-                How many objects are there?
+                Please pay attention to the following quantities!
                 <br></br>
                 <br></br>
                 Press [Space] to continue</p>
@@ -13,4 +13,4 @@ const RunContinueScreen = () => { // Accept the function as a prop
     );
 };
 
-export default RunContinueScreen;
+export default RunIntroSecondScreen;
