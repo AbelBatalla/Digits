@@ -162,10 +162,11 @@ const Game = () => {
         };
     };
 
-    const handleButtonClick = (n) => () => {
+    const handleButtonClick = (n, resTime) => {
         if(n === number) console.log("Correct");
         else console.log("Incorrect");
-        trialData(n === number, 500);
+        console.log('Response Time: ', resTime);
+        trialData(n === number, resTime);
         console.log("Trial iter: ", trialIter);
         if (trialIter >= 5) { //28
             setTrialIter(1);
