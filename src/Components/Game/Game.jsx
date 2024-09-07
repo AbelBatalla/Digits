@@ -167,7 +167,7 @@ const Game = () => {
         if (trialIter >= 5) { //28
             setTrialIter(1);
             console.log("Run number: ", runNumber);
-            if (runNumber >= 3) setGameState('end'); //END
+            if ((runNumber >= 1 && sessionDifficulty <= -2) || (runNumber >= 2 && sessionDifficulty <= -1) || runNumber >= 3) setGameState('end'); //END
             else {
                 setGameState('runIntroSecond');
                 incrementRunNumber();
