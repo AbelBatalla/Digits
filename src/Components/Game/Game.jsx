@@ -18,6 +18,8 @@ const Game = () => {
     // 'start', 'runIntroFirst', 'passives', 'runContinue', 'number', 'button', 'trialContinue', 'runIntroSecond' or 'end'
     let updateCanvas = useRef(() => {});
     const [number, setNumber] = useState(-1);
+    const [trialIter, setTrialIter] = useState(1);
+
     const { currentUser, userLoggedIn } = useAuth();
     const { sessionDifficulty,
         changeSessionDifficulty,
@@ -161,7 +163,20 @@ const Game = () => {
     const handleButtonClick = (n) => () => {
         if(n === number) console.log("Correct");
         else console.log("Incorrect");
-        setGameState('trialContinue')
+        console.log("Trial iter: ", trialIter);
+        if (trialIter >= 5) { //28
+            setTrialIter(1);
+            console.log("Run number: ", runNumber);
+            if (runNumber >= 3) setGameState('end'); //END
+            else {
+                setGameState('runIntroSecond');
+                incrementRunNumber();
+            }
+        }
+        else {
+            setGameState('trialContinue');
+            setTrialIter(trialIter+1);
+        }
     };
 
     const handleStartGame = (selectedDifficulty) => {
@@ -187,7 +202,7 @@ const Game = () => {
     const handleKeyPress = (event) => {
         if (event.code === 'Space') {
             console.log("Pressed space, status: ", gameState);
-            if (gameState === 'runIntroFirst') {
+            if (gameState === 'runIntroFirst' || gameState === 'runIntroSecond') {
                 runIntroEnd();
             }
             if (gameState === 'runContinue' || gameState === 'trialContinue') {

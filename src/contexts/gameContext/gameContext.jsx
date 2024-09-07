@@ -7,7 +7,7 @@ export function useGame() {
 
 export function GameProvider({ children }) {
     const [sessionDifficulty, setSessionDifficulty] = useState(0);
-    const [runNumber, setRunNumber] = useState(0);
+    const [runNumber, setRunNumber] = useState(1);
     const [usedImages, setUsedImages] = useState([]);
     const [availableImages, setAvailableImages] = useState(Array.from({ length: 21 }, (_, i) => i));
 
@@ -22,7 +22,7 @@ export function GameProvider({ children }) {
     }
 
     function endSession() {
-        setRunNumber(0);
+        setRunNumber(1);
         setSessionDifficulty(0);
         setAvailableImages(Array.from({ length: 21 }, (_, i) => i));
     }

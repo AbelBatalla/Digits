@@ -10,7 +10,7 @@ const EndScreen = () => { // Accept the function as a prop
                 You can see your performance in the Stats tab.
                 <br></br>
                 <br></br>
-                Press [Space] to close</p>
+                Press [Esc] to close</p>
         </div>
     );
 };
