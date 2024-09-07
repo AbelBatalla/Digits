@@ -1,4 +1,6 @@
 import React, {useContext, useRef, useState} from "react";
+import { db, auth } from "../../config/firebase";
+import { collection, addDoc } from "firebase/firestore";
 
 const GameContext = React.createContext();
 export function useGame() {
@@ -55,15 +57,26 @@ export function GameProvider({ children }) {
         const formattedTimeUTC2 = now.toLocaleString('en-GB', options);
 
         const SessionData = {
-            user: "user",
-            date: formattedTimeUTC2,
-            difficulty: sessionDifficulty,
-            sessionCorrectRate: runDataRef.current.reduce((acc, run) => acc + run.correctRate, 0) / runDataRef.current.length,
-            sessionAvgResponseTime: runDataRef.current.reduce((acc, run) => acc + run.avgResponseTime, 0) / runDataRef.current.length,
+            UserID: auth?.currentUser?.uid,
+            Profile: "default",
+            Date: formattedTimeUTC2,
+            Difficulty: sessionDifficulty,
+            SessionCorrectRate: runDataRef.current.reduce((acc, run) => acc + run.correctRate, 0) / runDataRef.current.length,
+            SessionAvgResponseTime: runDataRef.current.reduce((acc, run) => acc + run.avgResponseTime, 0) / runDataRef.current.length,
             runs: runDataRef.current
         };
         console.log(SessionData);
+        storeSessionData(SessionData);
         resetSession();
+    }
+
+    const storeSessionData = async (data) => {
+        try {
+            const docRef = await addDoc(collection(db, "Sessions"), data);
+            console.log("Document written with ID: ", docRef.id);
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
     }
 
     function getImageId() {
