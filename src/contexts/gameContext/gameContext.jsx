@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, {useContext, useRef, useState} from "react";
 
 const GameContext = React.createContext();
 export function useGame() {
@@ -10,8 +10,8 @@ export function GameProvider({ children }) {
     const [runNumber, setRunNumber] = useState(1);
     const [usedImages, setUsedImages] = useState([]);
     const [availableImages, setAvailableImages] = useState(Array.from({ length: 21 }, (_, i) => i));
-    const [runData, setRunData] = useState([]);
-    const [currentRun, setCurrentRun] = useState({avgResponseTime: 0, correctRate: 0});
+    const runDataRef = useRef([]);
+    const currentRunRef = useRef({avgResponseTime: 0, correctRate: 0});
 
     function changeSessionDifficulty(difficulty) {
         setSessionDifficulty(difficulty);
@@ -19,7 +19,7 @@ export function GameProvider({ children }) {
     }
 
     function trialData(answer, time) {
-        setCurrentRun({avgResponseTime: currentRun.avgResponseTime + time, correctRate: answer ? currentRun.correctRate + 1 : currentRun.correctRate});
+        currentRunRef.current = {avgResponseTime: currentRunRef.current.avgResponseTime + time, correctRate: answer ? currentRunRef.current.correctRate + 1 : currentRunRef.current.correctRate};
     }
 
     function incrementRunNumber() {
@@ -27,10 +27,10 @@ export function GameProvider({ children }) {
     }
 
     function endRun() {
-        setCurrentRun({avgResponseTime: currentRun.avgResponseTime / 5, correctRate: currentRun.correctRate * 100 / 5});
-        console.log("currentRun: ", currentRun);
-        setRunData([...runData, currentRun]);
-        setCurrentRun({avgResponseTime: 0, correctRate: 0});
+        currentRunRef.current = {avgResponseTime: currentRunRef.current.avgResponseTime / 5, correctRate: currentRunRef.current.correctRate * 100 / 5};
+        console.log("currentRun: ", currentRunRef.current);
+        runDataRef.current = [...runDataRef.current, currentRunRef.current];
+        currentRunRef.current = {avgResponseTime: 0, correctRate: 0};
     }
 
     function resetSession() {
@@ -58,9 +58,9 @@ export function GameProvider({ children }) {
             user: "user",
             date: formattedTimeUTC2,
             difficulty: sessionDifficulty,
-            sessionCorrectRate: runData.reduce((acc, run) => acc + run.correctRate, 0) / runData.length,
-            sessionAvgResponseTime: runData.reduce((acc, run) => acc + run.avgResponseTime, 0) / runData.length,
-            runs: runData
+            sessionCorrectRate: runDataRef.current.reduce((acc, run) => acc + run.correctRate, 0) / runDataRef.current.length,
+            sessionAvgResponseTime: runDataRef.current.reduce((acc, run) => acc + run.avgResponseTime, 0) / runDataRef.current.length,
+            runs: runDataRef.current
         };
         console.log(SessionData);
         resetSession();
