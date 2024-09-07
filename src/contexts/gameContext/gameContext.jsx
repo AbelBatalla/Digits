@@ -10,21 +10,60 @@ export function GameProvider({ children }) {
     const [runNumber, setRunNumber] = useState(1);
     const [usedImages, setUsedImages] = useState([]);
     const [availableImages, setAvailableImages] = useState(Array.from({ length: 21 }, (_, i) => i));
-
+    const [runData, setRunData] = useState([]);
+    const [currentRun, setCurrentRun] = useState({avgResponseTime: 0, correctRate: 0});
 
     function changeSessionDifficulty(difficulty) {
         setSessionDifficulty(difficulty);
         console.log("difficulty: ", difficulty);
     }
 
+    function trialData(answer, time) {
+        setCurrentRun({avgResponseTime: currentRun.avgResponseTime + time, correctRate: answer ? currentRun.correctRate + 1 : currentRun.correctRate});
+    }
+
     function incrementRunNumber() {
         setRunNumber(runNumber + 1);
     }
 
-    function endSession() {
+    function endRun() {
+        setCurrentRun({avgResponseTime: currentRun.avgResponseTime / 5, correctRate: currentRun.correctRate * 100 / 5});
+        console.log("currentRun: ", currentRun);
+        setRunData([...runData, currentRun]);
+        setCurrentRun({avgResponseTime: 0, correctRate: 0});
+    }
+
+    function resetSession() {
         setRunNumber(1);
         setSessionDifficulty(0);
         setAvailableImages(Array.from({ length: 21 }, (_, i) => i));
+    }
+
+    function endSession() {
+        const now = new Date();
+// Get time in UTC+2 (you can use "Europe/Berlin" or other relevant timezone identifiers)
+        const options = {
+            timeZone: 'Europe/Berlin', // Timezone with UTC+2 during daylight savings
+            hour12: false,             // Use 24-hour format
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+        const formattedTimeUTC2 = now.toLocaleString('en-GB', options);
+
+        const SessionData = {
+            user: "user",
+            date: formattedTimeUTC2,
+            difficulty: sessionDifficulty,
+            sessionCorrectRate: runData.reduce((acc, run) => acc + run.correctRate, 0) / runData.length,
+            sessionAvgResponseTime: runData.reduce((acc, run) => acc + run.avgResponseTime, 0) / runData.length,
+            runs: runData
+        };
+        console.log(SessionData);
+        resetSession();
     }
 
     function getImageId() {
@@ -43,7 +82,10 @@ export function GameProvider({ children }) {
         endSession,
         runNumber,
         incrementRunNumber,
-        getImageId
+        getImageId,
+        trialData,
+        endRun,
+        resetSession
     };
 
     return (

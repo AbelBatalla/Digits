@@ -23,9 +23,11 @@ const Game = () => {
     const { currentUser, userLoggedIn } = useAuth();
     const { sessionDifficulty,
         changeSessionDifficulty,
-        endSession,
+        endSession, resetSession,
         runNumber,
         incrementRunNumber,
+        trialData,
+        endRun,
         getImageId } = useGame();
 
     const toggleFullScreen = () => {
@@ -137,7 +139,7 @@ const Game = () => {
 
     //Initalitzation
     useEffect(() => {
-        endSession();
+        resetSession();
     }, []);
 
     updateCanvas = () => {
@@ -163,11 +165,13 @@ const Game = () => {
     const handleButtonClick = (n) => () => {
         if(n === number) console.log("Correct");
         else console.log("Incorrect");
+        trialData(n === number, 500);
         console.log("Trial iter: ", trialIter);
         if (trialIter >= 5) { //28
             setTrialIter(1);
             console.log("Run number: ", runNumber);
-            if ((runNumber >= 1 && sessionDifficulty <= -2) || (runNumber >= 2 && sessionDifficulty <= -1) || runNumber >= 3) setGameState('end'); //END
+            endRun();
+            if ((runNumber >= 1 && sessionDifficulty <= -2) || (runNumber >= 2 && sessionDifficulty <= -1) || runNumber >= 3) endGame();
             else {
                 setGameState('runIntroSecond');
                 incrementRunNumber();
@@ -198,6 +202,11 @@ const Game = () => {
         setGameState('number');
         updateCanvas();
     };
+
+    const endGame = () => {
+        setGameState('end');
+        endSession();
+    }
 
     const handleKeyPress = (event) => {
         if (event.code === 'Space') {
