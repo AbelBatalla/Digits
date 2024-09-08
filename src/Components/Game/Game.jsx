@@ -56,28 +56,27 @@ const Game = () => {
     };
 
     const randomNumbers = (winWidth, winHeight, imageWidth, imageHeight) => {
-        let maxN = 24
-        let n = Math.floor(Math.random() * (maxN))+1 //Num of images 0-25
         winHeight = winHeight - imageHeight
         winWidth = winWidth - imageWidth
-        let width = winWidth/5 + (n*(winWidth-winWidth/5))/(maxN*2)
-        let height = winHeight/4 + (n*(winHeight-winHeight/4))/(maxN*1.4)
-        let paddingX = (winWidth-width)/2
-        let paddingY = (winHeight-height)/2
-        const radius = 120;
+        const radius = 110; //can depend on difficulty?
         const k = 4; // maximum number of samples before rejection
         const radius2 = radius * radius;
         const cellSize = radius * Math.SQRT1_2;
-        const gridWidth = Math.ceil(width / cellSize);
-        const gridHeight = Math.ceil(height / cellSize);
+        const gridWidth = Math.ceil(winWidth / cellSize);
+        const gridHeight = Math.ceil(winHeight / cellSize);
         const grid = new Array(gridWidth * gridHeight);
         const queue = [];
-        let posVector = [];
-        posVector.push({x: width / 2 + paddingX, y: height / 2 + paddingY});
-        queue.push(sample(width / 2, height / 2,));
-        let numBodies = 1;
-        // Pick a random existing sample from the queue.
-        pick: while (queue.length && numBodies < n) {
+        let pointsWithDistances = [];
+        const centerX = winWidth / 2;
+        const centerY = winHeight / 2;
+
+        const startX = Math.random() * winWidth;
+        const startY = Math.random() * winHeight;
+        const distance = distanceFromCenter(startX, startY);
+        pointsWithDistances.push({ startX, startY, distance });
+        queue.push(sample(startX, startY,));
+
+        pick: while (queue.length) {
             const i = Math.random() * queue.length | 0;
             const parent = queue[i];
             const seed = Math.random();
@@ -92,10 +91,9 @@ const Game = () => {
 
                 // Accept candidates that are inside the allowed extent
                 // and farther than 2 * radius to all existing samples.
-                if (0 <= x && x < width && 0 <= y && y < height && far(x, y)) {
-                    posVector.push({x: x+paddingX, y: y+paddingY});
-                    //console.log("x: " + x + " y: " + y);
-                    numBodies++;
+                if (0 <= x && x < winWidth && 0 <= y && y < winHeight && far(x, y)) {
+                    const distance = distanceFromCenter(x, y);
+                    pointsWithDistances.push({ x, y, distance });
                     queue.push(sample(x, y, parent));
                     continue pick;
                 }
@@ -106,7 +104,12 @@ const Game = () => {
             if (i < queue.length) queue[i] = r;
         }
 
-        function far(x, y) {
+        function distanceFromCenter(x, y) {
+            const dx = (x - centerX) * 0.8;
+            const dy = y - centerY;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+            function far(x, y) {
             const i = x / cellSize | 0;
             const j = y / cellSize | 0;
             const i0 = Math.max(i - 2, 0);
@@ -132,9 +135,13 @@ const Game = () => {
             queue.push(s);
             return s;
         }
-        setNumber(numBodies);
-        console.log("n: ", n," Number of bodies: ", numBodies, " number: ", number);
-        return posVector
+
+        let n = Math.floor(Math.random() * (30))+1 //Num of images 0-25
+        pointsWithDistances.sort((a, b) => a.distance - b.distance);
+        const closestPoints = pointsWithDistances.slice(0, n);
+        console.log("Points: ", n);
+        setNumber(n);
+        return closestPoints.map(point => ({ x: point.x, y: point.y }));
     };
 
     //Initalitzation
@@ -149,7 +156,6 @@ const Game = () => {
         image.src = '/images/teddy.jpg';
         let imageSize = {x: 64, y: 64}
         let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y)
-        // Clear the canvas
         context.clearRect(0, 0, canvas.width, canvas.height);
         image.onload = () => {
             for (let pos of positions) {
@@ -221,11 +227,9 @@ const Game = () => {
         }
     };
 
-    useEffect(() => { //Keypress
-        // Add the event listener for keypress
+    useEffect(() => {
         window.addEventListener('keydown', handleKeyPress);
 
-        // Clean up the event listener on component unmount
         return () => {
             window.removeEventListener('keydown', handleKeyPress);
         };
@@ -265,8 +269,6 @@ const Game = () => {
             window.removeEventListener('resize', resizeCanvas);
         };
     }, []);
-
-    // X'start', X'runIntroFirst', 'passives', X'runContinue', 'number', X'button', 'trialContinue', 'runIntroSecond' or 'end'
 
     return (
         <div ref={screenSet} className={document.fullscreenElement === screenSet.current? styles.canvasContainerFull : styles.canvasContainer}>

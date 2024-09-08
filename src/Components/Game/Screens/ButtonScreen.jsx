@@ -11,7 +11,7 @@ const ButtonScreen = ({ onButtonClick, number, distance }) => {
             [number - distance, number, number + distance],
             [number, number + distance, number + 2 * distance]
         ];
-        const validCases = cases.filter(arr => arr.every(num => num >= 0));
+        const validCases = cases.filter(arr => arr.every(num => num > 0));
         const randomIndex = Math.floor(Math.random() * validCases.length);
         return validCases[randomIndex].sort(() => Math.random() - 0.5);
     }
