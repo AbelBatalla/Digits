@@ -18,6 +18,10 @@ button {
   margin-left: 2px;
 }
 
+button:hover {
+  background-color: #0056b3;
+}
+
 h1 {
   margin-right: 2px;
   margin-left: 25px;

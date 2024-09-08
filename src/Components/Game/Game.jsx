@@ -275,7 +275,7 @@ const Game = () => {
                 {gameState === 'start' && <StartScreen onStartGame={handleStartGame}/>}
                 {gameState === 'runIntroFirst' && <RunIntroFirstScreen/>}
                 {gameState === 'runContinue' && <RunContinueScreen/>}
-                {gameState === 'button' && <ButtonScreen onButtonClick={handleButtonClick} number={number}/>}
+                {gameState === 'button' && <ButtonScreen onButtonClick={handleButtonClick} number={number} distance={4-runNumber}/>}
                 {gameState === 'trialContinue' && <TrialContinueScreen/>}
                 {gameState === 'runIntroSecond' && <RunIntroSecondScreen/>}
                 {gameState === 'end' && <EndScreen/>}
