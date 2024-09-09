@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './Game.module.css'
 import { useGame } from "../../contexts/gameContext/gameContext";
-import {useAuth} from "../../contexts/authContext";
 import StartScreen from './Screens/StartScreen';
 import RunIntroFirstScreen from './Screens/RunIntroFirstScreen';
 import RunContinueScreen from './Screens/RunContinueScreen';
@@ -19,8 +18,8 @@ const Game = () => {
     let updateCanvas = useRef(() => {});
     const [number, setNumber] = useState(-1);
     const [trialIter, setTrialIter] = useState(1);
+    const [imageId, setImageId] = useState(0);
 
-    const { currentUser, userLoggedIn } = useAuth();
     const { sessionDifficulty,
         changeSessionDifficulty,
         endSession, resetSession,
@@ -136,7 +135,7 @@ const Game = () => {
             return s;
         }
 
-        let n = Math.floor(Math.random() * (30))+1 //Num of images 0-25
+        let n = Math.floor(Math.random() * (30))+1;
         pointsWithDistances.sort((a, b) => a.distance - b.distance);
         const closestPoints = pointsWithDistances.slice(0, n);
         console.log("Points: ", n);
@@ -153,7 +152,8 @@ const Game = () => {
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
         const image = new Image();  // Create a new Image object
-        image.src = '/images/teddy.jpg';
+        image.src = `/images/${imageId}.jpg`;
+        console.log("Image ID: ", imageId);
         let imageSize = {x: 64, y: 64}
         let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y)
         context.clearRect(0, 0, canvas.width, canvas.height);
@@ -200,6 +200,7 @@ const Game = () => {
     };
 
     const runIntroEnd = () => {
+        setImageId(getImageId());
         console.log("passives");
         setGameState('runContinue');
         //updateCanvas();

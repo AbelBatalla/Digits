@@ -11,7 +11,7 @@ export function GameProvider({ children }) {
     const [sessionDifficulty, setSessionDifficulty] = useState(0);
     const [runNumber, setRunNumber] = useState(1);
     const [usedImages, setUsedImages] = useState([]);
-    const [availableImages, setAvailableImages] = useState(Array.from({ length: 21 }, (_, i) => i));
+    const [availableImages, setAvailableImages] = useState(Array.from({ length: 5 }, (_, i) => i));
     const runDataRef = useRef([]);
     const currentRunRef = useRef({avgResponseTime: 0, correctRate: 0});
 
@@ -38,7 +38,7 @@ export function GameProvider({ children }) {
     function resetSession() {
         setRunNumber(1);
         setSessionDifficulty(0);
-        setAvailableImages(Array.from({ length: 21 }, (_, i) => i));
+        setAvailableImages(Array.from({ length: 5 }, (_, i) => i));
     }
 
     function endSession() {
