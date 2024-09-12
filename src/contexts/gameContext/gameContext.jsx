@@ -59,7 +59,7 @@ export function GameProvider({ children }) {
         const formattedTimeUTC2 = now.toLocaleString('en-GB', options);
 
         const SessionData = {
-            UserID: auth?.currentUser?.uid,
+            UserID: auth?.currentUser ? auth?.currentUser?.uid : "none",
             Profile: "default",
             Date: formattedTimeUTC2,
             Difficulty: sessionDifficulty,
