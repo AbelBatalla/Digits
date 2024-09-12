@@ -15,10 +15,11 @@ const Game = () => {
     const screenSet = useRef(null);
     const [gameState, setGameState] = useState('start');
     // 'start', 'runIntroFirst', 'passives', 'runContinue', 'number', 'button', 'trialContinue', 'runIntroSecond' or 'end'
-    let updateCanvas = useRef(() => {});
+    let updateCanvasTrial = useRef(() => {});
+    let updateCanvasPassive = useRef(() => {});
     const [number, setNumber] = useState(-1);
     const [trialIter, setTrialIter] = useState(1);
-    const [imageId, setImageId] = useState(0);
+    const imageId = useRef(0);
 
     const { sessionDifficulty,
         changeSessionDifficulty,
@@ -54,7 +55,7 @@ const Game = () => {
         }
     };
 
-    const randomNumbers = (winWidth, winHeight, imageWidth, imageHeight) => {
+    const randomNumbers = (winWidth, winHeight, imageWidth, imageHeight, n = 0) => {
         winHeight = winHeight - imageHeight
         winWidth = winWidth - imageWidth
         const radius = 110; //can depend on difficulty?
@@ -135,7 +136,7 @@ const Game = () => {
             return s;
         }
 
-        let n = Math.floor(Math.random() * (30))+1;
+        if (n === 0) n = Math.floor(Math.random() * (30))+1;
         pointsWithDistances.sort((a, b) => a.distance - b.distance);
         const closestPoints = pointsWithDistances.slice(0, n);
         console.log("Points: ", n);
@@ -148,12 +149,12 @@ const Game = () => {
         resetSession();
     }, []);
 
-    updateCanvas = () => {
+    updateCanvasTrial = () => {
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
         const image = new Image();  // Create a new Image object
-        image.src = `/images/${imageId}.jpg`;
-        console.log("Image ID: ", imageId);
+        image.src = `/images/${imageId.current}.jpg`;
+        console.log("Image ID: ", imageId.current);
         let imageSize = {x: 64, y: 64}
         let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y)
         context.clearRect(0, 0, canvas.width, canvas.height);
@@ -168,17 +169,113 @@ const Game = () => {
         };
     };
 
+    updateCanvasPassive = () => {
+        const canvas = canvasRef.current;
+        const context = canvas.getContext('2d');
+        const image = new Image();  // Create a new Image object
+        image.src = `/images/${imageId.current}.jpg`;
+        console.log("Image ID: ", imageId.current);
+        let imageSize = {x: 64, y: 64}
+        let currentIteration = 0;
+        let passiveNumbers = [];
+        console.log("Session Difficulty:", sessionDifficulty, "Run number:", runNumber);
+
+        if (sessionDifficulty === 0) {
+            switch (runNumber) {
+                case 1:
+                    passiveNumbers = [15, 16, 17, 18, 19, 20, 21];
+                    break;
+                case 2:
+                    passiveNumbers = [8, 9, 10, 11, 12, 13, 14];
+                    break;
+                case 3:
+                    passiveNumbers = [1, 2, 3, 4, 5, 6, 7];
+                    break;
+            }
+        } else if (sessionDifficulty === 1) {
+            console.log("aquii");
+            switch (runNumber) {
+                case 1:
+                    passiveNumbers = [20, 21, 22, 23, 24, 25, 26];
+                    break;
+                case 2:
+                    passiveNumbers = [12, 13, 14, 15, 17, 18, 19];
+                    break;
+                case 3:
+                    passiveNumbers = [5, 6, 7, 8, 9, 10, 11];
+                    break;
+            }
+        } else if (sessionDifficulty === 2) {
+            switch (runNumber) {
+                case 1:
+                    passiveNumbers = [24, 25, 26, 27, 28, 29, 30];
+                    break;
+                case 2:
+                    passiveNumbers = [17, 18, 19, 20, 21, 22, 23];
+                    break;
+                case 3:
+                    passiveNumbers = [10, 11, 12, 13, 14, 15, 16];
+                    break;
+            }
+        } else if (sessionDifficulty === -1) {
+            switch (runNumber) {
+                case 1:
+                    passiveNumbers = [11, 12, 13, 14, 15];
+                    break;
+                case 2:
+                    passiveNumbers = [6, 7, 8, 9, 10];
+                    break;
+                case 3:
+                    passiveNumbers = [1, 2, 3, 4, 5];
+                    break;
+            }
+        } else if (sessionDifficulty === -2) {
+            switch (runNumber) {
+                case 1:
+                    passiveNumbers = [6, 7, 8, 9, 10];
+                    break;
+                case 2:
+                    passiveNumbers = [1, 2, 3, 4, 5];
+                    break;
+            }
+        }
+
+        passiveNumbers.sort(() => Math.random() - 0.5);
+        console.log("Passive numbers: ", passiveNumbers);
+
+        function executeIteration() {
+            if ((currentIteration < 7 && sessionDifficulty >= 0) || (currentIteration < 5 && sessionDifficulty < 0)) {
+                currentIteration++;
+                console.log("Iteration: ", currentIteration);
+                let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y, passiveNumbers[currentIteration-1]);
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                for (let pos of positions) {
+                    context.drawImage(image, pos.x, pos.y, imageSize.x, imageSize.y);
+                }
+                setTimeout(executeIteration, 1200); // Call the next iteration after 1.2 seconds
+            }
+            else {
+                console.log("Done,Clearing, passing to runContinue");
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                setGameState('runContinue');
+            }
+        }
+        image.onload = () => {
+            executeIteration();
+        }
+    };
+
     const handleButtonClick = (n, resTime) => {
         if(n === number) console.log("Correct");
         else console.log("Incorrect");
         console.log('Response Time: ', resTime);
         trialData(n === number, resTime);
         console.log("Trial iter: ", trialIter);
-        if (trialIter >= 5) { //28
+        if ((trialIter >= 5 && sessionDifficulty >= 0) || (trialIter >= 10 && sessionDifficulty < 0)) { //28 i 10 trials
             setTrialIter(1);
             console.log("Run number: ", runNumber);
             endRun();
-            if ((runNumber >= 1 && sessionDifficulty <= -2) || (runNumber >= 2 && sessionDifficulty <= -1) || runNumber >= 3) endGame();
+            if ((runNumber >= 2 && sessionDifficulty <= -2) || runNumber >= 3) endGame(); //2 runs at -2, 3 runs at >= -1
             else {
                 setGameState('runIntroSecond');
                 incrementRunNumber();
@@ -200,15 +297,15 @@ const Game = () => {
     };
 
     const runIntroEnd = () => {
-        setImageId(getImageId());
+        imageId.current = getImageId();
         console.log("passives");
-        setGameState('runContinue');
-        //updateCanvas();
+        setGameState('passives');
+        updateCanvasPassive();
     };
 
     const runContinueEnd = () => {
         setGameState('number');
-        updateCanvas();
+        updateCanvasTrial();
     };
 
     const endGame = () => {

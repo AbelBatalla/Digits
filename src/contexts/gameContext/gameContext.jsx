@@ -16,7 +16,7 @@ export function GameProvider({ children }) {
     const currentRunRef = useRef({avgResponseTime: 0, correctRate: 0});
 
     function changeSessionDifficulty(difficulty) {
-        setSessionDifficulty(difficulty);
+        setSessionDifficulty(Number(difficulty));
         console.log("difficulty: ", difficulty);
     }
 
