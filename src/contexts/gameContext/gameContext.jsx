@@ -10,8 +10,7 @@ export function useGame() {
 export function GameProvider({ children }) {
     const [sessionDifficulty, setSessionDifficulty] = useState(0);
     const [runNumber, setRunNumber] = useState(1);
-    const [usedImages, setUsedImages] = useState([]);
-    const [availableImages, setAvailableImages] = useState(Array.from({ length: 5 }, (_, i) => i));
+    const [availableImages, setAvailableImages] = useState(Array.from({ length: 5 }, (_, i) => i)); //[MODIFY IMAGES]
     const runDataRef = useRef([]);
     const currentRunRef = useRef({avgResponseTime: 0, correctRate: 0});
 
@@ -29,7 +28,10 @@ export function GameProvider({ children }) {
     }
 
     function endRun() {
-        currentRunRef.current = {avgResponseTime: currentRunRef.current.avgResponseTime / 5, correctRate: currentRunRef.current.correctRate * 100 / 5};
+        let numResponses = 28;
+        if (sessionDifficulty === -1) numResponses = 15;
+        else if (sessionDifficulty === -2) numResponses = 10;
+        currentRunRef.current = {avgResponseTime: currentRunRef.current.avgResponseTime / numResponses, correctRate: currentRunRef.current.correctRate * 100 / numResponses};
         console.log("currentRun: ", currentRunRef.current);
         runDataRef.current = [...runDataRef.current, currentRunRef.current];
         currentRunRef.current = {avgResponseTime: 0, correctRate: 0};
@@ -38,7 +40,7 @@ export function GameProvider({ children }) {
     function resetSession() {
         setRunNumber(1);
         setSessionDifficulty(0);
-        setAvailableImages(Array.from({ length: 5 }, (_, i) => i));
+        setAvailableImages(Array.from({ length: 5 }, (_, i) => i)); //[MODIFY IMAGES]
     }
 
     function endSession() {

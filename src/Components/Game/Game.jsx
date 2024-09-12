@@ -17,6 +17,7 @@ const Game = () => {
     // 'start', 'runIntroFirst', 'passives', 'runContinue', 'number', 'button', 'trialContinue', 'runIntroSecond' or 'end'
     let updateCanvasTrial = useRef(() => {});
     let updateCanvasPassive = useRef(() => {});
+    let numbersToDisplay = useRef([]);
     const [number, setNumber] = useState(-1);
     const [trialIter, setTrialIter] = useState(1);
     const imageId = useRef(0);
@@ -156,7 +157,7 @@ const Game = () => {
         image.src = `/images/${imageId.current}.jpg`;
         console.log("Image ID: ", imageId.current);
         let imageSize = {x: 64, y: 64}
-        let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y)
+        let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y, numbersToDisplay.current[trialIter-1]);
         context.clearRect(0, 0, canvas.width, canvas.height);
         image.onload = () => {
             for (let pos of positions) {
@@ -257,6 +258,7 @@ const Game = () => {
             else {
                 console.log("Done,Clearing, passing to runContinue");
                 context.clearRect(0, 0, canvas.width, canvas.height);
+                getNumbersToDisplay();
                 setGameState('runContinue');
             }
         }
@@ -265,13 +267,90 @@ const Game = () => {
         }
     };
 
+    const getNumbersToDisplay = () => {
+        function sectionScramble(arr, n) {
+            let arrays = [];
+            const length = Math.floor(arr.length / n);
+            console.log(length);
+            arrays.push(arr.slice(0, length));
+            for (let j = 1; j < n - 1; j++) {
+                arrays.push(arr.slice(j * length, (j + 1) * length));
+            }
+            arrays.push(arr.slice((n - 1) * length));
+            for (let i = 0; i < arrays.length; i++) {
+                arrays[i].sort(() => Math.random() - 0.5);
+            }
+            let result = [];
+            for (let i = 0; i < arrays.length; i++) {
+                result = result.concat(arrays[i]);
+            }
+            return result;
+        }
+
+        function duplicateElements(arr, n) {
+            if (n > arr.length) {
+                n = arr.length;
+            }
+
+            const uniqueElements = new Set();
+            while (uniqueElements.size < n) {
+                const randomIndex = Math.floor(Math.random() * arr.length);
+                uniqueElements.add(arr[randomIndex]);
+            }
+
+            const elementsToDuplicate = Array.from(uniqueElements);
+            return arr.concat(elementsToDuplicate);
+        }
+
+        function pseudorandomSort(arr) {
+            for (let i = 0; i < arr.length - 1; i++) {
+                if (Math.random() > 0.4) {
+                    [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+                }
+            }
+
+            for (let i = 1; i < arr.length; i++) {
+                if (arr[i] === arr[i - 1]) {
+                    if (i + 1 < arr.length) {
+                        [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+                    }
+                    else {
+                        [arr[i - 1], arr[i - 2]] = [arr[i - 2], arr[i - 1]];
+                    }
+                }
+            }
+
+            numbersToDisplay.current = [number];
+    }
+
+        let addedRange = 0;
+        if (sessionDifficulty === 1) addedRange = 5;
+        else if (sessionDifficulty === 2) addedRange = 10;
+
+        let maxNumber = 21;
+        if (sessionDifficulty === -1) maxNumber = 15;
+        else if (sessionDifficulty === -2) maxNumber = 10;
+
+        let a = Array.from({ length: maxNumber }, (_, i) => i+1+addedRange);
+        if (sessionDifficulty >= 0) a = duplicateElements(a, 7);
+        a.sort((a, b) => a - b);
+
+        let scrambleFactor = 4;
+        if (sessionDifficulty === -1) scrambleFactor = 3;
+        else if (sessionDifficulty === -2) scrambleFactor = 2;
+        a = sectionScramble(a, scrambleFactor);
+        pseudorandomSort(a);
+        console.log("Run numbers:", a);
+        numbersToDisplay.current = a;
+    };
+
     const handleButtonClick = (n, resTime) => {
         if(n === number) console.log("Correct");
         else console.log("Incorrect");
         console.log('Response Time: ', resTime);
         trialData(n === number, resTime);
         console.log("Trial iter: ", trialIter);
-        if ((trialIter >= 5 && sessionDifficulty >= 0) || (trialIter >= 10 && sessionDifficulty < 0)) { //28 i 10 trials
+        if (trialIter >= 28 || (trialIter >= 10 && sessionDifficulty === -2) || (trialIter >= 15 && sessionDifficulty === -1)) { //28, 15 i 10 trials
             setTrialIter(1);
             console.log("Run number: ", runNumber);
             endRun();
