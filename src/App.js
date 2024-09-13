@@ -1,7 +1,9 @@
 import './App.css';
 import { Route, Routes } from "react-router-dom";
-import Navbar from './Components/Navbar';
-import { Home, Play, Other } from './Components/Pages';
+import Navbar from './Components/Navbar/Navbar';
+import Home from './Components/Pages/Home';
+import Other from './Components/Pages/Other';
+import Play from './Components/Pages/Play';
 import { AuthProvider } from "./contexts/authContext";
 
 
