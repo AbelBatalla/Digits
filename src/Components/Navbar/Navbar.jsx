@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import styles from './Navbar.module.css';
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../contexts/authContext";
+import { useAuth } from "../../contexts/authContext/authContext";
 function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
     const { currentUser, userLoggedIn } = useAuth();

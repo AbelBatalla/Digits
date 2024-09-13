@@ -1,5 +1,6 @@
 import React, {useContext, useRef, useState} from "react";
-import { db, auth } from "../../config/firebase";
+import { db } from "../../config/firebase";
+import { useAuth } from "../authContext/authContext";
 import { collection, addDoc } from "firebase/firestore";
 
 const GameContext = React.createContext();
@@ -8,6 +9,7 @@ export function useGame() {
 }
 
 export function GameProvider({ children }) {
+    const { userLoggedIn, currentUser } = useAuth();
     const [sessionDifficulty, setSessionDifficulty] = useState(0);
     const [runNumber, setRunNumber] = useState(1);
     const [availableImages, setAvailableImages] = useState(Array.from({ length: 5 }, (_, i) => i)); //[MODIFY IMAGES]
@@ -16,7 +18,6 @@ export function GameProvider({ children }) {
 
     function changeSessionDifficulty(difficulty) {
         setSessionDifficulty(Number(difficulty));
-        console.log("difficulty: ", difficulty);
     }
 
     function trialData(answer, time) {
@@ -59,7 +60,7 @@ export function GameProvider({ children }) {
         const formattedTimeUTC2 = now.toLocaleString('en-GB', options);
 
         const SessionData = {
-            UserID: auth?.currentUser ? auth?.currentUser?.uid : "none",
+            UserID: userLoggedIn ? currentUser.uid : "none",
             Profile: "default",
             Date: formattedTimeUTC2,
             Difficulty: sessionDifficulty,
