@@ -1,0 +1,27 @@
+/* NotFoundPage.module.css */
+.NotFoundPage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    color: #333;
+    font-size: 24px;
+    text-align: center;
+}
+
+.NotFoundPage a {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 18px;
+    transition: background-color 0.3s;
+}
+
+.NotFoundPage a:hover {
+    background-color: #0056b3;
+}

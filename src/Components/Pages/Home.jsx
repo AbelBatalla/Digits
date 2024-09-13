@@ -1,7 +1,7 @@
 import React from "react";
 import Auth from "../Auth/Auth";
 
-export const Home = () => {
+const Home = () => {
     return (
     <>
         <h1>Home</h1>
@@ -9,3 +9,4 @@ export const Home = () => {
     </>
 )
 };
+export default Home;

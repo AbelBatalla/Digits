@@ -2,7 +2,7 @@ import React from "react";
 import Game from "../Game/Game";
 import { GameProvider } from "../../contexts/gameContext/gameContext";
 
-export const Play = () => {
+const Play = () => {
     return (
         <>
         <h1>Play</h1>
@@ -12,3 +12,4 @@ export const Play = () => {
         </>
     );
 };
+export default Play;
