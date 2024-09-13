@@ -9,6 +9,7 @@
 .h1 {
     font-size: 40px;
     color: Black;
+    margin-left: 0px;
 }
 
 .nav {
@@ -48,6 +49,10 @@
     color: black;
     display: none;
     font-size: 1.8rem;
+}
+
+.user {
+    padding: 8px 16px;
 }
 
 @media (max-width: 720px) {

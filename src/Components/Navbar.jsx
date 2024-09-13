@@ -17,7 +17,7 @@ function Navbar() {
                 <NavLink className={styles.a} to="/" onClick={() => setMenuOpen(false)}>Home</NavLink>
                 <NavLink className={styles.a} to="/digits" onClick={() => setMenuOpen(false)}>Play</NavLink>
                 <NavLink className={styles.a} to="/other" onClick={() => setMenuOpen(false)}>Other</NavLink>
-                <div>
+                <div className={styles.user}>
                     {userLoggedIn ? (
                         <p>{currentUser.email}</p>
                     ) : (

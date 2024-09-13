@@ -1,10 +1,11 @@
-import { auth, googleProvider } from "../config/firebase";
+import { auth, googleProvider } from "../../config/firebase";
 import {
     createUserWithEmailAndPassword,
     signInWithPopup,
     signOut,
 } from "firebase/auth";
 import { useState } from "react";
+import styles from "./Auth.module.css";
 
 const Auth = () => {
     const [email, setEmail] = useState("");

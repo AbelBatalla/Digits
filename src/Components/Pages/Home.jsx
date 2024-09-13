@@ -1,5 +1,5 @@
 import React from "react";
-import Auth from "../auth";
+import Auth from "../Auth/Auth";
 
 export const Home = () => {
     return (

@@ -1,13 +1,35 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './Game.module.css'
-import {isLabelWithInternallyDisabledControl} from "@testing-library/user-event/dist/utils";
+import { useGame } from "../../contexts/gameContext/gameContext";
+import StartScreen from './Screens/StartScreen';
+import RunIntroFirstScreen from './Screens/RunIntroFirstScreen';
+import RunContinueScreen from './Screens/RunContinueScreen';
+import ButtonScreen from './Screens/ButtonScreen';
+import TrialContinueScreen from "./Screens/TrialContinueScreen";
+import RunIntroSecondScreen from "./Screens/RunIntroSecondScreen";
+import EndScreen from "./Screens/EndScreen";
+
+
 const Game = () => {
     const canvasRef = useRef(null);
     const screenSet = useRef(null);
-    const [gameStarted, setGameStarted] = useState(false);
-    const [slideType, setSlideType] = useState('none'); // 'number' or 'button'
-    let updateCanvas = useRef(() => {});
+    const [gameState, setGameState] = useState('start');
+    // 'start', 'runIntroFirst', 'passives', 'runContinue', 'number', 'button', 'trialContinue', 'runIntroSecond' or 'end'
+    let updateCanvasTrial = useRef(() => {});
+    let updateCanvasPassive = useRef(() => {});
+    let numbersToDisplay = useRef([]);
     const [number, setNumber] = useState(-1);
+    const [trialIter, setTrialIter] = useState(1);
+    const imageId = useRef(0);
+
+    const { sessionDifficulty,
+        changeSessionDifficulty,
+        endSession, resetSession,
+        runNumber,
+        incrementRunNumber,
+        trialData,
+        endRun,
+        getImageId } = useGame();
 
     const toggleFullScreen = () => {
         const canvas = screenSet.current;
@@ -34,29 +56,28 @@ const Game = () => {
         }
     };
 
-    const randomNumbers = (winWidth, winHeight, imageWidth, imageHeight) => {
-        let maxN = 24
-        let n = Math.floor(Math.random() * (maxN))+1 //Num of images 0-25
+    const randomNumbers = (winWidth, winHeight, imageWidth, imageHeight, n = 0) => {
         winHeight = winHeight - imageHeight
         winWidth = winWidth - imageWidth
-        let width = winWidth/5 + (n*(winWidth-winWidth/5))/(maxN*2)
-        let height = winHeight/4 + (n*(winHeight-winHeight/4))/(maxN*1.4)
-        let paddingX = (winWidth-width)/2
-        let paddingY = (winHeight-height)/2
-        const radius = 120;
+        const radius = 110; //can depend on difficulty?
         const k = 4; // maximum number of samples before rejection
         const radius2 = radius * radius;
         const cellSize = radius * Math.SQRT1_2;
-        const gridWidth = Math.ceil(width / cellSize);
-        const gridHeight = Math.ceil(height / cellSize);
+        const gridWidth = Math.ceil(winWidth / cellSize);
+        const gridHeight = Math.ceil(winHeight / cellSize);
         const grid = new Array(gridWidth * gridHeight);
         const queue = [];
-        let posVector = [];
-        posVector.push({x: width / 2 + paddingX, y: height / 2 + paddingY});
-        queue.push(sample(width / 2, height / 2,));
-        let numBodies = 1;
-        // Pick a random existing sample from the queue.
-        pick: while (queue.length && numBodies < n) {
+        let pointsWithDistances = [];
+        const centerX = winWidth / 2;
+        const centerY = winHeight / 2;
+
+        const startX = Math.random() * winWidth;
+        const startY = Math.random() * winHeight;
+        const distance = distanceFromCenter(startX, startY);
+        pointsWithDistances.push({ startX, startY, distance });
+        queue.push(sample(startX, startY,));
+
+        pick: while (queue.length) {
             const i = Math.random() * queue.length | 0;
             const parent = queue[i];
             const seed = Math.random();
@@ -71,10 +92,9 @@ const Game = () => {
 
                 // Accept candidates that are inside the allowed extent
                 // and farther than 2 * radius to all existing samples.
-                if (0 <= x && x < width && 0 <= y && y < height && far(x, y)) {
-                    posVector.push({x: x+paddingX, y: y+paddingY});
-                    //console.log("x: " + x + " y: " + y);
-                    numBodies++;
+                if (0 <= x && x < winWidth && 0 <= y && y < winHeight && far(x, y)) {
+                    const distance = distanceFromCenter(x, y);
+                    pointsWithDistances.push({ x, y, distance });
                     queue.push(sample(x, y, parent));
                     continue pick;
                 }
@@ -85,7 +105,12 @@ const Game = () => {
             if (i < queue.length) queue[i] = r;
         }
 
-        function far(x, y) {
+        function distanceFromCenter(x, y) {
+            const dx = (x - centerX) * 0.8;
+            const dy = y - centerY;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+            function far(x, y) {
             const i = x / cellSize | 0;
             const j = y / cellSize | 0;
             const i0 = Math.max(i - 2, 0);
@@ -111,26 +136,28 @@ const Game = () => {
             queue.push(s);
             return s;
         }
-        setNumber(numBodies);
-        console.log("n: ", n," Number of bodies: ", numBodies, " number: ", number);
-        return posVector
+
+        if (n === 0) n = Math.floor(Math.random() * (30))+1;
+        pointsWithDistances.sort((a, b) => a.distance - b.distance);
+        const closestPoints = pointsWithDistances.slice(0, n);
+        console.log("Points: ", n);
+        setNumber(n);
+        return closestPoints.map(point => ({ x: point.x, y: point.y }));
     };
 
     //Initalitzation
     useEffect(() => {
-        const canvas = canvasRef.current;
-        canvas.style.backgroundColor = '#CFCFCF';
-
+        resetSession();
     }, []);
 
-    updateCanvas = () => {
+    updateCanvasTrial = () => {
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
         const image = new Image();  // Create a new Image object
-        image.src = '/images/teddy.jpg';
+        image.src = `/images/${imageId.current}.jpg`;
+        console.log("Image ID: ", imageId.current);
         let imageSize = {x: 64, y: 64}
-        let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y)
-        // Clear the canvas
+        let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y, numbersToDisplay.current[trialIter-1]);
         context.clearRect(0, 0, canvas.width, canvas.height);
         image.onload = () => {
             for (let pos of positions) {
@@ -138,23 +165,252 @@ const Game = () => {
             }
             setTimeout(() => {
                 context.clearRect(0, 0, canvas.width, canvas.height);
-                setSlideType('button')
+                setGameState('button')
             }, 1000);
         };
     };
 
-    const handleButtonClick = (n) => () => {
-        if(n === number) console.log("Correct");
-        else console.log("Incorrect");
-        setSlideType('number');
-        updateCanvas();
+    updateCanvasPassive = () => {
+        const canvas = canvasRef.current;
+        const context = canvas.getContext('2d');
+        const image = new Image();  // Create a new Image object
+        image.src = `/images/${imageId.current}.jpg`;
+        console.log("Image ID: ", imageId.current);
+        let imageSize = {x: 64, y: 64}
+        let currentIteration = 0;
+        let passiveNumbers = [];
+        console.log("Session Difficulty:", sessionDifficulty, "Run number:", runNumber);
+
+        if (sessionDifficulty === 0) {
+            switch (runNumber) {
+                case 1:
+                    passiveNumbers = [15, 16, 17, 18, 19, 20, 21];
+                    break;
+                case 2:
+                    passiveNumbers = [8, 9, 10, 11, 12, 13, 14];
+                    break;
+                case 3:
+                    passiveNumbers = [1, 2, 3, 4, 5, 6, 7];
+                    break;
+            }
+        } else if (sessionDifficulty === 1) {
+            console.log("aquii");
+            switch (runNumber) {
+                case 1:
+                    passiveNumbers = [20, 21, 22, 23, 24, 25, 26];
+                    break;
+                case 2:
+                    passiveNumbers = [12, 13, 14, 15, 17, 18, 19];
+                    break;
+                case 3:
+                    passiveNumbers = [5, 6, 7, 8, 9, 10, 11];
+                    break;
+            }
+        } else if (sessionDifficulty === 2) {
+            switch (runNumber) {
+                case 1:
+                    passiveNumbers = [24, 25, 26, 27, 28, 29, 30];
+                    break;
+                case 2:
+                    passiveNumbers = [17, 18, 19, 20, 21, 22, 23];
+                    break;
+                case 3:
+                    passiveNumbers = [10, 11, 12, 13, 14, 15, 16];
+                    break;
+            }
+        } else if (sessionDifficulty === -1) {
+            switch (runNumber) {
+                case 1:
+                    passiveNumbers = [11, 12, 13, 14, 15];
+                    break;
+                case 2:
+                    passiveNumbers = [6, 7, 8, 9, 10];
+                    break;
+                case 3:
+                    passiveNumbers = [1, 2, 3, 4, 5];
+                    break;
+            }
+        } else if (sessionDifficulty === -2) {
+            switch (runNumber) {
+                case 1:
+                    passiveNumbers = [6, 7, 8, 9, 10];
+                    break;
+                case 2:
+                    passiveNumbers = [1, 2, 3, 4, 5];
+                    break;
+            }
+        }
+
+        passiveNumbers.sort(() => Math.random() - 0.5);
+        console.log("Passive numbers: ", passiveNumbers);
+
+        function executeIteration() {
+            if ((currentIteration < 7 && sessionDifficulty >= 0) || (currentIteration < 5 && sessionDifficulty < 0)) {
+                currentIteration++;
+                console.log("Iteration: ", currentIteration);
+                let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y, passiveNumbers[currentIteration-1]);
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                for (let pos of positions) {
+                    context.drawImage(image, pos.x, pos.y, imageSize.x, imageSize.y);
+                }
+                setTimeout(executeIteration, 1200); // Call the next iteration after 1.2 seconds
+            }
+            else {
+                console.log("Done,Clearing, passing to runContinue");
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                getNumbersToDisplay();
+                setGameState('runContinue');
+            }
+        }
+        image.onload = () => {
+            executeIteration();
+        }
     };
 
-    const handleStart = () => {
-        setGameStarted(true);
-        setSlideType('number');
-        updateCanvas();
+    const getNumbersToDisplay = () => {
+        function sectionScramble(arr, n) {
+            let arrays = [];
+            const length = Math.floor(arr.length / n);
+            console.log(length);
+            arrays.push(arr.slice(0, length));
+            for (let j = 1; j < n - 1; j++) {
+                arrays.push(arr.slice(j * length, (j + 1) * length));
+            }
+            arrays.push(arr.slice((n - 1) * length));
+            for (let i = 0; i < arrays.length; i++) {
+                arrays[i].sort(() => Math.random() - 0.5);
+            }
+            let result = [];
+            for (let i = 0; i < arrays.length; i++) {
+                result = result.concat(arrays[i]);
+            }
+            return result;
+        }
+
+        function duplicateElements(arr, n) {
+            if (n > arr.length) {
+                n = arr.length;
+            }
+
+            const uniqueElements = new Set();
+            while (uniqueElements.size < n) {
+                const randomIndex = Math.floor(Math.random() * arr.length);
+                uniqueElements.add(arr[randomIndex]);
+            }
+
+            const elementsToDuplicate = Array.from(uniqueElements);
+            return arr.concat(elementsToDuplicate);
+        }
+
+        function pseudorandomSort(arr) {
+            for (let i = 0; i < arr.length - 1; i++) {
+                if (Math.random() > 0.4) {
+                    [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+                }
+            }
+
+            for (let i = 1; i < arr.length; i++) {
+                if (arr[i] === arr[i - 1]) {
+                    if (i + 1 < arr.length) {
+                        [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+                    }
+                    else {
+                        [arr[i - 1], arr[i - 2]] = [arr[i - 2], arr[i - 1]];
+                    }
+                }
+            }
+
+            numbersToDisplay.current = [number];
+    }
+
+        let addedRange = 0;
+        if (sessionDifficulty === 1) addedRange = 5;
+        else if (sessionDifficulty === 2) addedRange = 10;
+
+        let maxNumber = 21;
+        if (sessionDifficulty === -1) maxNumber = 15;
+        else if (sessionDifficulty === -2) maxNumber = 10;
+
+        let a = Array.from({ length: maxNumber }, (_, i) => i+1+addedRange);
+        if (sessionDifficulty >= 0) a = duplicateElements(a, 7);
+        a.sort((a, b) => a - b);
+
+        let scrambleFactor = 4;
+        if (sessionDifficulty === -1) scrambleFactor = 3;
+        else if (sessionDifficulty === -2) scrambleFactor = 2;
+        a = sectionScramble(a, scrambleFactor);
+        pseudorandomSort(a);
+        console.log("Run numbers:", a);
+        numbersToDisplay.current = a;
     };
+
+    const handleButtonClick = (n, resTime) => {
+        if(n === number) console.log("Correct");
+        else console.log("Incorrect");
+        console.log('Response Time: ', resTime);
+        trialData(n === number, resTime);
+        console.log("Trial iter: ", trialIter);
+        if (trialIter >= 28 || (trialIter >= 10 && sessionDifficulty === -2) || (trialIter >= 15 && sessionDifficulty === -1)) { //28, 15 i 10 trials
+            setTrialIter(1);
+            console.log("Run number: ", runNumber);
+            endRun();
+            if ((runNumber >= 2 && sessionDifficulty <= -2) || runNumber >= 3) endGame(); //2 runs at -2, 3 runs at >= -1
+            else {
+                setGameState('runIntroSecond');
+                incrementRunNumber();
+            }
+        }
+        else {
+            setGameState('trialContinue');
+            setTrialIter(trialIter+1);
+        }
+    };
+
+    const handleStartGame = (selectedDifficulty) => {
+        setGameState('runIntroFirst');
+        toggleFullScreen();
+        canvasRef.current.width = window.innerWidth;
+        canvasRef.current.height = window.innerHeight+125;
+        canvasRef.current.style.backgroundColor = '#CFCFCF';
+        changeSessionDifficulty(selectedDifficulty);
+    };
+
+    const runIntroEnd = () => {
+        imageId.current = getImageId();
+        console.log("passives");
+        setGameState('passives');
+        updateCanvasPassive();
+    };
+
+    const runContinueEnd = () => {
+        setGameState('number');
+        updateCanvasTrial();
+    };
+
+    const endGame = () => {
+        setGameState('end');
+        endSession();
+    }
+
+    const handleKeyPress = (event) => {
+        if (event.code === 'Space') {
+            console.log("Pressed space, status: ", gameState);
+            if (gameState === 'runIntroFirst' || gameState === 'runIntroSecond') {
+                runIntroEnd();
+            }
+            if (gameState === 'runContinue' || gameState === 'trialContinue') {
+                runContinueEnd();
+            }
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyPress);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+        };
+    }, [gameState]);
 
     //Resize
     useEffect(() => {
@@ -182,8 +438,8 @@ const Game = () => {
                 canvasRef.current.getContext('2d').drawImage(tempCanvas, 0, 0);
             }
         };
-        document.addEventListener('fullscreenchange', resizeCanvas);
-        window.addEventListener('resize', resizeCanvas);
+        //document.addEventListener('fullscreenchange', resizeCanvas);
+        //window.addEventListener('resize', resizeCanvas);
 
         return () => {
             document.removeEventListener('fullscreenchange', resizeCanvas);
@@ -192,14 +448,17 @@ const Game = () => {
     }, []);
 
     return (
-        <div ref={screenSet} className={styles.canvasContainer}>
-            <canvas ref={canvasRef} width={window.innerWidth} height ={"550"}></canvas>
-            <div className={document.fullscreenElement? styles.overlay : ''}>
-                {gameStarted && <button className={styles.fullscreenButton} onClick={toggleFullScreen}>Fullscreen</button>}
-                {slideType === 'button' && <button className={[styles.numberButton, styles.numberButtonLeft].join(' ')} onClick={handleButtonClick(number-2)}>{number-2}</button>}
-                {slideType === 'button' && <button className={[styles.numberButton, styles.numberButtonCenter].join(' ')} onClick={handleButtonClick(number)}>{number}</button>}
-                {slideType === 'button' && <button className={[styles.numberButton, styles.numberButtonRight].join(' ')} onClick={handleButtonClick(number+2)}>{number+2}</button>}
-                {!gameStarted && <button className={styles.startGameButton} onClick={handleStart}>Start Game</button>}
+        <div ref={screenSet} className={document.fullscreenElement === screenSet.current? styles.canvasContainerFull : styles.canvasContainer}>
+            <canvas ref={canvasRef} className={styles.canvas}></canvas>
+            <div>
+                {gameState === 'start' && <StartScreen onStartGame={handleStartGame}/>}
+                {gameState === 'runIntroFirst' && <RunIntroFirstScreen/>}
+                {gameState === 'runContinue' && <RunContinueScreen/>}
+                {gameState === 'button' && <ButtonScreen onButtonClick={handleButtonClick} number={number} distance={4-runNumber}/>}
+                {gameState === 'trialContinue' && <TrialContinueScreen/>}
+                {gameState === 'runIntroSecond' && <RunIntroSecondScreen/>}
+                {gameState === 'end' && <EndScreen/>}
+
             </div>
         </div>
     );
