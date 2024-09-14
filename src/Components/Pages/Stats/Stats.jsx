@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../../contexts/authContext/authContext';
 import { db } from "../../../config/firebase";
-import { collection, getDocs, where, query, orderBy } from "firebase/firestore";
+import { collection, getDocs, where, query } from "firebase/firestore";
 import Session from './Session';
 import styles from './Stats.module.css';
 import { FaAngleDown, FaTimes } from "react-icons/fa";

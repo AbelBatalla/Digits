@@ -32,7 +32,7 @@ const Session = ({ session }) => {
     };
 
     return (
-        <div className={styles.session} onClick={toggleExpand}>
+        <div className={`${styles.session} ${isExpanded ? styles.expanded : ''}`} onClick={toggleExpand}>
             <div className={styles['base-data']}>
                 <div><strong>Date</strong><div>{date}</div></div>
                 <div><strong>Time</strong><div>{time}</div></div>
@@ -41,21 +41,19 @@ const Session = ({ session }) => {
                 <div><strong>Correct Answers</strong><div>{Math.floor(session.SessionCorrectRate)}%</div></div>
                 <div className={styles.icon}>{isExpanded ? <FaTimes /> : <FaAngleDown />}</div>
             </div>
-            {isExpanded && (
-                <div className={styles.runs}>
-                    {session.runs.map((run, index) => (
-                        <div key={index} className={styles.run}>
-                            <p><strong>Run {index + 1}</strong></p>
-                            <p><strong>Average Response Time</strong>
-                                <div>{(run.avgResponseTime / 1000).toFixed(3)}s</div>
-                            </p>
-                            <p><strong>Correct Answers</strong>
-                                <div>{Math.floor(run.correctRate)}%</div>
-                            </p>
-                        </div>
-                    ))}
-                </div>
-            )}
+            <div className={styles.runs}>
+                {session.runs.map((run, index) => (
+                    <div key={index} className={styles.run}>
+                        <p><strong>Run {index + 1}</strong></p>
+                        <p><strong>Average Response Time</strong>
+                            <div>{(run.avgResponseTime / 1000).toFixed(3)}s</div>
+                        </p>
+                        <p><strong>Correct Answers</strong>
+                            <div>{Math.floor(run.correctRate)}%</div>
+                        </p>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };
