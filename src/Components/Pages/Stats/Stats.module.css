@@ -42,7 +42,7 @@
     justify-content: center; /* Align text and icon horizontally */
     padding-bottom: 15px;
     gap: 10px; /* Adds spacing between text and icon */
-    transition: transform 0.2s, border-bottom 0.2s;; /* Add a transition effect */
+    transition: transform 0.2s, border-bottom 0.1s;; /* Add a transition effect */
     width: 25%;
     margin: 15px auto;
 }
