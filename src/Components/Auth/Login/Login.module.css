@@ -1,0 +1,113 @@
+/* General container styling */
+.mainContainer {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginBox {
+    width: 24rem; /* Equivalent to 96 in Tailwind's w-96 */
+    color: #4B5563; /* Equivalent to text-gray-600 */
+    padding: 1rem; /* Equivalent to p-4 */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Equivalent to shadow-xl */
+    border: 1px solid #e5e7eb; /* Equivalent to border */
+    border-radius: 0.75rem; /* Equivalent to rounded-xl */
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem; /* Equivalent to space-y-5 */
+}
+
+.textCenter {
+    text-align: center;
+}
+
+.heading {
+    color: #1F2937; /* Equivalent to text-gray-800 */
+    font-size: 1.25rem; /* Equivalent to text-xl */
+    font-weight: 600; /* Equivalent to font-semibold */
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem; /* Equivalent to space-y-5 */
+}
+
+.inputField {
+    width: 100%;
+    padding: 0.5rem 0.75rem; /* Equivalent to px-3 py-2 */
+    color: #6B7280; /* Equivalent to text-gray-500 */
+    background-color: transparent;
+    outline: none;
+    border: 1px solid #d1d5db; /* Equivalent to border */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05); /* Equivalent to shadow-sm */
+    border-radius: 0.5rem; /* Equivalent to rounded-lg */
+    transition: border-color 0.3s;
+}
+
+.inputField:focus {
+    border-color: #6366F1; /* Equivalent to focus:border-indigo-600 */
+}
+
+.errorMessage {
+    color: #DC2626; /* Equivalent to text-red-600 */
+    font-weight: bold;
+}
+
+.submitButton {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    color: white;
+    font-weight: 500; /* Equivalent to font-medium */
+    border-radius: 0.5rem; /* Equivalent to rounded-lg */
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.submitButton:not(:disabled):hover {
+    background-color: #4F46E5; /* Equivalent to hover:bg-indigo-700 */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1); /* Equivalent to hover:shadow-xl */
+}
+
+.disabledButton {
+    background-color: #D1D5DB; /* Equivalent to bg-gray-300 */
+    cursor: not-allowed;
+}
+
+.enabledButton {
+    background-color: #6366F1; /* Equivalent to bg-indigo-600 */
+}
+
+.googleButton {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem; /* Equivalent to gap-x-3 */
+    padding: 0.625rem; /* Equivalent to py-2.5 */
+    border: 1px solid #d1d5db; /* Equivalent to border */
+    border-radius: 0.5rem; /* Equivalent to rounded-lg */
+    font-size: 0.875rem; /* Equivalent to text-sm */
+    font-weight: 500; /* Equivalent to font-medium */
+}
+
+.googleButton:hover {
+    background-color: #F3F4F6; /* Equivalent to hover:bg-gray-100 */
+    transition: background-color 0.3s;
+}
+
+.orDivider {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: bold;
+    font-size: 0.875rem; /* Equivalent to text-sm */
+    color: #4B5563;
+}
+
+.dividerLine {
+    flex-grow: 1;
+    height: 1px;
+    background-color: #D1D5DB; /* Equivalent to border-b-2 */
+}

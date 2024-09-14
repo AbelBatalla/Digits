@@ -1,7 +1,7 @@
 import './App.css';
 import { Outlet } from "react-router-dom";
-import Navbar from './Components/Navbar';
-import { AuthProvider } from "./contexts/authContext";
+import Navbar from './Components/Navbar/Navbar';
+import { AuthProvider } from "./contexts/authContext/authContext";
 
 
 const App = () => {

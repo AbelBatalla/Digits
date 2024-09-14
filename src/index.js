@@ -6,6 +6,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Play from "./Components/Pages/Play";
 import Other from "./Components/Pages/Other";
 import Home from "./Components/Pages/Home";
+import Login from "./Components/Auth/Login/Login";
+import Users from "./Components/Auth/Users";
+import Register from "./Components/Auth/Register/Register";
 import NotFoundPage from "./Components/Pages/NotFound/NotFoundPage";
 
 const router = createBrowserRouter([
@@ -15,7 +18,7 @@ const router = createBrowserRouter([
         errorElement: <NotFoundPage />,
         children: [
             {
-                path: '',
+                path: '/',
                 element: <Home />,
             },
             {
@@ -25,6 +28,18 @@ const router = createBrowserRouter([
             {
                 path: 'other',
                 element: <Other />,
+            },
+            {
+                path: 'login',
+                element: <Login />,
+            },
+            {
+                path: 'register',
+                element: <Register />,
+            },
+            {
+                path: 'auth',
+                element: <Users />,
             }
         ]
     }

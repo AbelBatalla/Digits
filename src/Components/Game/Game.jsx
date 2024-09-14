@@ -74,8 +74,8 @@ const Game = () => {
         const startX = Math.random() * winWidth;
         const startY = Math.random() * winHeight;
         const distance = distanceFromCenter(startX, startY);
-        pointsWithDistances.push({ startX, startY, distance });
-        queue.push(sample(startX, startY,));
+        pointsWithDistances.push({x: startX, y: startY, distance: distance});
+        queue.push(sample(startX, startY));
 
         pick: while (queue.length) {
             const i = Math.random() * queue.length | 0;
@@ -85,7 +85,7 @@ const Game = () => {
 
             // Make a new candidate.
             for (let j = 0; j < k; ++j) {
-                const a = 2 * Math.PI * (seed + 1.0*j/k);
+                const a = 2 * Math.PI * (seed + 1.0 * j / k);
                 const r = radius + epsilon;
                 const x = parent[0] + r * Math.cos(a);
                 const y = parent[1] + r * Math.sin(a);
@@ -94,8 +94,8 @@ const Game = () => {
                 // and farther than 2 * radius to all existing samples.
                 if (0 <= x && x < winWidth && 0 <= y && y < winHeight && far(x, y)) {
                     const distance = distanceFromCenter(x, y);
-                    pointsWithDistances.push({ x, y, distance });
-                    queue.push(sample(x, y, parent));
+                    pointsWithDistances.push({x, y, distance});
+                    queue.push(sample(x, y));
                     continue pick;
                 }
             }
@@ -110,7 +110,8 @@ const Game = () => {
             const dy = y - centerY;
             return Math.sqrt(dx * dx + dy * dy);
         }
-            function far(x, y) {
+
+        function far(x, y) {
             const i = x / cellSize | 0;
             const j = y / cellSize | 0;
             const i0 = Math.max(i - 2, 0);
@@ -137,8 +138,12 @@ const Game = () => {
             return s;
         }
 
-        if (n === 0) n = Math.floor(Math.random() * (30))+1;
+        if (n === 0) n = Math.floor(Math.random() * (30)) + 1;
         pointsWithDistances.sort((a, b) => a.distance - b.distance);
+        if (pointsWithDistances.some(point => point.x === undefined || point.y === undefined)) {
+            console.error("There are points with undefined values in pointsWithDistances. Removing them...");
+            pointsWithDistances = pointsWithDistances.filter(point => point.x !== undefined && point.y !== undefined);
+        }
         const closestPoints = pointsWithDistances.slice(0, n);
         console.log("Points: ", n);
         setNumber(n);
@@ -155,7 +160,7 @@ const Game = () => {
         const context = canvas.getContext('2d');
         const image = new Image();  // Create a new Image object
         image.src = `/images/${imageId.current}.jpg`;
-        console.log("Image ID: ", imageId.current);
+        //console.log("Image ID: ", imageId.current);
         let imageSize = {x: 64, y: 64}
         let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y, numbersToDisplay.current[trialIter-1]);
         context.clearRect(0, 0, canvas.width, canvas.height);
@@ -175,11 +180,9 @@ const Game = () => {
         const context = canvas.getContext('2d');
         const image = new Image();  // Create a new Image object
         image.src = `/images/${imageId.current}.jpg`;
-        console.log("Image ID: ", imageId.current);
         let imageSize = {x: 64, y: 64}
         let currentIteration = 0;
         let passiveNumbers = [];
-        console.log("Session Difficulty:", sessionDifficulty, "Run number:", runNumber);
 
         if (sessionDifficulty === 0) {
             switch (runNumber) {
@@ -194,7 +197,6 @@ const Game = () => {
                     break;
             }
         } else if (sessionDifficulty === 1) {
-            console.log("aquii");
             switch (runNumber) {
                 case 1:
                     passiveNumbers = [20, 21, 22, 23, 24, 25, 26];
@@ -242,12 +244,10 @@ const Game = () => {
         }
 
         passiveNumbers.sort(() => Math.random() - 0.5);
-        console.log("Passive numbers: ", passiveNumbers);
 
         function executeIteration() {
             if ((currentIteration < 7 && sessionDifficulty >= 0) || (currentIteration < 5 && sessionDifficulty < 0)) {
                 currentIteration++;
-                console.log("Iteration: ", currentIteration);
                 let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y, passiveNumbers[currentIteration-1]);
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 for (let pos of positions) {
@@ -256,7 +256,6 @@ const Game = () => {
                 setTimeout(executeIteration, 1200); // Call the next iteration after 1.2 seconds
             }
             else {
-                console.log("Done,Clearing, passing to runContinue");
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 getNumbersToDisplay();
                 setGameState('runContinue');
@@ -271,7 +270,6 @@ const Game = () => {
         function sectionScramble(arr, n) {
             let arrays = [];
             const length = Math.floor(arr.length / n);
-            console.log(length);
             arrays.push(arr.slice(0, length));
             for (let j = 1; j < n - 1; j++) {
                 arrays.push(arr.slice(j * length, (j + 1) * length));
@@ -345,14 +343,9 @@ const Game = () => {
     };
 
     const handleButtonClick = (n, resTime) => {
-        if(n === number) console.log("Correct");
-        else console.log("Incorrect");
-        console.log('Response Time: ', resTime);
         trialData(n === number, resTime);
-        console.log("Trial iter: ", trialIter);
         if (trialIter >= 28 || (trialIter >= 10 && sessionDifficulty === -2) || (trialIter >= 15 && sessionDifficulty === -1)) { //28, 15 i 10 trials
             setTrialIter(1);
-            console.log("Run number: ", runNumber);
             endRun();
             if ((runNumber >= 2 && sessionDifficulty <= -2) || runNumber >= 3) endGame(); //2 runs at -2, 3 runs at >= -1
             else {
@@ -377,7 +370,6 @@ const Game = () => {
 
     const runIntroEnd = () => {
         imageId.current = getImageId();
-        console.log("passives");
         setGameState('passives');
         updateCanvasPassive();
     };
