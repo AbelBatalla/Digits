@@ -13,6 +13,12 @@
     align-items: center;
     text-align: center;
     height: auto; /* Adjust height to auto */
+    opacity: 0;
+    overflow: hidden;
+    transition: opacity 0.2s ease; /* Add transition */
+}
+.containerSessions.expanded {
+    opacity: 1;
 }
 
 .p {

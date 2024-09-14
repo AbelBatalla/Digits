@@ -5,8 +5,7 @@ import { db } from "../../../config/firebase";
 import { collection, getDocs, where, query } from "firebase/firestore";
 import Session from './Session';
 import styles from './Stats.module.css';
-import {FaAngleDown, FaTimes} from "react-icons/fa";
-
+import { FaAngleDown, FaTimes } from "react-icons/fa";
 
 const Stats = () => {
     const { userLoggedIn, currentUser } = useAuth();
@@ -25,7 +24,7 @@ const Stats = () => {
                 const querySnapshot = await getDocs(q);
                 const sessionsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 setSessions(sessionsData);
-                console.log('Sessions feched', sessionsData);
+                console.log('Sessions fetched', sessionsData);
             } catch (err) {
                 console.error('Error fetching sessions:', err);
             }
@@ -36,6 +35,7 @@ const Stats = () => {
             fetchSessions();
         }
     }, [userLoggedIn]);
+
     return (
         <div>
             <h1>Stats</h1>
@@ -43,7 +43,8 @@ const Stats = () => {
                 <div className={styles.container}>
                     <p className={styles.p}>
                         <Link to="/login" className={styles.link}>Log in</Link>
-                        to view your stats.</p>
+                        to view your stats.
+                    </p>
                 </div>
             )}
             {userLoggedIn && (
@@ -52,16 +53,15 @@ const Stats = () => {
                         <h2> Sessions </h2>
                         <div className={styles.icon}> {isExpanded ? <FaTimes/> : <FaAngleDown/>} </div>
                     </div>
-                    {isExpanded && (
-                        <div className={styles.containerSessions}>
+                    <div className={`${styles.containerSessions} ${isExpanded ? styles.expanded : ''}`}>
                         {sessions.map((session, index) => (
-                            <Session key={index} session={session}/>
+                            <Session key={index} session={session} />
                         ))}
                     </div>
-                )}
                 </div>
             )}
         </div>
     );
-}
+};
+
 export default Stats;
