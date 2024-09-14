@@ -1,0 +1,71 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    text-align: center;
+}
+.containerSessions {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column; /* Change to column layout */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: auto; /* Adjust height to auto */
+}
+
+.p {
+    font-size: 1.1rem;
+}
+
+.link {
+    font-weight: bold;
+    text-decoration: none;
+    margin-right: 6px;
+    color: #6366F1;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+.dropdown {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Align text and icon horizontally */
+    padding-bottom: 15px;
+    gap: 10px; /* Adds spacing between text and icon */
+    transition: transform 0.2s, border-bottom 0.2s;; /* Add a transition effect */
+    width: 25%;
+    margin: 15px auto;
+}
+
+.dropdown.expanded {
+    border-bottom: none; /* Remove border when expanded */
+}
+
+.dropdown:not(.expanded) {
+    border-bottom: 2px solid #2fa6a6; /* Line below when not expanded */
+}
+
+.dropdown h2 {
+    margin: 0; /* Reset any default margin on h2 */
+    padding: 0; /* Ensure no extra space */
+    line-height: 1; /* Adjust line height if necessary */
+}
+
+.dropdown:hover {
+    cursor: pointer;
+    transform: scale(1.1); /* Slightly increase the size on hover */
+}
+
+.dropdown:hover .icon {
+    color: #2fa6a6; /* Change color on hover */
+}
+
+.icon {
+    line-height: 0; /* Adjust line height if necessary */
+    font-size: 1.5rem;
+    transition: color 0.25s ease; /* Add a transition effect */
+}

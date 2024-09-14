@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import styles from './Navbar.module.css';
-import { NavLink } from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 import { useAuth } from "../../contexts/authContext/authContext";
 function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -20,6 +20,11 @@ function Navbar() {
                 <NavLink className={({ isActive, isPending }) =>
                     `${styles.a} ${isActive || isPending ? styles.active : ''}`
                 } to="/digits" onClick={() => setMenuOpen(false)}>Play</NavLink>
+                {userLoggedIn && (
+                    <NavLink className={({ isActive, isPending }) =>
+                        `${styles.a} ${isActive || isPending ? styles.active : ''}`
+                    } to="/stats" onClick={() => setMenuOpen(false)}>Stats</NavLink>
+                )}
                 <NavLink className={({ isActive, isPending }) =>
                     `${styles.a} ${isActive || isPending ? styles.active : ''}`
                 } to="/other" onClick={() => setMenuOpen(false)}>Other</NavLink>

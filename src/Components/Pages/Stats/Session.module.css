@@ -1,0 +1,66 @@
+.session {
+    padding: 25px 0px;
+    margin: 0px 0;
+    background-color: white;
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center text vertically */
+    max-width: 1200px; /* Constrain the width */
+    width: 80%; /* Ensure it doesn't exceed the container's width */
+    height: 100%;
+    border-top: 1px solid #ddd; /* Line above */
+    border-bottom: 1px solid #ddd; /* Line below */
+}
+
+.session:hover {
+    transform: scale(1.03);
+}
+
+.session:hover .icon {
+    color: #2fa6a6; /* Change color on hover */
+}
+
+.icon {
+    transition: color 0.25s ease; /* Add a transition effect */
+}
+
+.session .base-data {
+    display: flex;
+    flex-direction: row; /* Display initial data side by side */
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.session p {
+    margin: 4px 8px;
+    font-size: 1rem;
+    color: #666;
+    flex: 1 1 30%;
+}
+
+.session strong {
+    color: #000;
+}
+
+.session .runs {
+    flex-basis: 100%;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column; /* Stack runs vertically */
+}
+
+.session .run {
+    margin: 5px;
+    display: flex;
+    align-items: center; /* Center text vertically */
+    flex-wrap: wrap; /* Allow wrapping */
+}
+
+.session .run p {
+    margin: 4px 20px;
+    font-size: 1rem;
+    color: #666;
+    flex: 1 1 auto; /* Allow items to grow and shrink */
+}
