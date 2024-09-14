@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../../contexts/authContext/authContext';
 import { db } from "../../../config/firebase";
-import { collection, getDocs, where, query } from "firebase/firestore";
+import { collection, getDocs, where, query, orderBy } from "firebase/firestore";
 import Session from './Session';
 import styles from './Stats.module.css';
 import { FaAngleDown, FaTimes } from "react-icons/fa";
@@ -16,6 +16,14 @@ const Stats = () => {
         setIsExpanded(!isExpanded);
     };
 
+    const parseDate = (dateString) => {
+        const [datePart, timePart] = dateString.split(', ');
+        const [day, month, year] = datePart.split('/').map(Number);
+        const [hours, minutes, seconds] = timePart.split(':').map(Number);
+
+        return new Date(year, month - 1, day, hours, minutes, seconds); // JavaScript months are 0-based
+    };
+
     useEffect(() => {
         const fetchSessions = async () => {
             try {
@@ -23,6 +31,13 @@ const Stats = () => {
                 const q = query(sessionsRef, where('UserID', '==', currentUser.uid));
                 const querySnapshot = await getDocs(q);
                 const sessionsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                sessionsData.sort((a, b) => {
+                    const dateA = parseDate(a.Date);
+                    const dateB = parseDate(b.Date);
+                    return dateB - dateA; // Newest to oldest
+                });
+
                 setSessions(sessionsData);
             } catch (err) {
                 console.error('Error fetching sessions:', err);

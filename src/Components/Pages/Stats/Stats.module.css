@@ -15,7 +15,7 @@
     height: auto; /* Adjust height to auto */
     opacity: 0;
     overflow: hidden;
-    transition: opacity 0.3s ease; /* Add transition */
+    transition: opacity 0.25s ease; /* Add transition */
 }
 .containerSessions.expanded {
     opacity: 1;
