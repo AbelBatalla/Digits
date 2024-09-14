@@ -24,14 +24,12 @@ const Stats = () => {
                 const querySnapshot = await getDocs(q);
                 const sessionsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 setSessions(sessionsData);
-                console.log('Sessions fetched', sessionsData);
             } catch (err) {
                 console.error('Error fetching sessions:', err);
             }
         };
 
         if (userLoggedIn) {
-            console.log('Logged in fetching sessions...');
             fetchSessions();
         }
     }, [userLoggedIn]);
