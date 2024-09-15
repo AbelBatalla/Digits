@@ -17,8 +17,12 @@
     overflow: hidden;
     transition: opacity 0.25s ease; /* Add transition */
 }
-.containerSessions.expanded {
-    opacity: 1;
+.containerSessions.visible {
+    opacity: 1; /* Fully visible */
+}
+
+.containerSessions.hidden {
+    opacity: 0; /* Fully hidden */
 }
 
 .p {

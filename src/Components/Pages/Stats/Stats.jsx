@@ -12,9 +12,16 @@ const Stats = () => {
     const [sessions, setSessions] = useState([]);
     const [expandedSessions, setExpandedSessions] = useState([]); // Array to track expanded session IDs
     const [isExpanded, setIsExpanded] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
 
     const toggleExpand = () => {
-        setIsExpanded(!isExpanded);
+        if (!isExpanded) {
+            setIsExpanded(true);
+            setTimeout(() => setIsVisible(true), 10); // Delay before setting visibility
+        } else {
+            setIsVisible(false);
+            setTimeout(() => setIsExpanded(false), 300); // Wait for opacity transition to complete
+        }
     };
 
     const toggleSessionExpand = (sessionId) => {
@@ -87,7 +94,9 @@ const Stats = () => {
                         <h2> Sessions </h2>
                         <div className={styles.icon}> {isExpanded ? <FaTimes/> : <FaAngleDown/>} </div>
                     </div>
-                    <div className={`${styles.containerSessions} ${isExpanded ? styles.expanded : ''}`}>
+
+                    {isExpanded && (
+                        <div className={`${styles.containerSessions} ${isVisible ? styles.visible : styles.hidden}`}>
                         {sessions.map((session) => (
                             <Session
                                 key={session.id}
@@ -97,7 +106,8 @@ const Stats = () => {
                                 onDelete={() => handleDelete(session.id)} // Pass session ID to delete
                             />
                         ))}
-                    </div>
+                        </div>
+                        )}
                 </div>
             )}
         </div>
