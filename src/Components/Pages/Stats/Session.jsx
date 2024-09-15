@@ -2,24 +2,18 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Session.module.css';
 import { FaTimes, FaAngleDown, FaTrash } from "react-icons/fa";
-import { db } from "../../../config/firebase";
-import { doc, deleteDoc } from "firebase/firestore";
 
-const Session = ({ session, onDelete }) => {
-    const [isExpanded, setIsExpanded] = useState(false);
+const Session = ({ session, isExpanded, onToggleExpand, onDelete }) => {
     const [isDeleting, setIsDeleting] = useState(false);
 
-    const toggleExpand = () => {
-        setIsExpanded(!isExpanded);
-    };
-
     const handleDelete = () => {
-        setIsDeleting(true);
-        setIsExpanded(false);
-        setTimeout(() => {
-            onDelete(session.id);
-            setIsDeleting(false);
+        if (window.confirm('Are you sure you want to delete this session?')) {
+            setIsDeleting(true);
+            setTimeout(() => {
+                onDelete(session.id);
+                setIsDeleting(false);
             }, 500);
+        }
     };
 
     const [date, time] = session.Date.split(', ');
@@ -44,7 +38,7 @@ const Session = ({ session, onDelete }) => {
     };
 
     return (
-        <div className={`${styles.session} ${isExpanded ? styles.expanded : ''} ${isDeleting ? styles.deleting : ''}`} onClick={toggleExpand}>
+        <div className={`${styles.session} ${isExpanded ? styles.expanded : ''} ${isDeleting ? styles.deleting : ''}`} onClick={onToggleExpand}>
             <div className={styles.unexpandedSession}>
                 <div className={styles.baseData}>
                     <div><strong>Date</strong>
@@ -62,44 +56,46 @@ const Session = ({ session, onDelete }) => {
                     <div><strong>Correct Answers</strong>
                         <div>{Math.floor(session.SessionCorrectRate)}%</div>
                     </div>
-                    <div className={styles.icon}>{isExpanded ? <FaTimes/> : <FaAngleDown/>}</div>
+                    <div className={styles.icon}>
+                        {isExpanded ? <FaTimes /> : <FaAngleDown />}
+                    </div>
                 </div>
                 <div className={styles.iconTrash} onClick={(e) => {
                     e.stopPropagation();
                     handleDelete();
-                }}><FaTrash/></div>
+                }}><FaTrash /></div>
             </div>
             <div className={styles.runs}>
                 {session.runs.map((run, index) => (
                     <div key={index} className={styles.run}>
-                    <p><strong>Run {index + 1}</strong></p>
-                            <p><strong>Average Response Time</strong>
-                                <div>{(run.avgResponseTime / 1000).toFixed(3)}s</div>
-                            </p>
-                            <p><strong>Correct Answers</strong>
-                                <div>{Math.floor(run.correctRate)}%</div>
-                            </p>
-                        </div>
-                    ))}
-                </div>
+                        <p><strong>Run {index + 1}</strong></p>
+                        <p><strong>Average Response Time</strong>
+                            <div>{(run.avgResponseTime / 1000).toFixed(3)}s</div>
+                        </p>
+                        <p><strong>Correct Answers</strong>
+                            <div>{Math.floor(run.correctRate)}%</div>
+                        </p>
+                    </div>
+                ))}
             </div>
-            );
-            };
+        </div>
+    );
+};
 
-            Session.propTypes = {
-            session: PropTypes.shape({
-            Date: PropTypes.string.isRequired,
-            Difficulty: PropTypes.number.isRequired,
-            Profile: PropTypes.string.isRequired,
-            SessionAvgResponseTime: PropTypes.number.isRequired,
-            SessionCorrectRate: PropTypes.number.isRequired,
-            UserID: PropTypes.string.isRequired,
-            runs: PropTypes.arrayOf(PropTypes.shape({
+Session.propTypes = {
+    session: PropTypes.shape({
+        Date: PropTypes.string.isRequired,
+        Difficulty: PropTypes.number.isRequired,
+        SessionAvgResponseTime: PropTypes.number.isRequired,
+        SessionCorrectRate: PropTypes.number.isRequired,
+        runs: PropTypes.arrayOf(PropTypes.shape({
             avgResponseTime: PropTypes.number.isRequired,
             correctRate: PropTypes.number.isRequired,
         })).isRequired,
-        }).isRequired,
-            onDelete: PropTypes.func.isRequired,
-        };
+    }).isRequired,
+    isExpanded: PropTypes.bool.isRequired, // Now controlled by the parent
+    onToggleExpand: PropTypes.func.isRequired, // Passed from the parent to toggle expansion
+    onDelete: PropTypes.func.isRequired, // Passed from the parent to delete session
+};
 
-            export default Session;
+export default Session;
