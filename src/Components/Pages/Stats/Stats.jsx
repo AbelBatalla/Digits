@@ -6,6 +6,7 @@ import { collection, getDocs, where, query, deleteDoc, doc } from "firebase/fire
 import Session from './Session';
 import styles from './Stats.module.css';
 import { FaAngleDown, FaTimes } from "react-icons/fa";
+import RunChart from "./RunChart";
 
 const Stats = () => {
     const { userLoggedIn, currentUser } = useAuth();
@@ -107,7 +108,12 @@ const Stats = () => {
                             />
                         ))}
                         </div>
-                        )}
+                    )}
+
+                    <div>
+                        <RunChart sessions={sessions} />
+                    </div>
+
                 </div>
             )}
         </div>
