@@ -1,3 +1,17 @@
+/* src/Components/Pages/Stats/Session.module.css */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        max-height: 100px;
+        padding: 25px 20px;
+    }
+    to {
+        opacity: 0;
+        max-height: 0;
+        padding: 0 20px;
+    }
+}
+
 .session {
     padding: 25px 20px;
     margin: 0px 0;
@@ -11,20 +25,25 @@
     border-top: 1px solid #ddd; /* Line above */
     border-bottom: 1px solid #ddd; /* Line below */
     overflow: hidden;
+    transition: opacity .5s ease, max-height 0.5s ease, padding 0.5s ease;
+}
+
+.session.deleting {
+    animation: fadeOut 0.5s forwards;
 }
 
 .icon {
     transition: color 0.25s ease; /* Add a transition effect */
 }
 
+.iconTrash {
+    transition: transform 0.2s ease, color 0.25s ease; /* Add a transition effect */
+}
+
 .iconTrash:hover {
     color: #d10000; /* Change color on hover */
     transform: scale(1.2);
     cursor: pointer;
-}
-
-.iconTrash {
-    transition: transform 0.2s ease, color 0.25s ease; /* Add a transition effect */
 }
 
 .session .unexpandedSession {
@@ -36,7 +55,7 @@
     gap: 5%;
 }
 
-.session .base-data {
+.session .baseData {
     display: flex;
     flex-direction: row; /* Display initial data side by side */
     flex-wrap: nowrap;
@@ -45,11 +64,11 @@
     transition: transform 0.1s ease; /* Add a transition effect */
 }
 
-.session .base-data:hover {
+.session .baseData:hover {
     cursor: pointer;
     transform: scale(1.03);
 }
-.session .base-data:hover .icon {
+.session .baseData:hover .icon {
     color: #2fa6a6; /* Change color on hover */
 }
 

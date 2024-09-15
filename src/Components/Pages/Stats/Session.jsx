@@ -2,12 +2,24 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Session.module.css';
 import { FaTimes, FaAngleDown, FaTrash } from "react-icons/fa";
+import { db } from "../../../config/firebase";
+import { doc, deleteDoc } from "firebase/firestore";
 
 const Session = ({ session, onDelete }) => {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const toggleExpand = () => {
         setIsExpanded(!isExpanded);
+    };
+
+    const handleDelete = () => {
+        setIsDeleting(true);
+        setIsExpanded(false);
+        setTimeout(() => {
+            onDelete(session.id);
+            setIsDeleting(false);
+            }, 500);
     };
 
     const [date, time] = session.Date.split(', ');
@@ -32,9 +44,9 @@ const Session = ({ session, onDelete }) => {
     };
 
     return (
-        <div className={`${styles.session} ${isExpanded ? styles.expanded : ''}`} onClick={toggleExpand}>
+        <div className={`${styles.session} ${isExpanded ? styles.expanded : ''} ${isDeleting ? styles.deleting : ''}`} onClick={toggleExpand}>
             <div className={styles.unexpandedSession}>
-                <div className={styles['base-data']}>
+                <div className={styles.baseData}>
                     <div><strong>Date</strong>
                         <div>{date}</div>
                     </div>
@@ -54,7 +66,7 @@ const Session = ({ session, onDelete }) => {
                 </div>
                 <div className={styles.iconTrash} onClick={(e) => {
                     e.stopPropagation();
-                    onDelete(session.id);
+                    handleDelete();
                 }}><FaTrash/></div>
             </div>
             <div className={styles.runs}>

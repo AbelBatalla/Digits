@@ -25,12 +25,12 @@ const Stats = () => {
     };
 
     const handleDelete = async (id) => {
+        setSessions(sessions.filter(session => session.id !== id));
         try {
             await deleteDoc(doc(db, 'Sessions', id));
         } catch (err) {
             console.error('Error deleting session:', err);
         }
-        setSessions(sessions.filter(session => session.id !== id));
     };
 
     useEffect(() => {

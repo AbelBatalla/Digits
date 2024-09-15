@@ -246,7 +246,7 @@ const Game = () => {
         passiveNumbers.sort(() => Math.random() - 0.5);
 
         function executeIteration() {
-            if ((currentIteration < 7 && sessionDifficulty >= 0) || (currentIteration < 5 && sessionDifficulty < 0)) {
+            if (((currentIteration < 7 && sessionDifficulty >= 0) || (currentIteration < 5 && sessionDifficulty < 0)) && !(sessionDifficulty === -3)) {
                 currentIteration++;
                 let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y, passiveNumbers[currentIteration-1]);
                 context.clearRect(0, 0, canvas.width, canvas.height);
@@ -344,10 +344,10 @@ const Game = () => {
 
     const handleButtonClick = (n, resTime) => {
         trialData(n === number, resTime);
-        if (trialIter >= 28 || (trialIter >= 10 && sessionDifficulty === -2) || (trialIter >= 15 && sessionDifficulty === -1)) { //28, 15 i 10 trials
+        if (trialIter >= 28 || (trialIter >= 10 && sessionDifficulty === -2) || (trialIter >= 15 && sessionDifficulty === -1) || (sessionDifficulty === -3)) { //28, 15 i 10 trials
             setTrialIter(1);
             endRun();
-            if ((runNumber >= 2 && sessionDifficulty <= -2) || runNumber >= 3) endGame(); //2 runs at -2, 3 runs at >= -1
+            if ((runNumber >= 1 && sessionDifficulty <= -3) || (runNumber >= 2 && sessionDifficulty <= -2) || runNumber >= 3) endGame(); //2 runs at -2, 3 runs at >= -1
             else {
                 setGameState('runIntroSecond');
                 incrementRunNumber();
