@@ -25,6 +25,14 @@
     transition: color 0.25s ease; /* Add a transition effect */
 }
 
+.iconTrash:hover {
+    color: #d10000; /* Change color on hover */
+}
+
+.iconTrash {
+    transition: color 0.25s ease; /* Add a transition effect */
+}
+
 .session .base-data {
     display: flex;
     flex-direction: row; /* Display initial data side by side */
@@ -35,7 +43,7 @@
 }
 
 .session .base-data:hover {
-    transform: scale(1.04);
+    transform: scale(1.03);
 }
 
 .session p {

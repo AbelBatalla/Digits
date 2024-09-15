@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../../contexts/authContext/authContext';
 import { db } from "../../../config/firebase";
-import { collection, getDocs, where, query } from "firebase/firestore";
+import {collection, getDocs, where, query, deleteDoc, doc} from "firebase/firestore";
 import Session from './Session';
 import styles from './Stats.module.css';
 import { FaAngleDown, FaTimes } from "react-icons/fa";
@@ -22,6 +22,15 @@ const Stats = () => {
         const [hours, minutes, seconds] = timePart.split(':').map(Number);
 
         return new Date(year, month - 1, day, hours, minutes, seconds); // JavaScript months are 0-based
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            await deleteDoc(doc(db, 'Sessions', id));
+        } catch (err) {
+            console.error('Error deleting session:', err);
+        }
+        setSessions(sessions.filter(session => session.id !== id));
     };
 
     useEffect(() => {
@@ -68,7 +77,7 @@ const Stats = () => {
                     </div>
                     <div className={`${styles.containerSessions} ${isExpanded ? styles.expanded : ''}`}>
                         {sessions.map((session, index) => (
-                            <Session key={index} session={session} />
+                            <Session key={index} session={session} onDelete={handleDelete} />
                         ))}
                     </div>
                 </div>

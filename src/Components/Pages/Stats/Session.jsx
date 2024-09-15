@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Session.module.css';
-import { FaTimes, FaAngleDown } from "react-icons/fa";
+import { FaTimes, FaAngleDown, FaTrash } from "react-icons/fa";
 
-const Session = ({ session }) => {
+const Session = ({ session, onDelete }) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const toggleExpand = () => {
@@ -40,6 +40,7 @@ const Session = ({ session }) => {
                 <div><strong>Average Response Time</strong><div>{(session.SessionAvgResponseTime / 1000).toFixed(3)}s</div></div>
                 <div><strong>Correct Answers</strong><div>{Math.floor(session.SessionCorrectRate)}%</div></div>
                 <div className={styles.icon}>{isExpanded ? <FaTimes /> : <FaAngleDown />}</div>
+                <div className={styles.iconTrash} onClick={(e) => { e.stopPropagation(); onDelete(session.id); }}><FaTrash /></div>
             </div>
             <div className={styles.runs}>
                 {session.runs.map((run, index) => (
@@ -71,6 +72,7 @@ Session.propTypes = {
             correctRate: PropTypes.number.isRequired,
         })).isRequired,
     }).isRequired,
+    onDelete: PropTypes.func.isRequired,
 };
 
 export default Session;
