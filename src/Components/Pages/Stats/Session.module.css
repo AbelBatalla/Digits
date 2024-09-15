@@ -13,24 +13,27 @@
     overflow: hidden;
 }
 
-.session:hover {
-    cursor: pointer;
-}
-
-.session:hover .icon {
-    color: #2fa6a6; /* Change color on hover */
-}
-
 .icon {
     transition: color 0.25s ease; /* Add a transition effect */
 }
 
 .iconTrash:hover {
     color: #d10000; /* Change color on hover */
+    transform: scale(1.2);
+    cursor: pointer;
 }
 
 .iconTrash {
-    transition: color 0.25s ease; /* Add a transition effect */
+    transition: transform 0.2s ease, color 0.25s ease; /* Add a transition effect */
+}
+
+.session .unexpandedSession {
+    display: flex;
+    flex-direction: row; /* Display initial data side by side */
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    width: 100%;
+    gap: 5%;
 }
 
 .session .base-data {
@@ -39,11 +42,15 @@
     flex-wrap: nowrap;
     justify-content: space-between;
     width: 100%;
-    transition: transform 0.2s ease; /* Add a transition effect */
+    transition: transform 0.1s ease; /* Add a transition effect */
 }
 
 .session .base-data:hover {
+    cursor: pointer;
     transform: scale(1.03);
+}
+.session .base-data:hover .icon {
+    color: #2fa6a6; /* Change color on hover */
 }
 
 .session p {
@@ -64,6 +71,10 @@
     max-height: 0;
     opacity: 0;
     transition: max-height 0.2s ease, opacity 0.2s ease, padding-top 0.2s ease;
+}
+
+.session .runs:hover {
+    cursor: pointer;
 }
 
 .session.expanded .runs {
