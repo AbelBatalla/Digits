@@ -28,13 +28,17 @@ function Navbar() {
                 <NavLink className={({ isActive, isPending }) =>
                     `${styles.a} ${isActive || isPending ? styles.active : ''}`
                 } to="/other" onClick={() => setMenuOpen(false)}>Other</NavLink>
-                <div className={styles.user}>
-                    {userLoggedIn ? (
+                {userLoggedIn ? (
+                    <div className={styles.user}>
                         <p>{currentUser.email}</p>
-                    ) : (
-                        <p>Not logged in</p>
-                    )}
-                </div>
+                    </div>
+                ) : (
+                    <NavLink className={({ isActive, isPending }) =>
+                        `${styles.a} ${isActive || isPending ? styles.active : ''}`
+                    } to="/login" onClick={() => setMenuOpen(false)}>Log In</NavLink>
+                )}
+
+
                 <button className={[styles.navBtn, styles.navCloseBtn].join(' ')}
                         onClick={() => setMenuOpen(!menuOpen)}>
                     <FaTimes />
