@@ -1,8 +1,9 @@
 import React, {useState} from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import styles from './Navbar.module.css';
-import {Link, NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useAuth } from "../../contexts/authContext/authContext";
+import UserPopUp from "./UserPopUp";
 
 function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -38,8 +39,8 @@ function Navbar() {
                     >
                         <p>{currentUser.email}</p>
                         {hover && (
-                            <div className={styles.popup}>
-                                <button onClick={logout}>Log Out</button>
+                            <div>
+                                <UserPopUp />
                             </div>
                         )}
                     </div>

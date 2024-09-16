@@ -1,7 +1,7 @@
 /* General container styling */
 .mainContainer {
     width: 100%;
-    height: 100vh;
+    height: 75vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,12 +16,13 @@
     border-radius: 0.75rem; /* Equivalent to rounded-xl */
     display: flex;
     flex-direction: column;
-    gap: 1.25rem; /* Equivalent to space-y-5 */
+    gap: 0.5rem; /* Equivalent to space-y-5 */
 }
 
 .textCenter {
     text-align: center;
-    margin-bottom: 1.5rem; /* Equivalent to mb-6 */
+    margin-top: 1rem; /* Equivalent to mb-6 */
+    margin-bottom: 0rem; /* Equivalent to mb-6 */
 }
 
 .heading {
