@@ -98,20 +98,25 @@ const Stats = () => {
 
                     {isExpanded && (
                         <div className={`${styles.containerSessions} ${isVisible ? styles.visible : styles.hidden}`}>
-                        {sessions.map((session) => (
-                            <Session
-                                key={session.id}
-                                session={session}
-                                isExpanded={expandedSessions.includes(session.id)} // Check if the session is expanded
-                                onToggleExpand={() => toggleSessionExpand(session.id)} // Toggle expansion
-                                onDelete={() => handleDelete(session.id)} // Pass session ID to delete
-                            />
-                        ))}
+                            {sessions.map((session) => (
+                                <Session
+                                    key={session.id}
+                                    session={session}
+                                    isExpanded={expandedSessions.includes(session.id)} // Check if the session is expanded
+                                    onToggleExpand={() => toggleSessionExpand(session.id)} // Toggle expansion
+                                    onDelete={() => handleDelete(session.id)} // Pass session ID to delete
+                                />
+                            ))}
                         </div>
                     )}
+                    <div className={styles.divider}>
+                    </div>
 
+                    <div className={`${styles.title}`}>
+                        <h2> Charts </h2>
+                    </div>
                     <div>
-                        <RunChart sessions={sessions} />
+                        <RunChart sessions={sessions}/>
                     </div>
 
                 </div>

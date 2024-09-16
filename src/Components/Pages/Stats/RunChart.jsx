@@ -1,8 +1,8 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import styles from './RunChart.module.css';
 
-// Register necessary components from Chart.js
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const RunChart = ({ sessions }) => {
@@ -61,7 +61,10 @@ const RunChart = ({ sessions }) => {
         },
     };
 
-    return <Line data={data} options={options} />;
-};
+    return (
+        <div className={styles.chartContainer}>
+            <Line data={data} options={options} />
+        </div>
+    );};
 
 export default RunChart;

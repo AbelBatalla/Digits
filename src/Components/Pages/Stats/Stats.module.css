@@ -40,6 +40,24 @@
     text-decoration: underline;
 }
 
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Align text and icon horizontally */
+    padding-bottom: 15px;
+    gap: 10px; /* Adds spacing between text and icon */
+    transition: transform 0.2s, border-bottom 0.1s;; /* Add a transition effect */
+    width: 25%;
+    margin: 60px auto;
+    border-bottom: 2px solid #2fa6a6; /* Line below when not expanded */
+}
+
+.title h2 {
+    margin: 0; /* Reset any default margin on h2 */
+    padding: 0; /* Ensure no extra space */
+    line-height: 1; /* Adjust line height if necessary */
+}
+
 .dropdown {
     display: flex;
     align-items: center;
@@ -78,4 +96,11 @@
     line-height: 0; /* Adjust line height if necessary */
     font-size: 1.5rem;
     transition: color 0.25s ease; /* Add a transition effect */
+}
+
+.divider {
+    width: 60%;
+    height: 2px;
+    background-color: #ccc; /* Adjust the color as needed */
+    margin: 80px auto; /* Adjust the spacing as needed */
 }
