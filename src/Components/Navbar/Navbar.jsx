@@ -3,9 +3,11 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import styles from './Navbar.module.css';
 import {Link, NavLink} from "react-router-dom";
 import { useAuth } from "../../contexts/authContext/authContext";
+
 function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
-    const { currentUser, userLoggedIn } = useAuth();
+    const { currentUser, userLoggedIn, logout } = useAuth();
+    const [hover, setHover] = useState(false);
 
     return (
         <header className={styles.header}>
@@ -29,10 +31,19 @@ function Navbar() {
                     `${styles.a} ${isActive || isPending ? styles.active : ''}`
                 } to="/other" onClick={() => setMenuOpen(false)}>Other</NavLink>
                 {userLoggedIn ? (
-                    <div className={styles.user}>
+                    <div
+                        className={styles.user}
+                        onMouseEnter={() => setHover(true)}
+                        onMouseLeave={() => setHover(false)}
+                    >
                         <p>{currentUser.email}</p>
+                        {hover && (
+                            <div className={styles.popup}>
+                                <button onClick={logout}>Log Out</button>
+                            </div>
+                        )}
                     </div>
-                ) : (
+                    ) : (
                     <NavLink className={({ isActive, isPending }) =>
                         `${styles.a} ${isActive || isPending ? styles.active : ''}`
                     } to="/login" onClick={() => setMenuOpen(false)}>Log In</NavLink>
