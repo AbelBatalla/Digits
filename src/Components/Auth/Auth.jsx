@@ -26,7 +26,11 @@ export const loginEmail = async (email, password) => {
 
 export const loginGoogle = async () => {
     try {
-        await signInWithPopup(auth, googleProvider);
+        const provider = googleProvider;
+        provider.setCustomParameters({
+            prompt: "select_account", // This forces the account chooser to show up every time
+        });
+        await signInWithPopup(auth, provider);
     } catch (err) {
         console.error(err);
     }

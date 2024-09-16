@@ -29,6 +29,7 @@ const Login = () => {
             loginGoogle().catch(err => {
                 setIsSigningIn(false);
             });
+            setIsSigningIn(false);
         }
     };
 

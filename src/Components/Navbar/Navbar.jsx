@@ -10,6 +10,10 @@ function Navbar() {
     const { currentUser, userLoggedIn, logout } = useAuth();
     const [hover, setHover] = useState(false);
 
+    function removeHover() {
+        setHover(false);
+    }
+
     return (
         <header className={styles.header}>
             <h1 className={styles.h1}>Digits</h1>
@@ -40,7 +44,7 @@ function Navbar() {
                         <p>{currentUser.email}</p>
                         {hover && (
                             <div>
-                                <UserPopUp />
+                                <UserPopUp onClickEffect={removeHover}/>
                             </div>
                         )}
                     </div>
