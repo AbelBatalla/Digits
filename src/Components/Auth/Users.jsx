@@ -20,7 +20,7 @@ const Users = () => {
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
             />
-            <button onClick={loginEmail(email, password)}> Log In</button>
+            <button onClick={() => {loginEmail(email, password)}}> Log In</button>
 
             <button onClick={loginGoogle}> Log In With Google</button>
 

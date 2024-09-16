@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Navigate, Link } from 'react-router-dom';
 import { useAuth } from '../../../contexts/authContext/authContext';
-import { signUpEmail} from "../Auth";
+import { signUpEmail } from "../Auth";
 import styles from './Register.module.css';
 
 const Register = () => {
@@ -23,7 +23,7 @@ const Register = () => {
 
     return (
         <>
-            {userLoggedIn && <Navigate to={'/register'} replace={true} />}
+            {userLoggedIn && <Navigate to={'/'} replace={true} />}
 
             <main className={styles.mainContainer}>
                 <div className={styles.registerBox}>

@@ -1,11 +1,18 @@
 import React, {useState} from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import styles from './Navbar.module.css';
-import {Link, NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useAuth } from "../../contexts/authContext/authContext";
+import UserPopUp from "./UserPopUp";
+
 function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
-    const { currentUser, userLoggedIn } = useAuth();
+    const { currentUser, userLoggedIn, logout } = useAuth();
+    const [hover, setHover] = useState(false);
+
+    function removeHover() {
+        setHover(false);
+    }
 
     return (
         <header className={styles.header}>
@@ -28,13 +35,26 @@ function Navbar() {
                 <NavLink className={({ isActive, isPending }) =>
                     `${styles.a} ${isActive || isPending ? styles.active : ''}`
                 } to="/other" onClick={() => setMenuOpen(false)}>Other</NavLink>
-                <div className={styles.user}>
-                    {userLoggedIn ? (
+                {userLoggedIn ? (
+                    <div
+                        className={styles.user}
+                        onMouseEnter={() => setHover(true)}
+                        onMouseLeave={() => setHover(false)}
+                    >
                         <p>{currentUser.email}</p>
+                        {hover && (
+                            <div>
+                                <UserPopUp onClickEffect={removeHover}/>
+                            </div>
+                        )}
+                    </div>
                     ) : (
-                        <p>Not logged in</p>
-                    )}
-                </div>
+                    <NavLink className={({ isActive, isPending }) =>
+                        `${styles.a} ${isActive || isPending ? styles.active : ''}`
+                    } to="/login" onClick={() => setMenuOpen(false)}>Log In</NavLink>
+                )}
+
+
                 <button className={[styles.navBtn, styles.navCloseBtn].join(' ')}
                         onClick={() => setMenuOpen(!menuOpen)}>
                     <FaTimes />
