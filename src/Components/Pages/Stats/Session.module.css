@@ -1,0 +1,117 @@
+/* src/Components/Pages/Stats/Session.module.css */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        max-height: 100px;
+        padding: 25px 20px;
+    }
+    to {
+        opacity: 0;
+        max-height: 0;
+        padding: 0 20px;
+    }
+}
+
+.session {
+    padding: 25px 20px;
+    margin: 0px 0;
+    background-color: white;
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center text vertically */
+    max-width: 1200px; /* Constrain the width */
+    width: 80%; /* Ensure it doesn't exceed the container's width */
+    height: 100%;
+    border-top: 1px solid #ddd; /* Line above */
+    border-bottom: 1px solid #ddd; /* Line below */
+    overflow: hidden;
+    transition: opacity .5s ease, max-height 0.5s ease, padding 0.5s ease;
+}
+
+.session.deleting {
+    animation: fadeOut 0.5s forwards;
+}
+
+.icon {
+    transition: color 0.25s ease; /* Add a transition effect */
+}
+
+.iconTrash {
+    transition: transform 0.2s ease, color 0.25s ease; /* Add a transition effect */
+}
+
+.iconTrash:hover {
+    color: #d10000; /* Change color on hover */
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.session .unexpandedSession {
+    display: flex;
+    flex-direction: row; /* Display initial data side by side */
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    width: 100%;
+    gap: 5%;
+}
+
+.session .baseData {
+    display: flex;
+    flex-direction: row; /* Display initial data side by side */
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    width: 100%;
+    transition: transform 0.1s ease; /* Add a transition effect */
+}
+
+.session .baseData:hover {
+    cursor: pointer;
+    transform: scale(1.03);
+}
+.session .baseData:hover .icon {
+    color: #2fa6a6; /* Change color on hover */
+}
+
+.session p {
+    margin: 4px 8px;
+    font-size: 1rem;
+    color: #666;
+    flex: 1 1 30%;
+}
+
+.session strong {
+    color: #000;
+}
+
+.session .runs {
+    flex-basis: 100%;
+    display: flex;
+    flex-direction: column; /* Stack runs vertically */
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.2s ease, opacity 0.2s ease, padding-top 0.2s ease;
+}
+
+.session .runs:hover {
+    cursor: pointer;
+}
+
+.session.expanded .runs {
+    max-height: 1000px; /* Adjust as needed */
+    opacity: 1;
+    padding-top: 15px;
+}
+
+.session .run {
+    margin: 5px;
+    display: flex;
+    align-items: center; /* Center text vertically */
+    flex-wrap: wrap; /* Allow wrapping */
+}
+
+.session .run p {
+    margin: 4px 20px;
+    font-size: 1rem;
+    color: #666;
+    flex: 1 1 auto; /* Allow items to grow and shrink */
+}
