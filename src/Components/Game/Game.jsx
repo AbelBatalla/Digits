@@ -106,7 +106,7 @@ const Game = () => {
         }
 
         function distanceFromCenter(x, y) {
-            const dx = (x - centerX) * 0.8;
+            const dx = (x - centerX) * 0.7;
             const dy = y - centerY;
             return Math.sqrt(dx * dx + dy * dy);
         }
@@ -306,20 +306,49 @@ const Game = () => {
                     [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
                 }
             }
+        }
+
+        function repeatDistanceCheck(arr, minDistance = 3) {
+            function isRepeated(arr, i, n = arr[i]) {
+                let j = i - minDistance;
+                if (j < 0) j = 0;
+                for (j; j < i; j++) {
+                    if (arr[j] === n) {
+                        return true;
+                    }
+                }
+                return false;
+            }
 
             for (let i = 1; i < arr.length; i++) {
-                if (arr[i] === arr[i - 1]) {
-                    if (i + 1 < arr.length) {
-                        [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+                if (isRepeated(arr, i)) {
+                    let j = i + 1;
+                    let remaining = [];
+                    let end = false;
+                    if (j >= arr.length) {
+                        end = true;
+                        remaining = arr.splice(i);
                     }
-                    else {
-                        [arr[i - 1], arr[i - 2]] = [arr[i - 2], arr[i - 1]];
+                    while (!end) {
+                        if (isRepeated(arr, i, arr[j])) {
+                            j++;
+                            if (j >= arr.length) {
+                                remaining = arr.splice(i);
+                                end = true;
+                            }
+                        }
+                        else {
+                            [arr[i], arr[j]] = [arr[j], arr[i]];
+                            end = true;
+                        }
+                    }
+                    if (remaining.length > 0) {
+                        arr.splice(arr.length-2*minDistance, 0, ...remaining);
+                        break;
                     }
                 }
             }
-
-            numbersToDisplay.current = [number];
-    }
+        }
 
         let addedRange = 0;
         if (sessionDifficulty === 1) addedRange = 5;
@@ -338,6 +367,7 @@ const Game = () => {
         else if (sessionDifficulty === -2) scrambleFactor = 2;
         a = sectionScramble(a, scrambleFactor);
         pseudorandomSort(a);
+        repeatDistanceCheck(a);
         console.log("Run numbers:", a);
         numbersToDisplay.current = a;
     };
