@@ -20,16 +20,12 @@ export function ProfileProvider({ children }) {
             const fetchUserProfiles = async () => {
                 try {
                     const profilesCollectionRef = collection(db, "Users", currentUser.uid, "Profiles");
-                    console.log("Profiles collection ref", profilesCollectionRef);
                     const q = query(profilesCollectionRef, where('UserID', '==', currentUser.uid));
-
                     const querySnapshot = await getDocs(q);
-                    console.log("Query snapshot", querySnapshot);
                     setProfiles(querySnapshot.docs.map(doc => ({
                         id: doc.id,
                         ...doc.data()
                     })));
-                    console.log("Profiles:", profiles);
                 } catch (error) {
                     console.error("Error fetching profiles:", error);
                 }

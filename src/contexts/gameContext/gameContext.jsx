@@ -1,6 +1,7 @@
 import React, {useContext, useRef, useState} from "react";
 import { db } from "../../config/firebase";
 import { useAuth } from "../authContext/authContext";
+import { useProfile } from "../profileContext/profileContext";
 import { collection, addDoc } from "firebase/firestore";
 
 const GameContext = React.createContext();
@@ -10,6 +11,7 @@ export function useGame() {
 
 export function GameProvider({ children }) {
     const { userLoggedIn, currentUser } = useAuth();
+    const { activeProfile } = useProfile();
     const [sessionDifficulty, setSessionDifficulty] = useState(0);
     const [runNumber, setRunNumber] = useState(1);
     const [availableImages, setAvailableImages] = useState(Array.from({ length: 5 }, (_, i) => i)); //[MODIFY IMAGES]
@@ -61,7 +63,7 @@ export function GameProvider({ children }) {
 
         const SessionData = {
             UserID: userLoggedIn ? currentUser.uid : "none",
-            Profile: "default",
+            ProfileName: activeProfile ? activeProfile.Name : "No Profile",
             Date: formattedTimeUTC2,
             Difficulty: sessionDifficulty,
             SessionCorrectRate: runDataRef.current.reduce((acc, run) => acc + run.correctRate, 0) / runDataRef.current.length,
@@ -75,7 +77,8 @@ export function GameProvider({ children }) {
 
     const storeSessionData = async (data) => {
         try {
-            const docRef = await addDoc(collection(db, "Sessions"), data);
+            const sessionsRef = collection(db, 'Users', currentUser.uid, 'Profiles', activeProfile.Name, 'Sessions');
+            const docRef = await addDoc(sessionsRef, data);
             console.log("Document written with ID: ", docRef.id);
         } catch (e) {
             console.error("Error adding document: ", e);
