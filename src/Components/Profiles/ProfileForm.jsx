@@ -32,17 +32,18 @@ const ProfileForm = ({ onSubmit }) => {
     return (
         <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.formGroup}>
-                <label htmlFor="Name">Name</label>
+                <label htmlFor="Name" className={styles.label}>Name</label>
                 <input
                     type="text"
                     name="Name"
+                    className={styles.input}
                     value={profileData.Name}
                     onChange={handleChange}
                     required
                 />
             </div>
             <div className={styles.formGroupNationality}>
-                <label htmlFor="Nationality">Nationality</label>
+                <label htmlFor="Nationality" className={styles.label}>Nationality</label>
                 <ReactFlagsSelect
                     className={styles.inputNationality}
                     selectButtonClassName={styles.buttonNationality}
@@ -59,11 +60,12 @@ const ProfileForm = ({ onSubmit }) => {
                 {error && <p className={styles.error}>{error}</p>}
             </div>
             <div className={styles.formGroup}>
-                <label htmlFor="DateOfBirth">Date of Birth</label>
+                <label htmlFor="DateOfBirth" className={styles.label}>Date of Birth</label>
                 <input
                     type="date"
                     min="1900-01-01"
                     max={new Date().toISOString().split('T')[0]}
+                    className={styles.input}
                     name="DateOfBirth"
                     value={profileData.DateOfBirth}
                     onChange={handleChange}
@@ -71,12 +73,13 @@ const ProfileForm = ({ onSubmit }) => {
                 />
             </div>
             <div className={styles.formGroup}>
-                <label htmlFor="Gender">Gender</label>
+                <label htmlFor="Gender" className={styles.label}>Gender</label>
                 <select
                     name="Gender"
                     value={profileData.Gender}
                     onChange={handleChange}
                     required
+                    className={styles.select}
                 >
                     <option value="" className={styles.selectPlaceholder}>Select Gender</option>
                     <option value="male">Male</option>
