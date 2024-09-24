@@ -2,6 +2,8 @@
     display: flex;
     flex-direction: column;
     margin: 0.5rem;
+    justify-content: left;
+    text-align: left;
 }
 
 .formGroup {
@@ -34,6 +36,11 @@
     box-sizing: border-box;
     border: 1px solid black;
     border-radius: 3px;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 0.4rem top 50%;
+    background-size: 1.4rem;
 }
 
 .select:hover {
@@ -50,6 +57,7 @@
 
 .buttonNationality {
     padding: 0.35rem;
+    padding-right: 1rem;
     font-size: 1rem;
     border-color: black;
     border-radius: 3px;

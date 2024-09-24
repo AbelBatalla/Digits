@@ -77,7 +77,7 @@ const Stats = () => {
             }
         };
 
-        if (userLoggedIn) {
+        if (userLoggedIn && activeProfile) {
             fetchSessions().then(r => {});
         }
     }, [userLoggedIn]);
@@ -98,13 +98,15 @@ const Stats = () => {
                 {!activeProfile && (
                     <div className={styles.container}>
                         <p className={styles.p}>
-                            No active profile selected. Please <ProfileFormModal />.
-                        </p>
+                            No active profile selected. Please&nbsp;</p>
+                        <ProfileFormModal/>
+                        <p className={styles.p}>.</p>
                     </div>
                 )}
                     {activeProfile && (
                         <div>
-                            <div className={`${styles.dropdown} ${isExpanded ? styles.expanded : ''}`} onClick={toggleExpand}>
+                            <div className={`${styles.dropdown} ${isExpanded ? styles.expanded : ''}`}
+                                 onClick={toggleExpand}>
                                 <h2> Sessions </h2>
                                 <div className={styles.icon}> {isExpanded ? <FaTimes/> : <FaAngleDown/>} </div>
                             </div>

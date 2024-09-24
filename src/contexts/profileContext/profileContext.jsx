@@ -34,6 +34,7 @@ export function ProfileProvider({ children }) {
                 const userRef = doc(db, 'Users', currentUser.uid);
                 const userSnap = await getDoc(userRef);
                 const activeProfileName = userSnap.data().activeProfile;
+                if (!activeProfileName) return;
                 const activeProfileRef = doc(db, 'Users', currentUser.uid, 'Profiles', activeProfileName);
                 const activeProfileSnap = await getDoc(activeProfileRef);
                 setActiveProfile(activeProfileSnap.data());

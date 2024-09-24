@@ -18,8 +18,9 @@ const Play = () => {
                     {!activeProfile && (
                         <div className={styles.container}>
                             <p className={styles.p}>
-                                No active profile selected. Please <ProfileFormModal />.
-                            </p>
+                                No active profile selected. Please&nbsp;</p>
+                            <ProfileFormModal />
+                            <p className={styles.p}>.</p>
                         </div>
                     )}
                     {activeProfile && (
