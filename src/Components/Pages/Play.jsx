@@ -5,6 +5,7 @@ import { useProfile } from "../../contexts/profileContext/profileContext";
 import { useAuth } from "../../contexts/authContext/authContext";
 import styles from "./Stats/Stats.module.css";
 import { Link } from "react-router-dom";
+import ProfileFormModal from "../Modal/ProfileFormModal";
 
 const Play = () => {
     const { activeProfile } = useProfile();
@@ -17,9 +18,7 @@ const Play = () => {
                     {!activeProfile && (
                         <div className={styles.container}>
                             <p className={styles.p}>
-                                No active profile selected. Please
-                                <Link to="/login" className={styles.linkEnd}>create a profile</Link>
-                                .
+                                No active profile selected. Please <ProfileFormModal />.
                             </p>
                         </div>
                     )}

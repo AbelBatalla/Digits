@@ -2,12 +2,16 @@
 import React, { useState } from 'react';
 import { useProfile } from '../../contexts/profileContext/profileContext';
 import { useAuth } from '../../contexts/authContext/authContext';
+import styles from './ProfileForm.module.css';
+import ReactFlagsSelect from 'react-flags-select';
 
 
-const ProfileForm = () => {
+const ProfileForm = ({ onSubmit }) => {
     const { createProfile } = useProfile();
     const { userLoggedIn, currentUser } = useAuth();
-    const [profileData, setProfileData] = useState({UserID: userLoggedIn ? currentUser.uid : "none", Name: '', DateOfBirth: '', Gender: ''});
+    const [profileData, setProfileData] = useState({UserID: userLoggedIn ? currentUser.uid : "none", Name: '', DateOfBirth: '', Gender: '', Nationality: ''});
+    const [selected, setSelected] = useState('');
+    const [error, setError] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -16,36 +20,71 @@ const ProfileForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (!profileData.Nationality) {
+            //window.alert('Nationality is required');
+            setError('Nationality is required');
+            return;
+        }
         createProfile(profileData);
+        if(onSubmit) onSubmit();
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input
-                type="text"
-                name="Name"
-                value={profileData.Name}
-                onChange={handleChange}
-                placeholder="Name"
-                required
-            />
-            <input
-                type="text"
-                name="DateOfBirth"
-                value={profileData.DateOfBirth}
-                onChange={handleChange}
-                placeholder="Date of birth"
-                required
-            />
-            <input
-                type="text"
-                name="Gender"
-                value={profileData.Gender}
-                onChange={handleChange}
-                placeholder="Gender"
-                required
-            />
-            <button type="submit">Create Profile</button>
+        <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.formGroup}>
+                <label htmlFor="Name">Name</label>
+                <input
+                    type="text"
+                    name="Name"
+                    value={profileData.Name}
+                    onChange={handleChange}
+                    required
+                />
+            </div>
+            <div className={styles.formGroupNationality}>
+                <label htmlFor="Nationality">Nationality</label>
+                <ReactFlagsSelect
+                    className={styles.inputNationality}
+                    selectButtonClassName={styles.buttonNationality}
+                    selected={selected}
+                    onSelect={(code) => {
+                        setSelected(code);
+                        setProfileData({...profileData, Nationality: code});
+                        setError('');
+                    }}
+                    searchable={true}
+                    placeholder="Select Country"
+                    searchPlaceholder="Search countries"
+                />
+                {error && <p className={styles.error}>{error}</p>}
+            </div>
+            <div className={styles.formGroup}>
+                <label htmlFor="DateOfBirth">Date of Birth</label>
+                <input
+                    type="date"
+                    min="1900-01-01"
+                    max={new Date().toISOString().split('T')[0]}
+                    name="DateOfBirth"
+                    value={profileData.DateOfBirth}
+                    onChange={handleChange}
+                    required
+                />
+            </div>
+            <div className={styles.formGroup}>
+                <label htmlFor="Gender">Gender</label>
+                <select
+                    name="Gender"
+                    value={profileData.Gender}
+                    onChange={handleChange}
+                    required
+                >
+                    <option value="" className={styles.selectPlaceholder}>Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <button type="submit" className={styles.submitButton}>Create Profile</button>
         </form>
     );
 };

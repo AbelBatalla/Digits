@@ -51,8 +51,8 @@ export function ProfileProvider({ children }) {
         if (userLoggedIn) {
             const newProfiles = [...profiles, profileData];
             await setDoc(doc(db, "Users", currentUser.uid, "Profiles", profileData.Name), profileData);
-            setProfiles(newProfiles);
-            setActiveProfile(profileData);
+            setProfiles(newProfiles); //ONLY ON SUCESS
+            setActiveProfileInDb(profileData); //ONLY ON SUCESS
             console.log("Profile created successfully");
         }
     };

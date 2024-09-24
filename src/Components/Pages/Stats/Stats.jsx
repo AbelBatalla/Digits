@@ -8,6 +8,7 @@ import Session from './Session';
 import styles from './Stats.module.css';
 import { FaAngleDown, FaTimes } from "react-icons/fa";
 import RunChart from "./RunChart";
+import ProfileFormModal from "../../Modal/ProfileFormModal";
 
 const Stats = () => {
     const { userLoggedIn, currentUser } = useAuth();
@@ -77,7 +78,7 @@ const Stats = () => {
         };
 
         if (userLoggedIn) {
-            fetchSessions();
+            fetchSessions().then(r => {});
         }
     }, [userLoggedIn]);
 
@@ -97,9 +98,7 @@ const Stats = () => {
                 {!activeProfile && (
                     <div className={styles.container}>
                         <p className={styles.p}>
-                            No active profile selected. Please
-                            <Link to="/login" className={styles.linkEnd}>create a profile</Link>
-                            .
+                            No active profile selected. Please <ProfileFormModal />.
                         </p>
                     </div>
                 )}
