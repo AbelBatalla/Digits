@@ -40,6 +40,17 @@
     text-decoration: underline;
 }
 
+.linkEnd {
+    font-weight: bold;
+    text-decoration: none;
+    margin-left: 6px;
+    color: #6366F1;
+}
+
+.linkEnd:hover {
+    text-decoration: underline;
+}
+
 .title {
     display: flex;
     align-items: center;

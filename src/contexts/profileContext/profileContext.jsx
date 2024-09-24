@@ -38,8 +38,8 @@ export function ProfileProvider({ children }) {
                 const activeProfileSnap = await getDoc(activeProfileRef);
                 setActiveProfile(activeProfileSnap.data());
             }
-            fetchActiveProfile();
-            fetchUserProfiles();
+            fetchActiveProfile().then(r => {});
+            fetchUserProfiles().then(r => {});
         }
         else {
             setProfiles([]);

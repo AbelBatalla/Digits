@@ -8,7 +8,7 @@ const UserPopUp = ({ onClickEffect }) => {
             <button onClick={
                 () => {
                     onClickEffect();
-                    logout();
+                    logout().then(r => {});
                 }}>Log Out</button>
         </div>
     );

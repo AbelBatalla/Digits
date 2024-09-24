@@ -43,6 +43,7 @@ export const loginGoogle = async () => {
         });
 
         const result = await signInWithPopup(auth, provider);
+        console.log(result);
         const { isNewUser } = result._tokenResponse;
         if (isNewUser) {
             await createUserDoc(result.user);
