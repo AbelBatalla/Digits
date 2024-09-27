@@ -15,7 +15,10 @@ const ProfileSelector = () => {
 
     const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
     const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setIsDropdownOpen(false);
+    }
 
     const handleClickOutside = (event) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {

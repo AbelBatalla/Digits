@@ -22,11 +22,11 @@ const Login = () => {
         }
     };
 
-    const onGoogleSignIn = (e) => {
+    const onGoogleSignIn = async (e) => {
         e.preventDefault();
         if (!isSigningIn) {
             setIsSigningIn(true);
-            loginGoogle().catch(err => {
+            await loginGoogle().catch(err => {
                 setIsSigningIn(false);
             });
             setIsSigningIn(false);

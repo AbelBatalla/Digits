@@ -12,8 +12,7 @@ import {
 
 export const signUpEmail = async (email, password) => {
     try {
-        const result = await createUserWithEmailAndPassword(auth, email, password);
-        createUserDoc(result.user);
+        await createUserWithEmailAndPassword(auth, email, password);
     } catch (err) {
         if (err.code === 'auth/email-already-in-use') {
             console.error("This email is already in use.");
@@ -41,28 +40,10 @@ export const loginGoogle = async () => {
         provider.setCustomParameters({
             prompt: "select_account", // This forces the account chooser to show up every time
         });
-
-        const result = await signInWithPopup(auth, provider);
-        console.log(result);
-        const { isNewUser } = result._tokenResponse;
-        if (isNewUser) {
-            await createUserDoc(result.user);
-        }
-
+        await signInWithPopup(auth, provider);
+        console.log("Here3");
     } catch (err) {
         console.error(err);
-    }
-};
-
-const createUserDoc = async (user) => {
-    try {
-        await setDoc(doc(db, "Users", user.uid), {
-            UserID: user.uid,
-            email: user.email
-        });
-
-    } catch (error) {
-        console.error("Error creating user document:", error);
     }
 };
 

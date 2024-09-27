@@ -16,6 +16,7 @@ export function ProfileProvider({ children }) {
     const [activeProfile, setActiveProfile] = useState(null);
 
     useEffect(() => {
+        console.log("Here4");
         if (userLoggedIn) {
             const fetchUserProfiles = async () => {
                 try {
@@ -41,6 +42,7 @@ export function ProfileProvider({ children }) {
             }
             fetchActiveProfile().then(r => {});
             fetchUserProfiles().then(r => {});
+            console.log("Here5");
         }
         else {
             setProfiles([]);
