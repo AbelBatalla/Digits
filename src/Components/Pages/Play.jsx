@@ -19,7 +19,7 @@ const Play = () => {
                         <div className={styles.container}>
                             <p className={styles.p}>
                                 No active profile selected. Please&nbsp;</p>
-                            <ProfileFormModal />
+                            <ProfileFormModal text={"create a profile"}/>
                             <p className={styles.p}>.</p>
                         </div>
                     )}

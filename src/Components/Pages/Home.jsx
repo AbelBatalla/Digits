@@ -10,7 +10,7 @@ const Home = () => {
     <>
         <h1>Home</h1>
         <ProfileSelector />
-        <ProfileFormModal />
+        <ProfileFormModal text={"create a profile"}/>
     </>
 )
 };

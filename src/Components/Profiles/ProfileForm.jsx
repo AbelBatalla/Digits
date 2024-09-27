@@ -7,27 +7,36 @@ import ReactFlagsSelect from 'react-flags-select';
 
 
 const ProfileForm = ({ onSubmit }) => {
-    const { createProfile } = useProfile();
+    const { createProfile, profiles } = useProfile();
     const { userLoggedIn, currentUser } = useAuth();
     const [profileData, setProfileData] = useState({UserID: userLoggedIn ? currentUser.uid : "none", Name: '', DateOfBirth: '', Gender: '', Nationality: ''});
     const [selected, setSelected] = useState('');
-    const [error, setError] = useState('');
+    const [errorNationality, setErrorNationality] = useState('');
+    const [errorName, setErrorName] = useState('');
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        //if (name === 'Name' && checkProfileName(value)) setErrorName('A Profile already exists with that name');
         setProfileData({ ...profileData, [name]: value });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!profileData.Nationality) {
-            //window.alert('Nationality is required');
-            setError('Nationality is required');
+            setErrorNationality('Nationality is required');
+            return;
+        }
+        if (errorName) {
             return;
         }
         createProfile(profileData);
         if(onSubmit) onSubmit();
     };
+
+    const checkProfileName = (name) => {
+        return profiles.some(profile => profile.Name === name);
+    }
 
     return (
         <form onSubmit={handleSubmit} className={styles.form}>
@@ -35,12 +44,22 @@ const ProfileForm = ({ onSubmit }) => {
                 <label htmlFor="Name" className={styles.label}>Name</label>
                 <input
                     type="text"
+                    maxLength="16"
                     name="Name"
                     className={styles.input}
                     value={profileData.Name}
-                    onChange={handleChange}
+                    onChange={(event) => {
+                        handleChange(event);
+                        if (checkProfileName(event.target.value)) {
+                            setErrorName('A Profile already exists with that name');
+                        }
+                        else {
+                            setErrorName('');
+                        }
+                    }}
                     required
                 />
+                {errorName && <p className={styles.error}>{errorName}</p>}
             </div>
             <div className={styles.formGroupNationality}>
                 <label htmlFor="Nationality" className={styles.label}>Nationality</label>
@@ -51,13 +70,13 @@ const ProfileForm = ({ onSubmit }) => {
                     onSelect={(code) => {
                         setSelected(code);
                         setProfileData({...profileData, Nationality: code});
-                        setError('');
+                        setErrorNationality('');
                     }}
                     searchable={true}
                     placeholder="Select Country"
                     searchPlaceholder="Search countries"
                 />
-                {error && <p className={styles.error}>{error}</p>}
+                {errorNationality && <p className={styles.error}>{errorNationality}</p>}
             </div>
             <div className={styles.formGroup}>
                 <label htmlFor="DateOfBirth" className={styles.label}>Date of Birth</label>

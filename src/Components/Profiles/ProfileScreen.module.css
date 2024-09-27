@@ -1,0 +1,22 @@
+.profileDetail {
+    padding: 20px;
+}
+
+.profileDetail h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.profileDetail p {
+    font-size: 1rem;
+    margin: 10px 0;
+}
+
+.profileScreen {
+    display: flex;
+}
+
+.profileContent {
+    flex: 1;
+    padding: 20px;
+}

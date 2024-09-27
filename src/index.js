@@ -10,6 +10,7 @@ import Login from "./Components/Auth/Login/Login";
 import Users from "./Components/Auth/Users";
 import Register from "./Components/Auth/Register/Register";
 import Stats from "./Components/Pages/Stats/Stats";
+import ProfileScreen from "./Components/Profiles/ProfileScreen";
 import NotFoundPage from "./Components/Pages/NotFound/NotFoundPage";
 
 const router = createBrowserRouter([
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
             {
                 path: 'stats',
                 element: <Stats />,
+            },
+            {
+                path: 'profile/:profileName',
+                element: <ProfileScreen />,
             }
         ]
     }
