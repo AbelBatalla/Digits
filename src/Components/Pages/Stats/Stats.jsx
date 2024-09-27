@@ -9,6 +9,7 @@ import styles from './Stats.module.css';
 import { FaAngleDown, FaTimes } from "react-icons/fa";
 import RunChart from "./RunChart";
 import ProfileFormModal from "../../Modal/ProfileFormModal";
+import ProfileSelector from "../../Profiles/ProfileSelector";
 
 const Stats = () => {
     const { userLoggedIn, currentUser } = useAuth();
@@ -80,11 +81,15 @@ const Stats = () => {
         if (userLoggedIn && activeProfile) {
             fetchSessions().then(r => {});
         }
-    }, [userLoggedIn]);
+    }, [userLoggedIn, activeProfile]);
 
     return (
         <div>
-            <h1>Stats</h1>
+            <div className={styles.headerContainerMargin}>
+                <h1>Stats</h1>
+                <ProfileSelector />
+            </div>
+
             {!userLoggedIn && (
                 <div className={styles.container}>
                     <p className={styles.p}>
@@ -111,7 +116,7 @@ const Stats = () => {
                                 <div className={styles.icon}> {isExpanded ? <FaTimes/> : <FaAngleDown/>} </div>
                             </div>
 
-                            {isExpanded && (
+                            {isExpanded && sessions.length>0 && (
                                 <div className={`${styles.containerSessions} ${isVisible ? styles.visible : styles.hidden}`}>
                                     {sessions.map((session) => (
                                         <Session

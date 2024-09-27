@@ -27,6 +27,7 @@
     right: 0.3rem;
     padding: 0.7rem;
     cursor: pointer;
+    color: black;
 }
 
 .closeButton:hover {

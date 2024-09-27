@@ -6,13 +6,17 @@ import { useAuth } from "../../contexts/authContext/authContext";
 import styles from "./Stats/Stats.module.css";
 import { Link } from "react-router-dom";
 import ProfileFormModal from "../Modal/ProfileFormModal";
+import ProfileSelector from "../Profiles/ProfileSelector";
 
 const Play = () => {
     const { activeProfile } = useProfile();
     const { userLoggedIn } = useAuth();
     return (
         <>
-            <h1>Play</h1>
+            <div className={styles.headerContainer}>
+                <h1>Play</h1>
+                <ProfileSelector/>
+            </div>
             {userLoggedIn && (
                 <div>
                     {!activeProfile && (
@@ -26,7 +30,7 @@ const Play = () => {
                     {activeProfile && (
                         <div>
                             <GameProvider>
-                                <Game />
+                                <Game/>
                             </GameProvider>
                         </div>
                     )}

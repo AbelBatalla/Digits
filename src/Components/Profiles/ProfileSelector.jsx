@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useProfile } from '../../contexts/profileContext/profileContext';
 import styles from './ProfileSelector.module.css';
-import { FaBars, FaPlus } from "react-icons/fa";
+import {FaAngleDown, FaArrowDown, FaBars, FaPlus, FaUser} from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import ProfileFormModal from "../Modal/ProfileFormModal";
 import Modal from "../Modal/Modal";
@@ -41,7 +41,19 @@ const ProfileSelector = () => {
     return (
         <div className={styles.dropdown} ref={dropdownRef}>
             <button onClick={toggleDropdown} className={styles.dropdownButton}>
-                {activeProfile ? activeProfile.Name : "Select Profile"}
+                <div className={styles.buttonIconLink}>
+                    <FaUser className={styles.buttonIcon} />
+                </div>
+                <strong className={styles.activeProfButton}>{activeProfile ? activeProfile.Name : "Select Profile"} </strong>
+                {activeProfile && isDropdownOpen ? (
+                    <Link className={styles.buttonIconLink} to={`/profile/${activeProfile.Name}`}>
+                        <FaBars className={styles.buttonIconBars} />
+                    </Link>
+                ) : (
+                    <div className={styles.buttonIconLink}>
+                        <FaAngleDown className={styles.buttonIconAngle} />
+                    </div>
+                )}
             </button>
             {isDropdownOpen && (
                 <div className={styles.dropdownContent}>
