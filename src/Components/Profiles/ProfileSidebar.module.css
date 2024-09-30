@@ -1,9 +1,9 @@
 .sidebar {
-    width: 200px;
-    height: 100vh;
+    width: 18vw;
+    height: 82vh;
     overflow-y: auto;
-    background-color: #f4f4f4;
-    padding: 20px;
+    background-color: #f8f8f8;
+    padding: 10px 5px 10px 5px;
     box-shadow: 2px 0 5px rgba(0,0,0,0.1);
 }
 
@@ -13,16 +13,21 @@
 }
 
 .sidebar li {
-    margin-bottom: 10px;
+    padding: 5px 20px;
+    border-radius: 5px;
 }
 
 .profileLink {
     text-decoration: none;
     color: #333;
     font-size: 1rem;
-    transition: color 0.3s;
+    transition: color 0.2s;
 }
 
 .profileLink:hover {
-    color: #007bff;
+    color: #3ac6c6;
+}
+
+.selectedProfile {
+    background-color: #2fa6a6;
 }
