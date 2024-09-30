@@ -38,6 +38,10 @@ const ProfileSelector = () => {
         };
     }, [isDropdownOpen]);
 
+    const filteredProfiles = activeProfile
+        ? profiles.filter(profile => profile.Name !== activeProfile.Name)
+        : [];
+
     return (
         <div className={styles.dropdown} ref={dropdownRef}>
             <button onClick={toggleDropdown} className={styles.dropdownButton}>
@@ -58,7 +62,7 @@ const ProfileSelector = () => {
             {isDropdownOpen && (
                 <div className={styles.dropdownContent}>
                     <ul>
-                        {profiles.map((profile, index) => (
+                        {filteredProfiles.map((profile, index) => (
                             <li key={index}>
                                 <div
                                     className={styles.prof}
