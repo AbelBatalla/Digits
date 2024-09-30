@@ -11,17 +11,30 @@
     z-index: 1000;
 }
 
-.popup button {
-    background-color: #2fa6a6;
+.popup .logoutButton, .popup .profileButton {
     color: white;
     border: none;
-    padding: 8px 16px;
+    padding: 0.9rem 1.8rem;
     cursor: pointer;
     border-radius: 4px;
-    margin: 0;
     white-space: nowrap;
+    margin-top: 15px;
+    width: 100%;
+    font-size: 1.1rem;
 }
 
-.popup button:hover {
+.popup .logoutButton {
+    background-color: #c6716e;
+}
+
+.popup .profileButton {
+    background-color: #2fa6a6;
+}
+
+.popup .logoutButton:hover {
+    background-color: #a34a44;
+}
+
+.popup .profileButton:hover {
     background-color: #1f7a7a;
 }

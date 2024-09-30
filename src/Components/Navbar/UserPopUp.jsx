@@ -1,14 +1,27 @@
 import { logout } from "../Auth/Auth";
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useProfile } from "../../contexts/profileContext/profileContext";
 import styles from "./UserPopUp.module.css";
+import ProfileSelector from "../Profiles/ProfileSelector";
 
 const UserPopUp = ({ onClickEffect }) => {
     const navigate = useNavigate();     // Hook for navigation
     const location = useLocation();
+    const { activeProfile, profiles } = useProfile();
 
     return (
         <div className={styles.popup}>
-            <button onClick={
+            <ProfileSelector />
+            {profiles.length > 0 && (
+            <button className={styles.profileButton}
+                onClick={() => {
+                    onClickEffect();
+                    navigate(`/profile/${activeProfile.Name}`);
+                }}>Manage Profiles</button>
+            )}
+
+            <button className={styles.logoutButton}
+                onClick={
                 () => {
                     onClickEffect();
                     logout().then(r => {});

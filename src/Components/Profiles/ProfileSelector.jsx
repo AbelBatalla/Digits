@@ -3,7 +3,6 @@ import { useProfile } from '../../contexts/profileContext/profileContext';
 import styles from './ProfileSelector.module.css';
 import {FaAngleDown, FaArrowDown, FaBars, FaPlus, FaUser} from "react-icons/fa";
 import { Link } from 'react-router-dom';
-import ProfileFormModal from "../Modal/ProfileFormModal";
 import Modal from "../Modal/Modal";
 import ProfileForm from "./ProfileForm";
 
