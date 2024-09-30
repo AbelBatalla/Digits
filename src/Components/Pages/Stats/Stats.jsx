@@ -87,7 +87,7 @@ const Stats = () => {
         <div>
             <div className={styles.headerContainerMargin}>
                 <h1>Stats</h1>
-                <ProfileSelector />
+                {activeProfile && (<ProfileSelector/>)}
             </div>
 
             {!userLoggedIn && (
@@ -100,14 +100,14 @@ const Stats = () => {
             )}
             {userLoggedIn && (
                 <div>
-                {!activeProfile && (
-                    <div className={styles.container}>
-                        <p className={styles.p}>
-                            No active profile selected. Please&nbsp;</p>
-                        <ProfileFormModal  text={"create a profile"}/>
-                        <p className={styles.p}>.</p>
-                    </div>
-                )}
+                    {!activeProfile && (
+                        <div className={styles.container}>
+                            <p className={styles.p}>
+                                No active profile selected. Please&nbsp;</p>
+                            <ProfileFormModal  text={"create a profile"}/>
+                            <p className={styles.p}>.</p>
+                        </div>
+                    )}
                     {activeProfile && (
                         <div>
                             <div className={`${styles.dropdown} ${isExpanded ? styles.expanded : ''}`}
@@ -116,9 +116,21 @@ const Stats = () => {
                                 <div className={styles.icon}> {isExpanded ? <FaTimes/> : <FaAngleDown/>} </div>
                             </div>
 
-                            {isExpanded && sessions.length>0 && (
-                                <div className={`${styles.containerSessions} ${isVisible ? styles.visible : styles.hidden}`}>
-                                    {sessions.map((session) => (
+                            {isExpanded && sessions.length===0 && (
+                                <div
+                                    className={`${styles.containerNoSessions} ${isVisible ? styles.visible : styles.hidden}`}>
+                                    <p className={styles.p}>
+                                        No sessions recorded. Please&nbsp;
+                                        <Link to="/play" className={styles.link}>Play</Link>
+                                        to view your stats.
+                                    </p>
+                                </div>
+                            )}
+
+                            {isExpanded && sessions.length > 0 && (
+                                <div
+                                    className={`${styles.containerSessions} ${isVisible ? styles.visible : styles.hidden}`}>
+                                {sessions.map((session) => (
                                         <Session
                                             key={session.id}
                                             session={session}
@@ -129,6 +141,7 @@ const Stats = () => {
                                     ))}
                                 </div>
                             )}
+
                             <div className={styles.divider}>
                             </div>
 

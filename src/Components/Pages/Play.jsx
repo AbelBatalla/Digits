@@ -15,7 +15,7 @@ const Play = () => {
         <>
             <div className={styles.headerContainer}>
                 <h1>Play</h1>
-                <ProfileSelector/>
+                {activeProfile && (<ProfileSelector/>)}
             </div>
             {userLoggedIn && (
                 <div>

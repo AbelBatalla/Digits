@@ -43,8 +43,9 @@ function Navbar() {
                     >
                         <p>{currentUser.email}</p>
                         {hover && (
-                            <div>
-                                <UserPopUp onClickEffect={removeHover}/>
+                            <div className={styles.popupContainer}>
+                                <UserPopUp className={styles.popupComponent}
+                                           onClickEffect={removeHover}/>
                             </div>
                         )}
                     </div>

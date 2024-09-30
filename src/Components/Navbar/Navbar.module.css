@@ -17,6 +17,7 @@
     gap: 2rem;
     position: sticky;
     top: 0;
+    z-index: 10;
 }
 
 .nav .a {
@@ -59,6 +60,7 @@
     font-size: 16px;
     font-weight: 60;
     color: Black;
+    z-index: 1000;
 }
 
 
@@ -87,6 +89,14 @@
     background-color: #1f7a7a;
 }
 
+.popupComponent {
+    z-index: 1000;
+}
+
+.popupContainer {
+    z-index: 1000;
+}
+
 @media (max-width: 720px) {
     .open {
         transform: translateY(100vh);
@@ -98,6 +108,7 @@
     }
 
     .nav {
+        z-index: 1000;
         top: -100vh;
         position: fixed;
         left: 0;

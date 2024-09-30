@@ -25,6 +25,26 @@
     height: 60vh;
     text-align: center;
 }
+
+.containerNoSessions {
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    height: 10vh;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.25s ease; /* Add transition */
+
+}
+
+.containerNoSessions.visible {
+    opacity: 1; /* Fully visible */
+}
+
+.containerNoSessions.hidden {
+    opacity: 0; /* Fully hidden */
+}
+
 .containerSessions {
     padding-top: 5px;
     display: flex;
