@@ -1,7 +1,7 @@
 import React from 'react';
 import { useProfile } from '../../contexts/profileContext/profileContext';
 import styles from './ProfileScreen.module.css';
-import { useParams, useNavigate } from 'react-router-dom';
+import {useParams, useNavigate, Link} from 'react-router-dom';
 import ProfileSidebar from './ProfileSidebar';
 import countryList from 'react-select-country-list';
 import {FaPen, FaTrash} from "react-icons/fa";
@@ -9,7 +9,7 @@ import {FaPen, FaTrash} from "react-icons/fa";
 
 const ProfileScreen = () => {
     const { profileName } = useParams();
-    const { profiles, deleteProfile } = useProfile();
+    const { profiles, deleteProfile, setActiveProfile } = useProfile();
     const profile = profiles.find(p => p.Name === profileName);
     const countries = countryList().getData();
     const countryMap = countries.reduce((acc, country) => {
@@ -46,6 +46,12 @@ const ProfileScreen = () => {
                         <p>Date of Birth: {profile.DateOfBirth}</p>
                         <p>Gender: {profile.Gender}</p>
                         <p>Nationality: {countryMap[profile.Nationality]}</p>
+                        <Link to={`/stats`}
+                              onClick={() => {
+                                    setActiveProfile(profile);
+                              }}
+                              className={styles.link}
+                        >See Stats</Link>
                     </div>
                         <div className={styles.buttonContainer}>
                             <div className={styles.icon} onClick={(e) => {

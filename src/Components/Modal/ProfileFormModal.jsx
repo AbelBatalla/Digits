@@ -3,7 +3,7 @@ import ProfileForm from '../Profiles/ProfileForm';
 import Modal from './Modal';
 import styles from './ProfileFormModal.module.css';
 
-const ProfileFormModal = ( {text, } ) => {
+const ProfileFormModal = ( { text } ) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const openModal = () => setIsModalOpen(true);

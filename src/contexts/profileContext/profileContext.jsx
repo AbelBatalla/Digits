@@ -63,7 +63,8 @@ export function ProfileProvider({ children }) {
     const setActiveProfileInDb = async (profileData) => {
         if (userLoggedIn) {
             const profileRef = doc(db, 'Users', currentUser.uid);
-            await updateDoc(profileRef, { activeProfile: profileData ? profileData.Name : null});
+            const activeValue = profileData ? profileData.Name : null;
+            await updateDoc(profileRef, { activeProfile: activeValue});
             setActiveProfile(profileData);
         }
         console.log("Active profile set successfully");

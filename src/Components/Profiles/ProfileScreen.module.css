@@ -79,3 +79,14 @@
     transform: scale(1.2);
     cursor: pointer;
 }
+
+.link {
+    font-weight: bold;
+    text-decoration: none;
+    margin-right: 6px;
+    color: #6366F1;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
