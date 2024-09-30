@@ -48,11 +48,12 @@ function Navbar() {
                                 <span className={styles.userEmail}>{currentUser.email}</span>
                                 <span className={styles.userProfile}>{activeProfile ? activeProfile.Name : "No Profile"}</span>
                             </p>
+                    {hover && (
                         <div className={styles.popupContainer}>
                             <UserPopUp className={styles.popupComponent}
                                        onClickEffect={removeHover}/>
                         </div>
-
+                        )}
                     </div>
                     ) : (
                     <NavLink className={({ isActive, isPending }) =>
