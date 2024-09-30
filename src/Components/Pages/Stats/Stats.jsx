@@ -121,7 +121,7 @@ const Stats = () => {
                                     className={`${styles.containerNoSessions} ${isVisible ? styles.visible : styles.hidden}`}>
                                     <p className={styles.p}>
                                         No sessions recorded. Please&nbsp;
-                                        <Link to="/play" className={styles.link}>Play</Link>
+                                        <Link to="/digits" className={styles.link}>Play</Link>
                                         to view your stats.
                                     </p>
                                 </div>

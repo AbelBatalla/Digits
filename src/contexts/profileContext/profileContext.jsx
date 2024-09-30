@@ -2,7 +2,7 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import { db } from '../../config/firebase';
 import { useAuth } from '../authContext/authContext';
-import {doc, setDoc, updateDoc, getDoc, collection, query, where, getDocs} from 'firebase/firestore';
+import {doc, setDoc, updateDoc, getDoc, collection, query, where, getDocs, deleteDoc} from 'firebase/firestore';
 
 const ProfileContext = createContext();
 
@@ -63,17 +63,34 @@ export function ProfileProvider({ children }) {
     const setActiveProfileInDb = async (profileData) => {
         if (userLoggedIn) {
             const profileRef = doc(db, 'Users', currentUser.uid);
-            await updateDoc(profileRef, { activeProfile: profileData.Name });
+            await updateDoc(profileRef, { activeProfile: profileData ? profileData.Name : null});
             setActiveProfile(profileData);
         }
         console.log("Active profile set successfully");
     };
+
+    const deleteProfile = async (profileName) => {
+        if (userLoggedIn) {
+            const newProfiles = profiles.filter(p => p.Name !== profileName);
+            await deleteDoc(doc(db, "Users", currentUser.uid, "Profiles", profileName));
+            setProfiles(newProfiles);
+            if (activeProfile && activeProfile.Name === profileName) {
+                if (newProfiles.length === 0) {
+                    await setActiveProfileInDb(null);
+                }
+                else {
+                    await setActiveProfileInDb(newProfiles[0]);
+                }
+            }
+        }
+    }
 
     const value = {
         profiles,
         activeProfile,
         createProfile,
         setActiveProfile: setActiveProfileInDb,
+        deleteProfile
     };
 
     return (

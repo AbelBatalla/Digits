@@ -15,8 +15,17 @@
     padding-right: 5px;
 }
 
+.profileDetailContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+}
+
 .profileDetail {
     padding: 20px;
+    width: 50%;
+    flex: 1;
 }
 
 .profileDetail h1 {
@@ -38,4 +47,35 @@
     flex: 1;
     padding: 20px;
     margin-left: 5vw;
+}
+
+.buttonContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.icon, .iconTrash {
+    margin: 0;
+    transition: transform 0.2s ease, color 0.25s ease; /* Add a transition effect */
+    font-size: 2.3rem;
+    padding: 20px;
+    text-align: end;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+
+}
+
+.icon:hover {
+    color: #2fa6a6;
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.iconTrash:hover {
+    color: #d10000;
+    transform: scale(1.2);
+    cursor: pointer;
 }
