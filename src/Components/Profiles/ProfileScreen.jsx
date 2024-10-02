@@ -54,9 +54,6 @@ const ProfileScreen = () => {
                         >See Stats</Link>
                     </div>
                         <div className={styles.buttonContainer}>
-                            <div className={styles.icon} onClick={(e) => {
-                                //handleDelete();
-                            }}><FaPen/></div>
                             <div className={styles.iconTrash} onClick={(e) => {
                                 if (window.confirm('Are you sure you want to delete this profile?')) {
                                     handleDelete(profile.Name).then(r => {});
