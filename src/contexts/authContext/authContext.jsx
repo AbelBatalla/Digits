@@ -1,9 +1,9 @@
-import React, { useContext, useState, useEffect } from "react";
-import { auth } from "../../config/firebase";
-// import { GoogleAuthProvider } from "firebase/auth";
-import { onAuthStateChanged } from "firebase/auth";
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { auth, db } from '../../config/firebase'; // Make sure to import 'db'
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
-const AuthContext = React.createContext();
+const AuthContext = createContext();
 
 export function useAuth() {
     return useContext(AuthContext);
@@ -11,48 +11,36 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState(null);
-    const [userLoggedIn, setUserLoggedIn] = useState(false);
-    const [isEmailUser, setIsEmailUser] = useState(false);
-    const [isGoogleUser, setIsGoogleUser] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, initializeUser);
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            console.log("Here1");
+            setLoading(true);
+
+            if (user) {
+                console.log("starting search for user document...");
+                const userDocRef = doc(db, "Users", user.uid);
+                console.log("obtaining user document...", userDocRef);
+                const userDocSnapshot = await getDoc(userDocRef);
+                console.log("user document obtained, checking existance.", userDocSnapshot);
+                if (!userDocSnapshot.exists()) {
+                    console.log("Creating user document...");
+                    await createUserDoc(user);
+                }
+                console.log("User check completed.");
+            }
+            console.log("Here2");
+            setCurrentUser(user);
+            setLoading(false);
+        });
+
         return unsubscribe;
     }, []);
 
-    async function initializeUser(user) {
-        if (user) {
-
-            setCurrentUser({ ...user });
-
-            // check if provider is email and password login
-            const isEmail = user.providerData.some(
-                (provider) => provider.providerId === "password"
-            );
-            setIsEmailUser(isEmail);
-
-            // check if the auth provider is google or not
-            //   const isGoogle = user.providerData.some(
-            //     (provider) => provider.providerId === GoogleAuthProvider.PROVIDER_ID
-            //   );
-            //   setIsGoogleUser(isGoogle);
-
-            setUserLoggedIn(true);
-        } else {
-            setCurrentUser(null);
-            setUserLoggedIn(false);
-        }
-
-        setLoading(false);
-    }
-
     const value = {
-        userLoggedIn,
-        isEmailUser,
-        isGoogleUser,
         currentUser,
-        setCurrentUser
+        userLoggedIn: !!currentUser,
     };
 
     return (
@@ -61,3 +49,14 @@ export function AuthProvider({ children }) {
         </AuthContext.Provider>
     );
 }
+
+const createUserDoc = async (user) => {
+    try {
+        await setDoc(doc(db, "Users", user.uid), {
+            UserID: user.uid,
+            email: user.email
+        });
+    } catch (error) {
+        console.error("Error creating user document:", error);
+    }
+};

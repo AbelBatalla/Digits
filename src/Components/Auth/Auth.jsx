@@ -1,4 +1,6 @@
 import { auth, googleProvider } from "../../config/firebase";
+import { db } from "../../config/firebase";
+import { doc, setDoc } from "firebase/firestore";
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
@@ -12,7 +14,15 @@ export const signUpEmail = async (email, password) => {
     try {
         await createUserWithEmailAndPassword(auth, email, password);
     } catch (err) {
-        console.error(err);
+        if (err.code === 'auth/email-already-in-use') {
+            console.error("This email is already in use.");
+        } else if (err.code === 'auth/invalid-email') {
+            console.error("Invalid email format.");
+        } else if (err.code === 'auth/weak-password') {
+            console.error("The password is too weak.");
+        } else {
+            console.error("Error during sign-up:", err.message);
+        }
     }
 };
 
@@ -31,6 +41,7 @@ export const loginGoogle = async () => {
             prompt: "select_account", // This forces the account chooser to show up every time
         });
         await signInWithPopup(auth, provider);
+        console.log("Here3");
     } catch (err) {
         console.error(err);
     }

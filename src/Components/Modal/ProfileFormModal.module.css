@@ -1,0 +1,11 @@
+.openModalButton {
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: #6366F1;
+    cursor: pointer;
+}
+
+.openModalButton:hover {
+    text-decoration: underline;
+}

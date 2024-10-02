@@ -4,10 +4,13 @@ import styles from './Navbar.module.css';
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../contexts/authContext/authContext";
 import UserPopUp from "./UserPopUp";
+import { useProfile } from "../../contexts/profileContext/profileContext";
+import ProfileSelector from "../Profiles/ProfileSelector";
 
 function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
-    const { currentUser, userLoggedIn, logout } = useAuth();
+    const { currentUser, userLoggedIn } = useAuth();
+    const { activeProfile } = useProfile();
     const [hover, setHover] = useState(false);
 
     function removeHover() {
@@ -36,16 +39,20 @@ function Navbar() {
                     `${styles.a} ${isActive || isPending ? styles.active : ''}`
                 } to="/other" onClick={() => setMenuOpen(false)}>Other</NavLink>
                 {userLoggedIn ? (
-                    <div
-                        className={styles.user}
-                        onMouseEnter={() => setHover(true)}
-                        onMouseLeave={() => setHover(false)}
-                    >
-                        <p>{currentUser.email}</p>
-                        {hover && (
-                            <div>
-                                <UserPopUp onClickEffect={removeHover}/>
-                            </div>
+                        <div
+                            className={styles.user}
+                            onMouseEnter={() => setHover(true)}
+                            onMouseLeave={() => setHover(false)}
+                        >
+                            <p className={styles.userText}>
+                                <span className={styles.userEmail}>{currentUser.email}</span>
+                                <span className={styles.userProfile}>{activeProfile ? activeProfile.Name : "No Profile"}</span>
+                            </p>
+                    {hover && (
+                        <div className={styles.popupContainer}>
+                            <UserPopUp className={styles.popupComponent}
+                                       onClickEffect={removeHover}/>
+                        </div>
                         )}
                     </div>
                     ) : (

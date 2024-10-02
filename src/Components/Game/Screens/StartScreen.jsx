@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './StartScreen.module.css';
+import ProfileSelector from "../../Profiles/ProfileSelector";
 
 const StartScreen = ({ onStartGame }) => { // Accept the function as a prop
     const [difficulty, setDifficulty] = useState(0); // State to manage the local difficulty selection

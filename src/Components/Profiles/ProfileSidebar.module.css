@@ -1,0 +1,50 @@
+.sidebar {
+    width: 18vw;
+    height: 82vh;
+    overflow-y: auto;
+    background-color: #f8f8f8;
+    padding: 10px 5px 5px 5px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar li {
+    padding: 5px 20px;
+    border-radius: 5px;
+}
+
+.profileLink {
+    text-decoration: none;
+    color: #333;
+    font-size: 1rem;
+    transition: color 0.2s;
+}
+
+.profileLink:hover {
+    color: #3ac6c6;
+}
+
+.selectedProfile {
+    background-color: #2fa6a6;
+}
+
+.addProfileProf {
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    border-top: 2px solid #ddd;
+    padding-top: 10px;
+}
+
+.addProfileIcon {
+    color: dimgrey;
+    transition: color 0.25s ease;
+}
+
+.addProfileProf:hover .addProfileIconLink .addProfileIcon{
+    color: #2fa6a6;
+}

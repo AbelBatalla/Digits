@@ -48,7 +48,7 @@
 
 .session .unexpandedSession {
     display: flex;
-    flex-direction: row; /* Display initial data side by side */
+    flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
     width: 100%;
