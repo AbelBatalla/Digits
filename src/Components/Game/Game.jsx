@@ -21,6 +21,8 @@ const Game = () => {
     const [number, setNumber] = useState(-1);
     const [trialIter, setTrialIter] = useState(1);
     const imageId = useRef(0);
+    const correctSound = useRef(new Audio('/sounds/correct.mp3'));
+    const incorrectSound = useRef(new Audio('/sounds/incorrect.mp3'));
 
     const { sessionDifficulty,
         changeSessionDifficulty,
@@ -373,7 +375,15 @@ const Game = () => {
     };
 
     const handleButtonClick = (n, resTime) => {
-        trialData(n === number, resTime);
+        const answer = n === number;
+        if (answer) {
+            console.log("Correct!");
+            correctSound.current.play();
+        } else {
+            console.log("Incorrect!");
+            incorrectSound.current.play();
+        }
+        trialData(answer, resTime);
         if (trialIter >= 28 || (trialIter >= 10 && sessionDifficulty === -2) || (trialIter >= 15 && sessionDifficulty === -1) || (sessionDifficulty === -3)) { //28, 15 i 10 trials
             setTrialIter(1);
             endRun();
