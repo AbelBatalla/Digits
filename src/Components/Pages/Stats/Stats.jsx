@@ -149,7 +149,7 @@ const Stats = () => {
                                 <h2> Charts </h2>
                             </div>
                             <div>
-                                <RunChart sessions={sessions}/>
+                                <RunChart sessions={[...sessions].reverse()}/>
                             </div>
 
                         </div>
