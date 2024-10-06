@@ -21,6 +21,8 @@ const Game = () => {
     const [number, setNumber] = useState(-1);
     const [trialIter, setTrialIter] = useState(1);
     const imageId = useRef(0);
+    const correctSound = useRef(new Audio('/sounds/correct.mp3'));
+    const incorrectSound = useRef(new Audio('/sounds/incorrect.mp3'));
 
     const { sessionDifficulty,
         changeSessionDifficulty,
@@ -245,9 +247,19 @@ const Game = () => {
 
         passiveNumbers.sort(() => Math.random() - 0.5);
 
+        let numberSound = [];
+        if (sessionDifficulty <= 0) {
+            console.log("Passive numbers: ", passiveNumbers);
+            for (let i = 0; i <= passiveNumbers.length - 1; i++) {
+                numberSound.push(new Audio(`/sounds/${passiveNumbers[i]}.mp3`));
+                console.log("loaded: ", passiveNumbers[i]);
+            }
+        }
+
         function executeIteration() {
             if (((currentIteration < 7 && sessionDifficulty >= 0) || (currentIteration < 5 && sessionDifficulty < 0)) && !(sessionDifficulty === -3)) {
                 currentIteration++;
+                if (sessionDifficulty <= 0) numberSound[currentIteration-1].play();
                 let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y, passiveNumbers[currentIteration-1]);
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 for (let pos of positions) {
@@ -373,7 +385,15 @@ const Game = () => {
     };
 
     const handleButtonClick = (n, resTime) => {
-        trialData(n === number, resTime);
+        const answer = n === number;
+        if (answer) {
+            console.log("Correct!");
+            correctSound.current.play();
+        } else {
+            console.log("Incorrect!");
+            incorrectSound.current.play();
+        }
+        trialData(answer, resTime);
         if (trialIter >= 28 || (trialIter >= 10 && sessionDifficulty === -2) || (trialIter >= 15 && sessionDifficulty === -1) || (sessionDifficulty === -3)) { //28, 15 i 10 trials
             setTrialIter(1);
             endRun();
