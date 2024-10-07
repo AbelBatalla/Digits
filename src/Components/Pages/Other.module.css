@@ -1,0 +1,77 @@
+.howItWorksContent {
+    max-width: 900px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for floating effect */
+}
+
+.howItWorksTitle {
+    font-size: 2.8rem;
+    color: #1f2937; /* Dark gray title */
+    text-align: center;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.howItWorksSubtitle {
+    font-size: 2rem;
+    color: #1d4ed8; /* Accent color */
+    margin: 2rem 0 1rem;
+    font-weight: 600;
+}
+
+.howItWorksText {
+    font-size: 1.2rem;
+    color: #374151; /* Soft dark gray */
+    margin-bottom: 1.5rem;
+    text-align: justify;
+    line-height: 1.8;
+}
+
+.citation {
+    font-style: italic;
+    font-size: 1.1rem;
+    margin: 1rem 0;
+}
+
+.howItWorksLink {
+    color: #2563eb; /* Bright blue link */
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.howItWorksLink:hover {
+    border-bottom: 1px solid #2563eb; /* Add underline on hover */
+}
+
+.importantNotice {
+    background-color: #fef3c7; /* Light yellow background for emphasis */
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    color: #b45309; /* Dark orange text */
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .howItWorksContent {
+        padding: 1.5rem;
+    }
+
+    .howItWorksTitle {
+        font-size: 2.3rem;
+    }
+
+    .howItWorksSubtitle {
+        font-size: 1.8rem;
+    }
+
+    .howItWorksText {
+        font-size: 1.1rem;
+    }
+}
