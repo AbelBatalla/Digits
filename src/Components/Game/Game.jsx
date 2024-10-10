@@ -93,7 +93,7 @@ const Game = () => {
         winHeight = winHeight - imageHeight
         winWidth = winWidth - imageWidth
         const radius = 110; //can depend on difficulty?
-        const k = 4; // maximum number of samples before rejection
+        const k = 30; // maximum number of samples before rejection
         const radius2 = radius * radius;
         const cellSize = radius * Math.SQRT1_2;
         const gridWidth = Math.ceil(winWidth / cellSize);
@@ -415,10 +415,10 @@ const Game = () => {
         const answer = n === number;
         if (answer) {
             console.log("Correct!");
-            correctSound.current.play();
+            correctSound.current.play().then(r => {});
         } else {
             console.log("Incorrect!");
-            incorrectSound.current.play();
+            incorrectSound.current.play().then(r => {});
         }
         trialData(answer, resTime);
         if (trialIter >= 28 || (trialIter >= 10 && sessionDifficulty === -2) || (trialIter >= 15 && sessionDifficulty === -1) || (sessionDifficulty === -3)) { //28, 15 i 10 trials
