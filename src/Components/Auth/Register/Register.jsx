@@ -15,9 +15,26 @@ const Register = () => {
 
     const onSubmit = async (e) => {
         e.preventDefault();
+        if(password !== confirmPassword) {
+            setErrorMessage('Passwords do not match');
+            return;
+        }
         if (!isRegistering) {
             setIsRegistering(true);
-            await signUpEmail(email, password);
+            const result = await signUpEmail(email, password);
+            if (result === 0) {
+                return;
+            }
+            else if (result === 1) {
+                setErrorMessage("This email is already in use.");
+            } else if (result === 2) {
+                setErrorMessage("Invalid email format.");
+            } else if (result === 3) {
+                setErrorMessage("The password is too weak. 6 characters minimum.");
+            } else {
+                setErrorMessage("Error during sign-up.");
+            }
+            setIsRegistering(false);
         }
     };
 
@@ -49,6 +66,7 @@ const Register = () => {
                                 type="password"
                                 autoComplete="new-password"
                                 required
+                                minLength="6"
                                 disabled={isRegistering}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -62,6 +80,7 @@ const Register = () => {
                                 type="password"
                                 autoComplete="off"
                                 required
+                                minLength="6"
                                 disabled={isRegistering}
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}

@@ -93,7 +93,7 @@ const Game = () => {
         winHeight = winHeight - imageHeight
         winWidth = winWidth - imageWidth
         const radius = 110; //can depend on difficulty?
-        const k = 30; // maximum number of samples before rejection
+        const k = 20; // maximum number of samples before rejection
         const radius2 = radius * radius;
         const cellSize = radius * Math.SQRT1_2;
         const gridWidth = Math.ceil(winWidth / cellSize);
@@ -108,7 +108,7 @@ const Game = () => {
         const startY = Math.random() * winHeight;
         const distance = distanceFromCenter(startX, startY);
         pointsWithDistances.push({x: startX, y: startY, distance: distance});
-        queue.push(sample(startX, startY));
+        sample(startX, startY);
 
         pick: while (queue.length) {
             const i = Math.random() * queue.length | 0;
@@ -118,7 +118,7 @@ const Game = () => {
 
             // Make a new candidate.
             for (let j = 0; j < k; ++j) {
-                const a = 2 * Math.PI * (seed + 1.0 * j / k);
+                const a = 2 * Math.PI * (seed + j / k);
                 const r = radius + epsilon;
                 const x = parent[0] + r * Math.cos(a);
                 const y = parent[1] + r * Math.sin(a);
@@ -128,7 +128,7 @@ const Game = () => {
                 if (0 <= x && x < winWidth && 0 <= y && y < winHeight && far(x, y)) {
                     const distance = distanceFromCenter(x, y);
                     pointsWithDistances.push({x, y, distance});
-                    queue.push(sample(x, y));
+                    sample(x, y);
                     continue pick;
                 }
             }

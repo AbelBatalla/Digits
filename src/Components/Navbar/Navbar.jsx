@@ -33,7 +33,7 @@ function Navbar() {
                 {userLoggedIn && (
                     <NavLink className={({ isActive, isPending }) =>
                         `${styles.a} ${isActive || isPending ? styles.active : ''}`
-                    } to="/stats" onClick={() => setMenuOpen(false)}>Stats</NavLink>
+                    } to="/stats" onClick={() => setMenuOpen(false)}>Statistics</NavLink>
                 )}
                 <NavLink className={({ isActive, isPending }) =>
                     `${styles.a} ${isActive || isPending ? styles.active : ''}`
