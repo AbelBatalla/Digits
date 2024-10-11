@@ -40,7 +40,7 @@ const Play = () => {
                 <div className={styles.container}>
                     <p className={styles.p}>
                         <Link to="/login" className={styles.link}>Log in</Link>
-                        to view your stats.
+                        to play the Digits game.
                     </p>
                 </div>
             )}

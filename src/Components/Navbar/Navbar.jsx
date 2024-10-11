@@ -37,7 +37,7 @@ function Navbar() {
                 )}
                 <NavLink className={({ isActive, isPending }) =>
                     `${styles.a} ${isActive || isPending ? styles.active : ''}`
-                } to="/other" onClick={() => setMenuOpen(false)}>Other</NavLink>
+                } to="/info" onClick={() => setMenuOpen(false)}>Info</NavLink>
                 {userLoggedIn ? (
                         <div
                             className={styles.user}

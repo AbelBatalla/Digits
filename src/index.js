@@ -28,7 +28,7 @@ const router = createBrowserRouter([
                 element: <Play />,
             },
             {
-                path: 'other',
+                path: 'info',
                 element: <Other />,
             },
             {

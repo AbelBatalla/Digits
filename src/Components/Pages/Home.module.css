@@ -10,30 +10,36 @@
 }
 
 .homepageTitle {
-    font-size: 2.5rem; /* Larger title */
+    font-size: 7.5rem; /* Larger title */
     text-align: center; /* Center the title */
     color: #333;        /* Dark gray for the title */
-    margin: 0 0 1rem;
+    margin: 0 0 2.5rem;
+    padding-bottom: 0.5rem;
     opacity: 0;
     animation: slideDown 0.7s ease forwards;
+    border-bottom: #2fa6a6 solid 2px;
 }
 
 .homepageText {
     font-size: 1.1rem; /* Slightly larger text for readability */
-    color: #555;       /* Gray text for a softer look */
+    color: #3e3e3e;       /* Gray text for a softer look */
     text-align: justify; /* Justify the text */
     margin: 0 0 1.5rem;
     opacity: 0;
     transform: translateY(20px); /* Start slightly below */
     animation: slideUp 1s ease forwards;
-    animation-delay: 0.2s;
+    animation-delay: 0.3s;
+}
+
+.homepageText:first-of-type {
+    font-size: 1.2rem; /* Slightly larger for the call to action */
+    font-weight: bold; /* Make it stand out */
+    text-align: center; /* Center this specific text */
+    animation-delay: 0.1s;
 }
 
 .homepageText:last-of-type {
-    font-size: 1.1rem; /* Slightly larger for the call to action */
-    font-weight: bold; /* Make it stand out */
-    text-align: center; /* Center this specific text */
-    animation-delay: 0.4s; /* Slight delay for staggered effect */
+    animation-delay: 0.5s; /* Slight delay for staggered effect */
 }
 
 /* Fade-in animation */

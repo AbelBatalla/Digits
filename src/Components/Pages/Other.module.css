@@ -1,77 +1,118 @@
-.howItWorksContent {
-    max-width: 900px;
-    margin: 3rem auto;
-    padding: 2rem;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for floating effect */
-}
-
-.howItWorksTitle {
-    font-size: 2.8rem;
-    color: #1f2937; /* Dark gray title */
+.homepageContent {
+    max-width: 90%; /* Limit the width of the content */
+    line-height: 1.8; /* Improve readability */
+    padding: 0 2rem 2rem;
+    margin: 0 auto 0rem;
     text-align: center;
-    margin-bottom: 1.5rem;
-    text-transform: uppercase;
-    font-weight: bold;
-    letter-spacing: 1px;
+    color: #333;
+    opacity: 0; /* Start hidden */
+    animation: fadeIn 0.6s ease-in-out forwards;
 }
 
-.howItWorksSubtitle {
-    font-size: 2rem;
-    color: #1d4ed8; /* Accent color */
-    margin: 2rem 0 1rem;
-    font-weight: 600;
+.homepageSubTitle {
+    font-size: 2.5rem; /* Larger title */
+    text-align: center; /* Center the title */
+    color: #333;        /* Dark gray for the title */
+    margin: 0 0 0.4rem;
+    padding-top: 0;
+    opacity: 0;
+    animation: slideDown 0.4s ease forwards;
 }
 
-.howItWorksText {
-    font-size: 1.2rem;
-    color: #374151; /* Soft dark gray */
-    margin-bottom: 1.5rem;
-    text-align: justify;
-    line-height: 1.8;
+.homepageSubSubTitle {
+    font-size: 1.4rem; /* Larger title */
+    text-align: left; /* Center the title */
+    color: #333;        /* Dark gray for the title */
+    margin: 0.25rem 1rem 0.25rem;
+    opacity: 0;
+    animation: slideDown 0.2s ease forwards;
 }
 
-.citation {
-    font-style: italic;
-    font-size: 1.1rem;
-    margin: 1rem 0;
+.homepageText {
+    font-size: 1.1rem; /* Slightly larger text for readability */
+    color: #3e3e3e;       /* Gray text for a softer look */
+    text-align: justify; /* Justify the text */
+    margin: 0 0 0.75rem;
+    opacity: 0;
+    transform: translateY(20px); /* Start slightly below */
+    animation: slideUp 1s ease forwards;
+    animation-delay: 0.2s;
 }
 
-.howItWorksLink {
-    color: #2563eb; /* Bright blue link */
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: all 0.3s ease;
+.homepageParagraph {
+    padding-bottom: 1rem;
 }
 
-.howItWorksLink:hover {
-    border-bottom: 1px solid #2563eb; /* Add underline on hover */
+.homepageListIntro {
+    padding-bottom: 0.5rem;
 }
 
-.importantNotice {
-    background-color: #fef3c7; /* Light yellow background for emphasis */
-    padding: 1rem;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    color: #b45309; /* Dark orange text */
-    margin-bottom: 2rem;
+.homepageList {
+    padding-left: 2rem;
+    padding-bottom: 0.5rem;
+}
+
+.homepageListItem {
+    padding-left: 1rem;
+    padding-bottom: 0.5rem;
+}
+
+.homepageListItemTitle {
+    font-weight: 501;
+}
+
+.homepageText:first-of-type {
+    animation-delay: 0s;
+}
+
+.homepageText:last-of-type {
+    animation-delay: 0.4s; /* Slight delay for staggered effect */
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Slide-up animation for text */
+@keyframes slideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Slide-down animation for the title */
+@keyframes slideDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (max-width: 768px) {
-    .howItWorksContent {
-        padding: 1.5rem;
+    .homepageContent {
+        padding: 1rem; /* Reduce padding on smaller screens */
     }
 
-    .howItWorksTitle {
-        font-size: 2.3rem;
+    .homepageTitle {
+        font-size: 2rem; /* Adjust the title size for smaller screens */
     }
 
-    .howItWorksSubtitle {
-        font-size: 1.8rem;
-    }
-
-    .howItWorksText {
-        font-size: 1.1rem;
+    .homepageText {
+        font-size: 1rem; /* Adjust the text size for smaller screens */
     }
 }

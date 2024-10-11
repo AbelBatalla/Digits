@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './StartScreen.module.css';
-import ProfileSelector from "../../Profiles/ProfileSelector";
+import {Link} from "react-router-dom";
 
 const StartScreen = ({ onStartGame }) => { // Accept the function as a prop
     const [difficulty, setDifficulty] = useState(0); // State to manage the local difficulty selection
@@ -29,6 +29,9 @@ const StartScreen = ({ onStartGame }) => { // Accept the function as a prop
                 </select>
                 <button type="submit" className={styles.startGameButton} >Start Game</button>
             </form>
+            <p className={styles.guide}>
+                <Link to="/info#howToPlay" className={styles.link}>How to Play</Link>
+            </p>
         </div>
     );
 };
