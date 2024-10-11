@@ -18,9 +18,19 @@ const Login = () => {
         e.preventDefault();
         if (!isSigningIn) {
             setIsSigningIn(true);
-            await loginEmail(email, password);
+            const result = await loginEmail(email, password);
+            if (result === 0) {}
+            else if (result === 'auth/invalid-credential') {
+                setErrorMessage("Invalid email or password.");
+                setIsSigningIn(false);
+            }
+            else {
+                setErrorMessage("Error during sign-in.");
+                setIsSigningIn(false);
+            }
         }
     };
+
 
     const onGoogleSignIn = async (e) => {
         e.preventDefault();

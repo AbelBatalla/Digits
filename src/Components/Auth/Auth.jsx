@@ -13,15 +13,16 @@ import {
 export const signUpEmail = async (email, password) => {
     try {
         await createUserWithEmailAndPassword(auth, email, password);
+        return 0;
     } catch (err) {
         if (err.code === 'auth/email-already-in-use') {
-            console.error("This email is already in use.");
+            return 1;
         } else if (err.code === 'auth/invalid-email') {
-            console.error("Invalid email format.");
+            return 2;
         } else if (err.code === 'auth/weak-password') {
-            console.error("The password is too weak.");
+            return 3;
         } else {
-            console.error("Error during sign-up:", err.message);
+            return 4;
         }
     }
 };
@@ -29,8 +30,9 @@ export const signUpEmail = async (email, password) => {
 export const loginEmail = async (email, password) => {
     try {
         await signInWithEmailAndPassword(auth, email, password);
+        return 0;
     } catch (err) {
-        console.error(err);
+        return err.code;
     }
 };
 
