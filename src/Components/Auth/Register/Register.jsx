@@ -10,6 +10,7 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [acceptPolicy, setAcceptPolicy] = useState(false);
     const [isRegistering, setIsRegistering] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -17,6 +18,10 @@ const Register = () => {
         e.preventDefault();
         if(password !== confirmPassword) {
             setErrorMessage('Passwords do not match');
+            return;
+        }
+        if (!acceptPolicy) {
+            setErrorMessage('You must be 18 or over and accept the Privacy Policy to register.');
             return;
         }
         if (!isRegistering) {
@@ -88,25 +93,37 @@ const Register = () => {
                             />
                         </div>
 
-                        {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
-
-                        <button
-                            type="submit"
-                            disabled={isRegistering}
-                            className={`${styles.submitButton} ${isRegistering ? styles.disabledButton : styles.enabledButton}`}
-                        >
-                            {isRegistering ? 'Signing Up...' : 'Sign Up'}
-                        </button>
-
-                        <div className={styles.loginLink}>
-                            Already have an account?{' '}
-                            <Link to="/login" className={styles.loginLink}>Continue</Link>
+                        <div className={styles.privacyContainer}>
+                            <input
+                                type="checkbox"
+                                id="acceptPolicy"
+                                checked={acceptPolicy}
+                                onChange={(e) => setAcceptPolicy(e.target.checked)}
+                                className={styles.checkbox}
+                            />
+                            <label htmlFor="acceptPolicy">
+                                I am 18 or over and accept the <Link to="/privacy-policy" className={styles.loginLink}>Privacy Policy</Link>.
+                            </label>
                         </div>
+                            {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
+
+                            <button
+                                type="submit"
+                                disabled={isRegistering}
+                                className={`${styles.submitButton} ${isRegistering ? styles.disabledButton : styles.enabledButton}`}
+                            >
+                                {isRegistering ? 'Signing Up...' : 'Sign Up'}
+                            </button>
+
+                            <div className={styles.loginLinkContainer}>
+                                Already have an account?{' '}
+                                <Link to="/login" className={styles.loginLink}>Continue</Link>
+                            </div>
                     </form>
                 </div>
             </main>
         </>
-    );
+);
 };
 
 export default Register;

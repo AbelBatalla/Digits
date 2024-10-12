@@ -11,6 +11,8 @@ import Register from "./Components/Auth/Register/Register";
 import Stats from "./Components/Pages/Stats/Stats";
 import ProfileScreen from "./Components/Profiles/ProfileScreen";
 import NotFoundPage from "./Components/Pages/NotFound/NotFoundPage";
+import PrivacyPolicy from "./Components/Pages/PrivacyPolicy";
+import AcceptPrivacyPolicy from "./Components/Pages/AcceptPrivacyPolicy";
 
 const router = createBrowserRouter([
     {
@@ -47,7 +49,16 @@ const router = createBrowserRouter([
                 element: <ProfileScreen />,
             }
         ]
+    },
+    {
+        path: '/privacy-policy',
+        element: <PrivacyPolicy />,
+    },
+    {
+        path: '/accept-privacy-policy',
+        element: <AcceptPrivacyPolicy />,
     }
+
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

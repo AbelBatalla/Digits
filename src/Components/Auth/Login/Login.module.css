@@ -51,7 +51,7 @@
 }
 
 .inputField:focus {
-    border-color: #6366F1; /* Equivalent to focus:border-indigo-600 */
+    border-color: #2fa6a6; /* Equivalent to focus:border-indigo-600 */
 }
 
 .errorMessage {
@@ -70,13 +70,22 @@
 }
 
 .submitButton:not(:disabled):hover {
+    background-color: #1f7a7a;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1); /* Equivalent to hover:shadow-xl */
 }
 
-.disabledButton {
-    background-color: #D1D5DB; /* Equivalent to bg-gray-300 */
+.disabledButton:hover {
+    background-color: #D1D5DB;
     cursor: not-allowed;
 }
+.disabledButton {
+    background-color: #D1D5DB;
+}
+
+.enabledButton {
+    background-color: #2fa6a6;
+}
+
 
 
 .googleButton {
@@ -112,4 +121,14 @@
     flex-grow: 1;
     height: 1px;
     background-color: #D1D5DB; /* Equivalent to border-b-2 */
+}
+
+.link {
+    font-weight: bold;
+    text-decoration: none;
+    color: #2fa6a6;
+    transition: text-decoration 0.3s;
+}
+.link:hover {
+    text-decoration: underline;
 }
