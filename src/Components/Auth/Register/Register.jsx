@@ -21,7 +21,7 @@ const Register = () => {
             return;
         }
         if (!acceptPolicy) {
-            setErrorMessage('You must be 18 or over and accept the Privacy Policy to register.');
+            setErrorMessage('You must be 18 or older and accept the Privacy Policy to register.');
             return;
         }
         if (!isRegistering) {
@@ -102,7 +102,7 @@ const Register = () => {
                                 className={styles.checkbox}
                             />
                             <label htmlFor="acceptPolicy">
-                                I am 18 or over and accept the <Link to="/privacy-policy" className={styles.loginLink}>Privacy Policy</Link>.
+                                I am 18 or older and accept the <Link to="/privacy-policy" className={styles.loginLink}>Privacy Policy</Link>.
                             </label>
                         </div>
                             {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}

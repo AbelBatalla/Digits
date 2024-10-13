@@ -68,7 +68,7 @@ export const loginGoogle = async () => {
 
 export const logout = async () => {
     try {
-        await signOut(auth);
+        await signOut(auth).then();
     } catch (err) {
         console.error(err);
     }

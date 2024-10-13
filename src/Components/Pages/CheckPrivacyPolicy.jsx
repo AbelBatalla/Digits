@@ -15,6 +15,7 @@ const CheckPrivacyPolicy = () => {
             console.log("Checking privacy policy...");
             if (user) {
                 console.log("Checking privacy policy, USER LOGGED IN");
+                console.log("User:", user);
                 setUser(user);
 
                 // Check Firestore to see if user has accepted privacy policy

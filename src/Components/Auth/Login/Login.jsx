@@ -92,7 +92,7 @@ const Login = () => {
                         </button>
                     </form>
 
-                    <p className="text-center text-sm">
+                    <p className={styles.linkContainer}>
                         Don't have an account? <Link to="/register" className={styles.link}>Sign up</Link>
                     </p>
 

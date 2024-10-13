@@ -18,11 +18,13 @@ export function AuthProvider({ children }) {
             setLoading(true);
 
             if (user) {
+                console.log("User logged in:", user);
+                console.log("User logged in, auth:", auth);
                 const userDocRef = doc(db, "Users", user.uid);
-                const userDocSnapshot = await getDoc(userDocRef);
+                const userDocSnapshot = await getDoc(userDocRef).then();
                 if (!userDocSnapshot.exists()) {
-                    console.log("Creating user document...", user.providerId);
-                    await createUserDoc(user, user.providerId);
+                    console.log("Creating user document...", user.providerData[0].providerId);
+                    await createUserDoc(user, user.providerData[0].providerId);
                 }
             }
             setCurrentUser(user);
@@ -49,7 +51,7 @@ const createUserDoc = async (user, provider) => {
         await setDoc(doc(db, "Users", user.uid), {
             UserID: user.uid,
             email: user.email,
-            acceptedPolicy: provider !== "firebase"
+            acceptedPolicy: provider !== "google.com"
         });
     } catch (error) {
         console.error("Error creating user document:", error);
