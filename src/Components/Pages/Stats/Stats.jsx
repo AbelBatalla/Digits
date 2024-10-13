@@ -86,7 +86,7 @@ const Stats = () => {
         <div>
             <div className={styles.headerContainerMargin}>
                 <h1>Stats</h1>
-                {activeProfile && (<ProfileSelector/>)}
+                {userLoggedIn && (<ProfileSelector/>)}
             </div>
 
             {!userLoggedIn && (

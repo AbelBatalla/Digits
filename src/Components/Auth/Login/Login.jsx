@@ -92,8 +92,8 @@ const Login = () => {
                         </button>
                     </form>
 
-                    <p className="text-center text-sm">
-                        Don't have an account? <Link to="/Register" className="hover:underline font-bold">Sign up</Link>
+                    <p className={styles.linkContainer}>
+                        Don't have an account? <Link to="/register" className={styles.link}>Sign up</Link>
                     </p>
 
                     <div className={styles.orDivider}>
