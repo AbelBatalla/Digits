@@ -18,12 +18,9 @@ export function AuthProvider({ children }) {
             setLoading(true);
 
             if (user) {
-                console.log("User logged in:", user);
-                console.log("User logged in, auth:", auth);
                 const userDocRef = doc(db, "Users", user.uid);
                 const userDocSnapshot = await getDoc(userDocRef).then();
                 if (!userDocSnapshot.exists()) {
-                    console.log("Creating user document...", user.providerData[0].providerId);
                     await createUserDoc(user, user.providerData[0].providerId);
                 }
             }

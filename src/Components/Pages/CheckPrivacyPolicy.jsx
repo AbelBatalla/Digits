@@ -12,17 +12,12 @@ const CheckPrivacyPolicy = () => {
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (user) => {
-            console.log("Checking privacy policy...");
             if (user) {
-                console.log("Checking privacy policy, USER LOGGED IN");
-                console.log("User:", user);
                 setUser(user);
 
-                // Check Firestore to see if user has accepted privacy policy
                 const userDoc = await getDoc(doc(db, "Users", user.uid));
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
-                    console.log("User data:", userData);
                     if (!userData.acceptedPolicy) {
                         setShowModal(true);
                     }
