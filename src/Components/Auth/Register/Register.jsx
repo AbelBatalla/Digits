@@ -102,10 +102,11 @@ const Register = () => {
                                 className={styles.checkbox}
                             />
                             <label htmlFor="acceptPolicy">
-                                I am 18 or older and accept the <Link to="/privacy-policy" className={styles.loginLink}>Privacy Policy</Link>.
+                                I am 18 or older and accept the <a href="/privacyPolicy.html" target="_blank"
+                                                                   rel="noopener noreferrer" className={styles.loginLink}>Privacy Policy</a>.
                             </label>
                         </div>
-                            {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
+                        {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
 
                             <button
                                 type="submit"
