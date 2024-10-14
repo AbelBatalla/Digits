@@ -1,11 +1,11 @@
-import React from "react";
+import {useEffect} from "react";
 
 const PrivacyPolicy = () => {
 
-    return (
-        <>
-            Privacy policy here
-        </>
-    );
+    useEffect(() => {
+        window.location.href = "/privacyPolicy.html";
+    }, []);
+
+    return null;
 };
 export default PrivacyPolicy;
