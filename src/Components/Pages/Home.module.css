@@ -1,0 +1,91 @@
+.homepageContent {
+    max-width: 850px; /* Limit the width of the content */
+    line-height: 1.8; /* Improve readability */
+    padding: 0 2rem 2rem;
+    margin: 0 auto 0rem;
+    text-align: center;
+    color: #333;
+    opacity: 0; /* Start hidden */
+    animation: fadeIn 0.6s ease-in-out forwards;
+}
+
+.homepageTitle {
+    font-size: 7.5rem; /* Larger title */
+    text-align: center; /* Center the title */
+    color: #333;        /* Dark gray for the title */
+    margin: 0 0 2.5rem;
+    padding-bottom: 0.5rem;
+    opacity: 0;
+    animation: slideDown 0.7s ease forwards;
+    border-bottom: #2fa6a6 solid 2px;
+}
+
+.homepageText {
+    font-size: 1.1rem; /* Slightly larger text for readability */
+    color: #3e3e3e;       /* Gray text for a softer look */
+    text-align: justify; /* Justify the text */
+    margin: 0 0 1.5rem;
+    opacity: 0;
+    transform: translateY(20px); /* Start slightly below */
+    animation: slideUp 1s ease forwards;
+    animation-delay: 0.3s;
+}
+
+.homepageText:first-of-type {
+    font-size: 1.2rem; /* Slightly larger for the call to action */
+    font-weight: bold; /* Make it stand out */
+    text-align: center; /* Center this specific text */
+    animation-delay: 0.1s;
+}
+
+.homepageText:last-of-type {
+    animation-delay: 0.5s; /* Slight delay for staggered effect */
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Slide-up animation for text */
+@keyframes slideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Slide-down animation for the title */
+@keyframes slideDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .homepageContent {
+        padding: 1rem; /* Reduce padding on smaller screens */
+    }
+
+    .homepageTitle {
+        font-size: 2rem; /* Adjust the title size for smaller screens */
+    }
+
+    .homepageText {
+        font-size: 1rem; /* Adjust the text size for smaller screens */
+    }
+}

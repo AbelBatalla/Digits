@@ -1,0 +1,127 @@
+.homepageContent {
+    max-width: 90%; /* Limit the width of the content */
+    line-height: 1.8; /* Improve readability */
+    padding: 0 2rem 2rem;
+    margin: 0 auto 0rem;
+    text-align: center;
+    color: #333;
+    opacity: 0; /* Start hidden */
+    animation: fadeIn 0.6s ease-in-out forwards;
+}
+
+.homepageSubTitle {
+    font-size: 2.5rem; /* Larger title */
+    text-align: center; /* Center the title */
+    color: #333;        /* Dark gray for the title */
+    margin: 0 0 0.4rem;
+    padding-top: 0;
+    opacity: 0;
+    animation: slideDown 0.4s ease forwards;
+}
+
+.homepageSubSubTitle {
+    font-size: 1.4rem; /* Larger title */
+    text-align: left; /* Center the title */
+    color: #333;        /* Dark gray for the title */
+    margin: 0.25rem 1rem 0.25rem;
+    opacity: 0;
+    animation: slideDown 0.2s ease forwards;
+}
+
+.homepageText {
+    font-size: 1.1rem;
+    color: #3e3e3e;
+    text-align: justify;
+    margin: 0 0 0.75rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 1s ease forwards;
+    animation-delay: 0.2s;
+}
+
+.homepageParagraph {
+    padding-bottom: 1rem;
+}
+
+.homepageListIntro {
+    padding-bottom: 0.5rem;
+}
+
+.homepageList {
+    padding-left: 2rem;
+    padding-bottom: 0.5rem;
+}
+
+.homepageListItem {
+    padding-left: 1rem;
+    padding-bottom: 0.5rem;
+}
+
+.homepageListItemTitle {
+    font-weight: 501;
+}
+
+.homepageText:first-of-type {
+    animation-delay: 0s;
+}
+
+.homepageText:last-of-type {
+    animation-delay: 0.4s;
+}
+
+.icon {
+    font-size: 1.1rem;
+    color: #2fa6a6;
+}
+
+.icon:hover {
+    color: #1f7a7a;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Slide-up animation for text */
+@keyframes slideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Slide-down animation for the title */
+@keyframes slideDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .homepageContent {
+        padding: 1rem; /* Reduce padding on smaller screens */
+    }
+
+    .homepageTitle {
+        font-size: 2rem; /* Adjust the title size for smaller screens */
+    }
+
+    .homepageText {
+        font-size: 1rem; /* Adjust the text size for smaller screens */
+    }
+}

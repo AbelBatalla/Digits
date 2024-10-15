@@ -70,10 +70,12 @@ const Session = ({ session, isExpanded, onToggleExpand, onDelete }) => {
                     <div key={index} className={styles.run}>
                         <p><strong>Run {index + 1}</strong></p>
                         <p><strong>Average Response Time</strong>
-                            <div>{(run.avgResponseTime / 1000).toFixed(3)}s</div>
+                            <br></br>
+                            {(run.avgResponseTime / 1000).toFixed(3)}s
                         </p>
                         <p><strong>Correct Answers</strong>
-                            <div>{Math.floor(run.correctRate)}%</div>
+                            <br></br>
+                            {Math.floor(run.correctRate)}%
                         </p>
                     </div>
                 ))}

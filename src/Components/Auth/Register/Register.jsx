@@ -10,14 +10,36 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [acceptPolicy, setAcceptPolicy] = useState(false);
     const [isRegistering, setIsRegistering] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
     const onSubmit = async (e) => {
         e.preventDefault();
+        if(password !== confirmPassword) {
+            setErrorMessage('Passwords do not match');
+            return;
+        }
+        if (!acceptPolicy) {
+            setErrorMessage('You must be 18 or older and accept the Privacy Policy to register.');
+            return;
+        }
         if (!isRegistering) {
             setIsRegistering(true);
-            await signUpEmail(email, password);
+            const result = await signUpEmail(email, password);
+            if (result === 0) {
+                return;
+            }
+            else if (result === 1) {
+                setErrorMessage("This email is already in use.");
+            } else if (result === 2) {
+                setErrorMessage("Invalid email format.");
+            } else if (result === 3) {
+                setErrorMessage("The password is too weak. 6 characters minimum.");
+            } else {
+                setErrorMessage("Error during sign-up.");
+            }
+            setIsRegistering(false);
         }
     };
 
@@ -49,6 +71,7 @@ const Register = () => {
                                 type="password"
                                 autoComplete="new-password"
                                 required
+                                minLength="6"
                                 disabled={isRegistering}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -62,6 +85,7 @@ const Register = () => {
                                 type="password"
                                 autoComplete="off"
                                 required
+                                minLength="6"
                                 disabled={isRegistering}
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -69,25 +93,38 @@ const Register = () => {
                             />
                         </div>
 
+                        <div className={styles.privacyContainer}>
+                            <input
+                                type="checkbox"
+                                id="acceptPolicy"
+                                checked={acceptPolicy}
+                                onChange={(e) => setAcceptPolicy(e.target.checked)}
+                                className={styles.checkbox}
+                            />
+                            <label htmlFor="acceptPolicy">
+                                I am 18 or older and accept the <a href="/privacyPolicy.html" target="_blank"
+                                                                   rel="noopener noreferrer" className={styles.loginLink}>Privacy Policy</a>.
+                            </label>
+                        </div>
                         {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
 
-                        <button
-                            type="submit"
-                            disabled={isRegistering}
-                            className={`${styles.submitButton} ${isRegistering ? styles.disabledButton : styles.enabledButton}`}
-                        >
-                            {isRegistering ? 'Signing Up...' : 'Sign Up'}
-                        </button>
+                            <button
+                                type="submit"
+                                disabled={isRegistering}
+                                className={`${styles.submitButton} ${isRegistering ? styles.disabledButton : styles.enabledButton}`}
+                            >
+                                {isRegistering ? 'Signing Up...' : 'Sign Up'}
+                            </button>
 
-                        <div className={styles.loginLink}>
-                            Already have an account?{' '}
-                            <Link to="/login" className={styles.loginLink}>Continue</Link>
-                        </div>
+                            <div className={styles.loginLinkContainer}>
+                                Already have an account?{' '}
+                                <Link to="/login" className={styles.loginLink}>Continue</Link>
+                            </div>
                     </form>
                 </div>
             </main>
         </>
-    );
+);
 };
 
 export default Register;

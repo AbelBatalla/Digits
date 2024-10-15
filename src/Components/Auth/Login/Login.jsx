@@ -18,9 +18,19 @@ const Login = () => {
         e.preventDefault();
         if (!isSigningIn) {
             setIsSigningIn(true);
-            await loginEmail(email, password);
+            const result = await loginEmail(email, password);
+            if (result === 0) {}
+            else if (result === 'auth/invalid-credential') {
+                setErrorMessage("Invalid email or password.");
+                setIsSigningIn(false);
+            }
+            else {
+                setErrorMessage("Error during sign-in.");
+                setIsSigningIn(false);
+            }
         }
     };
+
 
     const onGoogleSignIn = async (e) => {
         e.preventDefault();
@@ -82,8 +92,8 @@ const Login = () => {
                         </button>
                     </form>
 
-                    <p className="text-center text-sm">
-                        Don't have an account? <Link to="/Register" className="hover:underline font-bold">Sign up</Link>
+                    <p className={styles.linkContainer}>
+                        Don't have an account? <Link to="/register" className={styles.link}>Sign up</Link>
                     </p>
 
                     <div className={styles.orDivider}>

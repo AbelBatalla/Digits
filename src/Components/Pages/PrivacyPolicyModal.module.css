@@ -1,0 +1,71 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border-radius: 5px;
+    width: 37rem;
+    text-align: center;
+    gap: 1rem;
+}
+
+.modalButton {
+    background-color: #2fa6a6;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.modalButton:hover {
+    background-color: #1f7a7a;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1); /* Equivalent to hover:shadow-xl */
+}
+
+.privacyContainer {
+    text-align: center;
+    font-size: 1rem; /* Equivalent to text-sm */
+}
+
+.loginLink{
+    font-weight: bold;
+    text-decoration: none;
+    color: #2fa6a6;
+    transition: text-decoration 0.3s;
+}
+
+.loginLink:hover {
+    text-decoration: underline;
+}
+
+.checkbox{
+    width: 1rem;
+    height: 1rem;
+    margin: 0.5rem 0.7rem 0.5rem 0.5rem;
+    cursor: pointer;
+}
+
+.errorMessage {
+    color: #DC2626;
+    font-weight: bold;
+    text-align: center;
+}
+

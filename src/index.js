@@ -7,11 +7,11 @@ import Play from "./Components/Pages/Play";
 import Other from "./Components/Pages/Other";
 import Home from "./Components/Pages/Home";
 import Login from "./Components/Auth/Login/Login";
-import Users from "./Components/Auth/Users";
 import Register from "./Components/Auth/Register/Register";
 import Stats from "./Components/Pages/Stats/Stats";
 import ProfileScreen from "./Components/Profiles/ProfileScreen";
 import NotFoundPage from "./Components/Pages/NotFound/NotFoundPage";
+import PrivacyPolicy from "./Components/Pages/PrivacyPolicy";
 
 const router = createBrowserRouter([
     {
@@ -28,7 +28,7 @@ const router = createBrowserRouter([
                 element: <Play />,
             },
             {
-                path: 'other',
+                path: 'info',
                 element: <Other />,
             },
             {
@@ -40,10 +40,6 @@ const router = createBrowserRouter([
                 element: <Register />,
             },
             {
-                path: 'auth',
-                element: <Users />,
-            },
-            {
                 path: 'stats',
                 element: <Stats />,
             },
@@ -52,7 +48,12 @@ const router = createBrowserRouter([
                 element: <ProfileScreen />,
             }
         ]
+    },
+    {
+        path: '/privacy-policy',
+        element: <PrivacyPolicy />,
     }
+
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

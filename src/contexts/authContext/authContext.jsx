@@ -15,22 +15,15 @@ export function AuthProvider({ children }) {
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
-            console.log("Here1");
             setLoading(true);
 
             if (user) {
-                console.log("starting search for user document...");
                 const userDocRef = doc(db, "Users", user.uid);
-                console.log("obtaining user document...", userDocRef);
-                const userDocSnapshot = await getDoc(userDocRef);
-                console.log("user document obtained, checking existance.", userDocSnapshot);
+                const userDocSnapshot = await getDoc(userDocRef).then();
                 if (!userDocSnapshot.exists()) {
-                    console.log("Creating user document...");
-                    await createUserDoc(user);
+                    await createUserDoc(user, user.providerData[0].providerId);
                 }
-                console.log("User check completed.");
             }
-            console.log("Here2");
             setCurrentUser(user);
             setLoading(false);
         });
@@ -50,11 +43,12 @@ export function AuthProvider({ children }) {
     );
 }
 
-const createUserDoc = async (user) => {
+const createUserDoc = async (user, provider) => {
     try {
         await setDoc(doc(db, "Users", user.uid), {
             UserID: user.uid,
-            email: user.email
+            email: user.email,
+            acceptedPolicy: provider !== "google.com"
         });
     } catch (error) {
         console.error("Error creating user document:", error);

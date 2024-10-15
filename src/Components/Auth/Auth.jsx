@@ -1,6 +1,6 @@
 import { auth, googleProvider } from "../../config/firebase";
 import { db } from "../../config/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import {doc, getDoc, setDoc} from "firebase/firestore";
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
@@ -13,15 +13,16 @@ import {
 export const signUpEmail = async (email, password) => {
     try {
         await createUserWithEmailAndPassword(auth, email, password);
+        return 0;
     } catch (err) {
         if (err.code === 'auth/email-already-in-use') {
-            console.error("This email is already in use.");
+            return 1;
         } else if (err.code === 'auth/invalid-email') {
-            console.error("Invalid email format.");
+            return 2;
         } else if (err.code === 'auth/weak-password') {
-            console.error("The password is too weak.");
+            return 3;
         } else {
-            console.error("Error during sign-up:", err.message);
+            return 4;
         }
     }
 };
@@ -29,8 +30,9 @@ export const signUpEmail = async (email, password) => {
 export const loginEmail = async (email, password) => {
     try {
         await signInWithEmailAndPassword(auth, email, password);
+        return 0;
     } catch (err) {
-        console.error(err);
+        return err.code;
     }
 };
 
@@ -38,18 +40,35 @@ export const loginGoogle = async () => {
     try {
         const provider = googleProvider;
         provider.setCustomParameters({
-            prompt: "select_account", // This forces the account chooser to show up every time
+            prompt: "select_account",
         });
         await signInWithPopup(auth, provider);
-        console.log("Here3");
+        /*
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        const isNewUser = result._tokenResponse.isNewUser;
+        if (isNewUser) {
+            // New user detected, redirect them to accept the privacy policy
+            //redirectToPrivacyPolicy(user.uid);
+        } else {
+            // Check if existing user has accepted the privacy policy
+            const userRef = doc(db, 'Users', user.uid);
+            const userSnap = await getDoc(userRef);
+            const acceptedPolicy = userSnap.data().acceptedPolicy;
+            if (userSnap.exists() && acceptedPolicy) {
+            } else {
+                //redirectToPrivacyPolicy(user.uid);
+            }
+        }*/
+        return 0;
     } catch (err) {
-        console.error(err);
+        return err.code;
     }
 };
 
 export const logout = async () => {
     try {
-        await signOut(auth);
+        await signOut(auth).then();
     } catch (err) {
         console.error(err);
     }
@@ -61,6 +80,13 @@ export const passwordReset = async (email) => {
     } catch (err) {
         console.error(err);
     }
+};
+
+const redirectToPrivacyPolicy = (uid) => {
+    // Store the user ID temporarily (in session storage, for example)
+    sessionStorage.setItem("uid", uid);
+    // Redirect to the privacy policy acceptance page
+    window.location.href = "/accept-privacy-policy";
 };
 
 /*

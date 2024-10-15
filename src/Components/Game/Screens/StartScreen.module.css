@@ -10,7 +10,7 @@
 
 form {
     display: inline-block;
-    margin-top: 25px;
+    margin-top: 2rem;
 }
 
 label {
@@ -24,3 +24,22 @@ select {
     margin-bottom: 20px;
 }
 
+.startGameButton {
+    background-color: #2fa6a6;
+}
+.startGameButton:hover {
+    background-color: #1f7a7a;
+}
+
+.guide{
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+.link {
+    color: #2fa6a6;
+    text-decoration: none;
+}
+.link:hover {
+    text-decoration: underline;
+}

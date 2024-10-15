@@ -7,7 +7,7 @@ const EndScreen = () => { // Accept the function as a prop
                 <br></br>
                 You have finished this session!
                 <br></br>
-                You can see your performance in the Stats tab.
+                You can see your performance in the Statistics tab.
                 <br></br>
                 <br></br>
                 Press [Esc] to close</p>

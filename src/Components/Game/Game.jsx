@@ -14,13 +14,16 @@ const Game = () => {
     const canvasRef = useRef(null);
     const screenSet = useRef(null);
     const [gameState, setGameState] = useState('start');
-    // 'start', 'runIntroFirst', 'passives', 'runContinue', 'number', 'button', 'trialContinue', 'runIntroSecond' or 'end'
+    //GAME STATES: 'start', 'runIntroFirst', 'passives', 'runContinue', 'number', 'button', 'trialContinue', 'runIntroSecond' or 'end'
     let updateCanvasTrial = useRef(() => {});
     let updateCanvasPassive = useRef(() => {});
     let numbersToDisplay = useRef([]);
     const [number, setNumber] = useState(-1);
     const [trialIter, setTrialIter] = useState(1);
     const imageId = useRef(0);
+    const correctSound = useRef(new Audio('/sounds/correct.mp3'));
+    const incorrectSound = useRef(new Audio('/sounds/incorrect.mp3'));
+    const timeouts = useRef([]);
 
     const { sessionDifficulty,
         changeSessionDifficulty,
@@ -30,6 +33,36 @@ const Game = () => {
         trialData,
         endRun,
         getImageId } = useGame();
+
+    const handleFullscreenChange = () => {
+        if (!document.fullscreenElement) {
+            console.log("Exited fullscreen, reloading the page...");
+            //window.location.reload(); // Reload the page when fullscreen is exited
+            const canvas = canvasRef.current;
+            const context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            canvasRef.current.style.backgroundColor = '#FFFFFF';
+            timeouts.current.forEach((timeoutId) => clearTimeout(timeoutId));
+            timeouts.current = [];
+            resetSession();
+            setNumber(-1);
+            setTrialIter(1);
+            setGameState('start');
+        }
+    };
+
+    //Initalitzation
+    useEffect(() => {
+        resetSession();
+    }, []);
+
+    useEffect(() => {
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+        };
+    }, []);
 
     const toggleFullScreen = () => {
         const canvas = screenSet.current;
@@ -54,13 +87,13 @@ const Game = () => {
                 document.msExitFullscreen();
             }
         }
-    };
+    }; //NOT USED
 
     const randomNumbers = (winWidth, winHeight, imageWidth, imageHeight, n = 0) => {
         winHeight = winHeight - imageHeight
         winWidth = winWidth - imageWidth
-        const radius = 110; //can depend on difficulty?
-        const k = 4; // maximum number of samples before rejection
+        const radius = 110;
+        const k = 10; // maximum number of samples before rejection
         const radius2 = radius * radius;
         const cellSize = radius * Math.SQRT1_2;
         const gridWidth = Math.ceil(winWidth / cellSize);
@@ -75,7 +108,7 @@ const Game = () => {
         const startY = Math.random() * winHeight;
         const distance = distanceFromCenter(startX, startY);
         pointsWithDistances.push({x: startX, y: startY, distance: distance});
-        queue.push(sample(startX, startY));
+        sample(startX, startY);
 
         pick: while (queue.length) {
             const i = Math.random() * queue.length | 0;
@@ -85,7 +118,7 @@ const Game = () => {
 
             // Make a new candidate.
             for (let j = 0; j < k; ++j) {
-                const a = 2 * Math.PI * (seed + 1.0 * j / k);
+                const a = 2 * Math.PI * (seed + j / k);
                 const r = radius + epsilon;
                 const x = parent[0] + r * Math.cos(a);
                 const y = parent[1] + r * Math.sin(a);
@@ -95,7 +128,7 @@ const Game = () => {
                 if (0 <= x && x < winWidth && 0 <= y && y < winHeight && far(x, y)) {
                     const distance = distanceFromCenter(x, y);
                     pointsWithDistances.push({x, y, distance});
-                    queue.push(sample(x, y));
+                    sample(x, y);
                     continue pick;
                 }
             }
@@ -150,17 +183,11 @@ const Game = () => {
         return closestPoints.map(point => ({ x: point.x, y: point.y }));
     };
 
-    //Initalitzation
-    useEffect(() => {
-        resetSession();
-    }, []);
-
     updateCanvasTrial = () => {
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
-        const image = new Image();  // Create a new Image object
+        const image = new Image();
         image.src = `/images/${imageId.current}.jpg`;
-        //console.log("Image ID: ", imageId.current);
         let imageSize = {x: 64, y: 64}
         let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y, numbersToDisplay.current[trialIter-1]);
         context.clearRect(0, 0, canvas.width, canvas.height);
@@ -168,17 +195,18 @@ const Game = () => {
             for (let pos of positions) {
                 context.drawImage(image, pos.x, pos.y, imageSize.x, imageSize.y);
             }
-            setTimeout(() => {
+            const timeoutId = setTimeout(() => {
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 setGameState('button')
             }, 1000);
+            timeouts.current.push(timeoutId);
         };
     };
 
     updateCanvasPassive = () => {
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
-        const image = new Image();  // Create a new Image object
+        const image = new Image();
         image.src = `/images/${imageId.current}.jpg`;
         let imageSize = {x: 64, y: 64}
         let currentIteration = 0;
@@ -245,15 +273,26 @@ const Game = () => {
 
         passiveNumbers.sort(() => Math.random() - 0.5);
 
+        let numberSound = [];
+        if (sessionDifficulty <= 0) {
+            console.log("Passive numbers: ", passiveNumbers);
+            for (let i = 0; i <= passiveNumbers.length - 1; i++) {
+                numberSound.push(new Audio(`/sounds/${passiveNumbers[i]}.mp3`));
+                console.log("loaded: ", passiveNumbers[i]);
+            }
+        }
+
         function executeIteration() {
             if (((currentIteration < 7 && sessionDifficulty >= 0) || (currentIteration < 5 && sessionDifficulty < 0)) && !(sessionDifficulty === -3)) {
                 currentIteration++;
+                if (sessionDifficulty <= 0) numberSound[currentIteration-1].play();
                 let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y, passiveNumbers[currentIteration-1]);
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 for (let pos of positions) {
                     context.drawImage(image, pos.x, pos.y, imageSize.x, imageSize.y);
                 }
-                setTimeout(executeIteration, 1200); // Call the next iteration after 1.2 seconds
+                const timeoutId = setTimeout(executeIteration, 1200);
+                timeouts.current.push(timeoutId);
             }
             else {
                 context.clearRect(0, 0, canvas.width, canvas.height);
@@ -373,7 +412,15 @@ const Game = () => {
     };
 
     const handleButtonClick = (n, resTime) => {
-        trialData(n === number, resTime);
+        const answer = n === number;
+        if (answer) {
+            console.log("Correct!");
+            correctSound.current.play().then(r => {});
+        } else {
+            console.log("Incorrect!");
+            incorrectSound.current.play().then(r => {});
+        }
+        trialData(answer, resTime);
         if (trialIter >= 28 || (trialIter >= 10 && sessionDifficulty === -2) || (trialIter >= 15 && sessionDifficulty === -1) || (sessionDifficulty === -3)) { //28, 15 i 10 trials
             setTrialIter(1);
             endRun();

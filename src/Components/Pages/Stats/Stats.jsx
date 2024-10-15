@@ -51,12 +51,11 @@ const Stats = () => {
         setExpandedSessions(expandedSessions.filter(sessionId => sessionId !== id));
         console.log('Delete session:', id);
 
-        // Uncomment this to enable actual deletion from Firestore
-        //try {
-        //     await deleteDoc(doc(db, 'Users', currentUser.uid, 'Profiles', activeProfile.Name, 'Sessions', id));
-        //} catch (err) {
-        //     console.error('Error deleting session:', err);
-        //}
+        try {
+             await deleteDoc(doc(db, 'Users', currentUser.uid, 'Profiles', activeProfile.Name, 'Sessions', id));
+        } catch (err) {
+             console.error('Error deleting session:', err);
+        }
     };
 
     useEffect(() => {
@@ -87,8 +86,8 @@ const Stats = () => {
     return (
         <div>
             <div className={styles.headerContainerMargin}>
-                <h1>Stats</h1>
-                {activeProfile && (<ProfileSelector/>)}
+                <h1>Statistics</h1>
+                {userLoggedIn && (<ProfileSelector/>)}
             </div>
 
             {!userLoggedIn && (
@@ -150,7 +149,7 @@ const Stats = () => {
                                 <h2> Charts </h2>
                             </div>
                             <div>
-                                <RunChart sessions={sessions}/>
+                                <RunChart sessions={[...sessions].reverse()}/>
                             </div>
                             <div>
                                 <TimeChart sessions={sessions}/>
