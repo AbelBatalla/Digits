@@ -274,18 +274,17 @@ const Game = () => {
         passiveNumbers.sort(() => Math.random() - 0.5);
 
         let numberSound = [];
-        if (sessionDifficulty <= 0) {
-            console.log("Passive numbers: ", passiveNumbers);
-            for (let i = 0; i <= passiveNumbers.length - 1; i++) {
-                numberSound.push(new Audio(`/sounds/${passiveNumbers[i]}.mp3`));
-                console.log("loaded: ", passiveNumbers[i]);
-            }
+
+        console.log("Passive numbers: ", passiveNumbers);
+        for (let i = 0; i <= passiveNumbers.length - 1; i++) {
+            numberSound.push(new Audio(`/sounds/${passiveNumbers[i]}.mp3`));
+            console.log("loaded: ", passiveNumbers[i]);
         }
 
         function executeIteration() {
             if (((currentIteration < 7 && sessionDifficulty >= 0) || (currentIteration < 5 && sessionDifficulty < 0)) && !(sessionDifficulty === -3)) {
                 currentIteration++;
-                if (sessionDifficulty <= 0) numberSound[currentIteration-1].play();
+                if (numberSound[currentIteration-1]) numberSound[currentIteration-1].play();
                 let positions = randomNumbers(canvasRef.current.width, canvasRef.current.height, imageSize.x, imageSize.y, passiveNumbers[currentIteration-1]);
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 for (let pos of positions) {
