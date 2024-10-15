@@ -5,16 +5,18 @@ import styles from './RunChart.module.css';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-const TimeChart = ({ sessions }) => {
+const EfficiencyChart = ({ sessions }) => {
     // Prepare data for the chart
     const labels = [];
-    const responseTimes = [];
+    const efficiencyRates = [];
 
     // Loop through sessions and gather correct rates for each run
     sessions.forEach((session, sessionIndex) => {
         session.runs.forEach((run, runIndex) => {
             labels.push(`Session ${sessionIndex + 1}, Run ${runIndex + 1}`);
-            responseTimes.push((run.avgResponseTime / 1000).toFixed(3));
+            console.log("run.avgResponseTime", run.avgResponseTime);
+            console.log("run.correctRate", run.correctRate);
+            efficiencyRates.push(run.correctRate/(((run.avgResponseTime+1) / 1000).toFixed(3)));
         });
     });
 
@@ -23,8 +25,8 @@ const TimeChart = ({ sessions }) => {
         labels: labels, // X-axis labels
         datasets: [
             {
-                label: 'Response time',
-                data: responseTimes, // Y-axis data
+                label: 'Efficiency',
+                data: efficiencyRates, // Y-axis data
                 borderColor: '#2fa6a6', // Line color
                 backgroundColor: '#2fa6a6',
                 fill: false, // Don't fill the area under the line
@@ -41,7 +43,7 @@ const TimeChart = ({ sessions }) => {
             },
             title: {
                 display: true,
-                text: 'Response time by Runs',
+                text: 'Efficiency by runs',
             },
         },
         scales: {
@@ -49,7 +51,7 @@ const TimeChart = ({ sessions }) => {
                 beginAtZero: true,
                 title: {
                     display: true,
-                    text: 'Response time in seconds',
+                    text: 'Efficiency (correct answers / response time)',
                 },
             },
             x: {
@@ -63,8 +65,8 @@ const TimeChart = ({ sessions }) => {
 
     return (
         <div className={styles.chartContainer}>
-            <Line className={styles.graph} data={data} options={options} />
+            <Line data={data} options={options} />
         </div>
     );};
 
-export default TimeChart;
+export default EfficiencyChart;

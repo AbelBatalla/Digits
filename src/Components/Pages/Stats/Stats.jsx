@@ -11,6 +11,7 @@ import RunChart from "./RunChart";
 import ProfileFormModal from "../../Modal/ProfileFormModal";
 import ProfileSelector from "../../Profiles/ProfileSelector";
 import TimeChart from "./TimeChart";
+import EfficiencyChart from "./EfficiencyChart";
 
 const Stats = () => {
     const { userLoggedIn, currentUser } = useAuth();
@@ -152,7 +153,10 @@ const Stats = () => {
                                 <RunChart sessions={[...sessions].reverse()}/>
                             </div>
                             <div>
-                                <TimeChart sessions={sessions}/>
+                                <TimeChart sessions={[...sessions].reverse()}/>
+                            </div>
+                            <div>
+                                <EfficiencyChart sessions={[...sessions].reverse()}/>
                             </div>
 
                         </div>
