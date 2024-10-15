@@ -10,6 +10,8 @@ import { FaAngleDown, FaTimes } from "react-icons/fa";
 import RunChart from "./RunChart";
 import ProfileFormModal from "../../Modal/ProfileFormModal";
 import ProfileSelector from "../../Profiles/ProfileSelector";
+import TimeChart from "./TimeChart";
+import EfficiencyChart from "./EfficiencyChart";
 
 const Stats = () => {
     const { userLoggedIn, currentUser } = useAuth();
@@ -115,7 +117,7 @@ const Stats = () => {
                                 <div className={styles.icon}> {isExpanded ? <FaTimes/> : <FaAngleDown/>} </div>
                             </div>
 
-                            {isExpanded && sessions.length===0 && (
+                            {isExpanded && sessions.length === 0 && (
                                 <div
                                     className={`${styles.containerNoSessions} ${isVisible ? styles.visible : styles.hidden}`}>
                                     <p className={styles.p}>
@@ -129,7 +131,7 @@ const Stats = () => {
                             {isExpanded && sessions.length > 0 && (
                                 <div
                                     className={`${styles.containerSessions} ${isVisible ? styles.visible : styles.hidden}`}>
-                                {sessions.map((session) => (
+                                    {sessions.map((session) => (
                                         <Session
                                             key={session.id}
                                             session={session}
@@ -149,6 +151,12 @@ const Stats = () => {
                             </div>
                             <div>
                                 <RunChart sessions={[...sessions].reverse()}/>
+                            </div>
+                            <div>
+                                <TimeChart sessions={[...sessions].reverse()}/>
+                            </div>
+                            <div>
+                                <EfficiencyChart sessions={[...sessions].reverse()}/>
                             </div>
 
                         </div>

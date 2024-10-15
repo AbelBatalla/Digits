@@ -92,7 +92,7 @@ const Game = () => {
     const randomNumbers = (winWidth, winHeight, imageWidth, imageHeight, n = 0) => {
         winHeight = winHeight - imageHeight
         winWidth = winWidth - imageWidth
-        const radius = 110; //can depend on difficulty?
+        const radius = 110;
         const k = 10; // maximum number of samples before rejection
         const radius2 = radius * radius;
         const cellSize = radius * Math.SQRT1_2;
