@@ -186,7 +186,7 @@ const Other = () => {
                 </div>
                 <div className={styles.homepageText}>
                     <p className={styles.homepageParagraph}>
-                        If you have any questions, you may contact us at abel.batalla@estudiantat.upc.edu
+                        If you have any questions, you may contact us at digitsnumericalcognition@gmail.com
                     </p>
                 </div>
             </div>
